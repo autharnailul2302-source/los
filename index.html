@@ -178,6 +178,8 @@ th{color:var(--gold);font-family:Cinzel,Georgia,serif;letter-spacing:.5px}td,th{
 .cp{position:relative;min-height:340px;overflow:hidden;border-radius:16px;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--bd));background:radial-gradient(ellipse at 50% 90%,rgba(240,199,94,.3),transparent 62%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(0,0,0,.25))}
 #gpv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 8%;transform:scaleX(-1);animation:gpin .35s ease both}
 @keyframes gpin{from{opacity:.2}}
+/* napas hero buat karakter: hanya melebar/mengembang dari kaki, tanpa naik-turun */
+@keyframes mkbr{50%{scale:1.014 1.01}}
 .cpn{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);padding:4px 18px;font:700 14px Cinzel,Georgia,serif;letter-spacing:.8px;color:#2b1a00;background:linear-gradient(180deg,#ffe486,#d9962b);border:1px solid #fff1a8;border-radius:10px;box-shadow:0 3px 10px rgba(0,0,0,.45)}
 .cf .row{margin:8px 0}.cf input.sv{width:70px}
 .gsel{display:flex;gap:8px;margin:8px 0 12px}.gc{position:relative;flex:1;cursor:pointer}.gc input{position:absolute;opacity:0;inset:0}
@@ -197,7 +199,8 @@ th{color:var(--gold);font-family:Cinzel,Georgia,serif;letter-spacing:.5px}td,th{
 @keyframes mkfl{to{background-position:0 -520px,0 -470px,0 -410px,0 -380px}}
 #mk .mkst{position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:0;min-width:0}
 #mk .mkst::before{content:"";position:absolute;left:50%;bottom:-8%;width:min(92%,600px);aspect-ratio:1;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(240,199,94,.36),rgba(79,209,197,.12) 58%,transparent 74%);filter:blur(6px)}
-#mk #mkpv{position:relative;height:min(96vh,920px);height:min(96dvh,920px);max-width:100%;object-fit:contain;object-position:50% 100%;transform:scaleX(-1);filter:drop-shadow(0 16px 28px rgba(0,0,0,.55));-webkit-mask-image:linear-gradient(180deg,#000 84%,transparent);mask-image:linear-gradient(180deg,#000 84%,transparent);animation:gpin .4s ease both}
+#mk #mkpv.fb{transform:scaleX(-1)}
+#mk #mkpv{position:relative;height:min(96vh,920px);height:min(96dvh,920px);max-width:100%;object-fit:contain;object-position:50% 100%;transform:none;filter:drop-shadow(0 16px 28px rgba(0,0,0,.55));-webkit-mask-image:linear-gradient(180deg,#000 84%,transparent);mask-image:linear-gradient(180deg,#000 84%,transparent);transform-origin:50% 100%;animation:gpin .4s ease both,mkbr 4.4s ease-in-out .4s infinite}
 #mk .mkpn{position:absolute;left:50%;bottom:clamp(14px,4vh,40px);bottom:clamp(14px,4dvh,40px);transform:translateX(-50%);padding:6px 26px;font:700 16px Cinzel,Georgia,serif;letter-spacing:1.2px;color:#2b1a00;background:linear-gradient(180deg,#ffe486,#d9962b);border:1px solid #fff1a8;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.5)}
 #mk .mkfm{position:relative;display:flex;align-items:center;justify-content:center;padding:var(--pad) clamp(14px,3.2vw,52px) var(--pad) 0;min-height:0;min-width:0}
 #mk .mkcard{width:min(640px,100%);max-height:calc(100vh - 2*var(--pad));max-height:calc(100dvh - 2*var(--pad));max-height:calc(100dvh - 2*var(--pad));display:flex;flex-direction:column;border-radius:22px;border:1px solid color-mix(in srgb,var(--gold) 55%,var(--bd));background:linear-gradient(180deg,rgba(23,33,80,.8),rgba(10,16,46,.9));-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 22px 64px rgba(0,0,0,.55),inset 0 0 0 1px rgba(255,255,255,.04);overflow:hidden}
@@ -503,6 +506,19 @@ main.app{display:block;padding:0;max-width:none;height:100%}
 .o b{font-size:clamp(11px,2vh,13px);font-size:clamp(11px,2dvh,13px)}.o small{font-size:clamp(9px,1.7vh,11px);font-size:clamp(9px,1.7dvh,11px)}
 .pad,.tk,.toast{bottom:104px}.side{bottom:112px}
 @media(max-width:1100px){.pad,.tk,.toast{bottom:170px}.side{bottom:180px}.tb img{height:clamp(40px,7.5vh,50px);height:clamp(40px,7.5dvh,50px)}}
+/* ===== dock HP landscape: satu baris ringkas, kartu hanya ikon + judul ===== */
+@media(orientation:landscape) and (max-height:430px){
+.dock{flex-wrap:nowrap;gap:6px;padding:3px 8px;border-radius:14px;bottom:max(4px,env(safe-area-inset-bottom));width:min(1180px,calc(100vw - 16px - env(safe-area-inset-left) - env(safe-area-inset-right)))}
+.ct{width:auto;flex:0 0 auto;padding-top:0;gap:0;align-items:center}
+.tb img{height:38px}.tb.on img{transform:scale(1.08)}
+.co{flex:1 1 0;min-width:0;gap:6px;padding:2px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.o{--oh:40px;min-width:0;flex:0 0 auto;scroll-snap-align:start;border-width:0 calc(var(--oh)*.45);border-image-width:0 calc(var(--oh)*.45)}
+.o small{display:none}
+.o b{font-size:12px;white-space:nowrap}
+.dock .cs{width:30px;height:30px;font-size:20px;padding-bottom:2px}
+.pad,.tk,.toast{bottom:62px}.side{bottom:68px}
+.pad button{width:52px;height:52px}
+}
 
 /* ===== layar judul: nav atas + banner tanpa kotak ===== */
 .tn2{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;z-index:3;display:flex;gap:10px}
@@ -1277,6 +1293,77 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 #mk .mkpn{font-size:12px;padding:3px 12px}
 }
 @media(orientation:landscape) and (max-height:340px){#mk .mkh{display:none}#mk .mkg span{padding:2px 8px}#mk .mkf input{padding:2px 8px}#mk .mkm{width:24px;height:24px}}
+/* ===== Uang / PSW / Karakter: layout lebar + padat di HP landscape ===== */
+#md.ug2{max-width:min(860px,96vw)}
+#md.ug2 .ug{display:grid;grid-template-columns:1fr 1fr;gap:4px 22px;align-items:start;text-align:left}
+#md.ug2 .uc p{margin-top:0}
+@media(orientation:portrait){#md.ug2 .ug{grid-template-columns:1fr}}
+@media(orientation:landscape) and (max-height:430px){
+#md.ug2{font-size:12px;line-height:1.35;padding:8px 14px 8px}
+#md.ug2 h2{font-size:15px;margin:0 0 6px}
+#md.ug2 .uc p{margin:0 0 4px!important}
+#md.ug2 td{padding:1px 6px!important}#md.ug2 table{margin:0 0 4px}
+#md.ug2 .sub{font-size:11px;line-height:1.3}
+#md.wide:has(.psw){padding:8px 14px}
+#md.wide:has(.psw) h2{margin-bottom:6px;font-size:15px}
+.psw{grid-template-columns:140px 1fr;gap:12px;align-items:start}
+.pw-l{padding:8px}
+.pw-emblem{width:62px;height:62px}.pw-emblem>div{width:52px;height:52px}.pw-emblem span{font-size:16px}.pw-emblem b{font-size:13px}.pw-emblem small{font-size:10px}
+.pw-stars{margin:2px 0 0;font-size:13px;letter-spacing:2px}
+.pw-full{font-size:12px;margin-top:2px}.pw-full b{font-size:16px}
+.pw-id{display:none}.pw-st{margin:5px 0 0;padding:3px 8px;font-size:10.5px}
+.pw-l .pw-st+.pw-cal,.pw-cal{margin-top:6px;padding:5px 8px;font-size:12px}
+.pw-d{font-size:11.5px;line-height:1.3}
+.pw-r h3{margin:6px 0 4px;font-size:10.5px}
+.pw-grid{grid-template-columns:repeat(3,1fr);gap:4px}.pw-evs{gap:4px}
+.pw-req,.pw-ev{padding:4px 7px;gap:6px}.pw-req i{width:20px;height:20px;font-size:11px}
+.pw-req b,.pw-ev b{font-size:11px}.pw-req small,.pw-ev small{font-size:10px}
+.pw-ev{flex-direction:column;align-items:flex-start;gap:2px}.pw-ev em{font-size:10px;padding:2px 6px}
+.pw-tip{margin:4px 0 0;font-size:10.5px}
+.chm .ctabs{margin:0 0 5px;gap:4px}.chm .ctabs button{padding:3px 10px;font-size:11.5px}
+.chm .chs.v2{grid-template-columns:minmax(100px,140px) 1fr;gap:10px}
+.chm .kport{height:92px;overflow:hidden}.chm .kport img{width:100%;height:100%;object-fit:cover;object-position:top}
+.chm .knp{padding:18px 6px 5px}.chm .knp h3{font-size:14px}.chm .knp span{font-size:10px}
+.chm .ksec{margin:0 0 3px;font-size:10px}.chm .kcol>.ksec:not(:first-child){margin-top:6px}
+.chm .kleft{font-size:11px}.chm .kleft *{line-height:1.25}
+.chm .kstats{gap:2px}.chm .kst{grid-template-columns:24px 44px 1fr 28px 30px;gap:6px;font-size:11px}
+.chm .kst .kic{width:22px;height:22px;font-size:12px}.chm .kst strong{font-size:14px}.chm .kbr{height:8px}
+.chm .keq{gap:4px}.chm .kslot{padding:3px 2px}.chm .kslot i{height:26px;font-size:20px}.chm .kslot i img{width:24px;height:24px}.chm .kslot b{font-size:9.5px;margin-top:1px}
+}
+/* ===== Karakter: tab tetap, isi tab scroll sendiri hanya kalau daftar panjang ===== */
+@media(orientation:landscape) and (max-height:430px){
+#md.chw{overflow:hidden;display:flex;flex-direction:column;padding:8px 12px}
+#md.chw h2{font-size:15px;margin:0 0 4px}
+#md.chw .chm{flex:1;min-height:0;max-height:none!important;display:flex;flex-direction:column;overflow:hidden}
+#md.chw .chm .ctabs{flex:none}
+#md.chw .chm .cbody{flex:1;min-height:0;max-height:none!important;overflow:auto}
+.chm .kport{height:70px}
+.chm .kbiz,.chm .kakm{font-size:10.5px}.chm .kakm *{line-height:1.2}
+}
+@media(orientation:landscape) and (max-height:430px) and (max-width:720px){
+#md.ug2{font-size:11px;padding:6px 10px}#md.ug2 .ug{gap:2px 14px}#md.ug2 .sub{font-size:10.5px}
+.psw{grid-template-columns:104px 1fr;gap:8px}.pw-l{padding:6px 5px}
+.pw-emblem{width:50px;height:50px}.pw-emblem>div{width:42px;height:42px}.pw-emblem span{font-size:13px}.pw-emblem b{font-size:11px}
+.pw-full{font-size:10.5px}.pw-full b{font-size:13px}.pw-st{font-size:9.5px;padding:2px 6px}
+.pw-d{font-size:10.5px;line-height:1.25}.pw-req b,.pw-ev b{font-size:10px}.pw-req small,.pw-ev small{font-size:9px}
+.pw-req i{width:16px;height:16px;font-size:9px}.pw-req,.pw-ev{padding:3px 5px;gap:4px}
+}
+/* ===== Hero buat karakter: ukuran mengikuti tinggi layar seperti di prolog ===== */
+@media(orientation:landscape){
+#mk .mkst{justify-content:flex-start;z-index:0;overflow:visible}
+#mk .mkfm{position:relative;z-index:1}
+#mk #mkpv{height:clamp(260px,min(96vh,48vw),1100px);height:clamp(260px,min(96dvh,48vw),1100px);width:auto;max-width:none;margin-left:-14%}
+}
+@media(orientation:landscape) and (max-height:430px){
+#mk{grid-template-columns:minmax(130px,28%) 1fr}
+#mk #mkpv{height:calc(100vh - 6px);height:calc(100dvh - 6px);margin-left:-18%}
+#mk .mkpn{font-size:12px;padding:3px 12px}
+}
+/* ===== Auto-fit & layar laptop pendek ===== */
+#mk .mkbd>*{zoom:var(--z,1)}
+#md.cal2>*:not(.xclose),#md.ug2>*:not(.xclose),#md.wide:has(.psw)>*:not(.xclose){zoom:var(--z,1)}
+@media(min-width:821px) and (max-height:820px){#mk .mkr .w{grid-column:auto}#mk .mks{margin:0 0 8px;font-size:13px;line-height:1.4}}
+@media(min-width:821px) and (max-height:680px){#mk .mks{display:none}#mk .mkf input{padding:7px 12px}#mk .mkl li{padding-top:4px;padding-bottom:4px}#mk .mkn small{display:none}}
 /* ===== Kalender: landscape, tanpa scroll ===== */
 #ov:has(#md.cal2){padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
 #md.cal2{--sw:calc((100vw - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px) - 20px)/66);--u:clamp(11px,min(2.3vh,var(--sw)),17px);font-size:var(--u);width:64em;max-width:100%;max-height:100%;overflow:auto;overscroll-behavior:contain;padding:calc(var(--u)*1.3) calc(var(--u)*1.8) calc(var(--u)*1.2)}
@@ -1738,7 +1825,7 @@ const SD={INT:['🧠','Kecerdasan pet dan jangkauan serangan'],STR:['💪','Keku
 const el=document.createElement('div');el.id='mk';el.setAttribute('role','dialog');el.setAttribute('aria-label','Buat karakter');
 el.innerHTML=`<div class="mkbg"></div><i class="mkfx"></i>
 <button type="button" class="mkback" id="mkback" aria-label="Kembali ke layar judul">← Kembali</button>
-<section class="mkst"><img id="mkpv" src="images/vn-boy.webp" alt="Pratinjau karakter" draggable="false"><span class="mkpn" id="mkpn">Cowok</span></section>
+<section class="mkst"><img id="mkpv" src="images/vn_cowok.png" alt="Pratinjau karakter" draggable="false"><span class="mkpn" id="mkpn">Cowok</span></section>
 <section class="mkfm"><form class="mkcard" id="mkf" autocomplete="off" novalidate>
 <div class="mkbd"><h2 class="mkh"><span>Buat Karakter</span></h2>
 <p class="mks">Kamu remaja 17 tahun yang hidup sebatang kara. Keluargamu sudah berangkat ke Old Village, desa para GMS, dan kamu bertekad menyusul dengan menjadi Grand Master of Summoner. Modalmu Rp 40.000 dan sebuah tenda.</p>
@@ -1751,7 +1838,9 @@ el.innerHTML=`<div class="mkbg"></div><i class="mkfx"></i>
 </form></section>`;
 document.body.append(el);
 const q=x=>el.querySelector(x),pv=q('#mkpv'),L=q('#mkl'),rm=q('#mkrem'),go=q('#mkgo'),mg=q('#mkmsg'),nm=q('#nm');
-['images/vn-girl.webp','images/vn-boy.webp'].forEach(u=>{new Image().src=u});
+['images/vn_cewek.png','images/vn_cowok.png','images/vn-girl.webp','images/vn-boy.webp'].forEach(u=>{new Image().src=u});
+ const setHero=c=>{pv.classList.remove('fb');pv.onerror=()=>{pv.onerror=null;pv.classList.add('fb');pv.src='images/vn-'+(c?'girl':'boy')+'.webp'};pv.src='images/vn_'+(c?'cewek':'cowok')+'.png'};setHero(false);
+ setTimeout(fitMk,60);setTimeout(fitMk,700);
 const say=t=>{mg.textContent=t||''};
 const paint=()=>{let t=0;ST.forEach(k=>{t+=v[k];const li=L.querySelector(`[data-k="${k}"]`);li.querySelector('output').textContent=v[k];li.querySelector('.mkb i').style.width=(v[k]/12*100)+'%'});
   const rem=20-t;L.querySelectorAll('.mkm').forEach(b=>{const k=b.closest('li').dataset.k;b.disabled=+b.dataset.d>0?(rem<=0||v[k]>=12):v[k]<=2});
@@ -1759,7 +1848,7 @@ const paint=()=>{let t=0;ST.forEach(k=>{t+=v[k];const li=L.querySelector(`[data-
 L.addEventListener('click',e=>{const b=e.target.closest('.mkm');if(!b||b.disabled)return;const k=b.closest('li').dataset.k;v[k]+=+b.dataset.d;say('');paint()});
 q('#mkbal').onclick=()=>{ST.forEach(k=>v[k]=4);say('');paint()};
 q('#mkrnd').onclick=()=>{ST.forEach(k=>v[k]=2);for(let n=0;n<10;n++){const c=ST.filter(k=>v[k]<12);v[c[Math.floor(Math.random()*c.length)]]++}say('');paint()};
-el.querySelectorAll('input[name=gd]').forEach(r=>r.onchange=()=>{const c=r.value==='cewek';pv.style.animation='none';void pv.offsetWidth;pv.style.animation='';pv.src='images/vn-'+(c?'girl':'boy')+'.webp';
+el.querySelectorAll('input[name=gd]').forEach(r=>r.onchange=()=>{const c=r.value==='cewek';pv.style.animation='none';void pv.offsetWidth;pv.style.animation='';setHero(c);
   if(!nm.value.trim()||nm.value==='Raka'||nm.value==='Alya')nm.value=c?'Alya':'Raka';q('#mkpn').textContent=c?'Cewek':'Cowok'});
 const dd=document.createElement('ul');dd.className='mkdd';dd.setAttribute('role','listbox');dd.hidden=true;dd.onmousedown=e=>e.preventDefault();el.append(dd);
 q('#mkback').onclick=()=>{el.remove();if(prev!==undefined)S=prev;title()};
@@ -2477,6 +2566,13 @@ let pendS='',pendN=0;
 setInterval(()=>{if(!mus||trkBad)return;const k=wantScene();if(!ael){playTrack(k);return}if(k===curT){pendN=0;return}if(k===pendS){if(++pendN>=2){pendN=0;playTrack(k)}}else{pendS=k;pendN=1}},500);
 document.addEventListener('visibilitychange',()=>{if(ael&&mus)document.hidden?ael.pause():ael.play().catch(()=>{})});
 /* Di HP: masuk fullscreen dan kunci landscape. Harus dipanggil dari ketukan pemain. */
+/* Pengaman: kalau isi tetap lebih tinggi dari layar (font/skala beda), perkecil otomatis agar tanpa scroll */
+function fitMk(){try{const b=document.querySelector('#mk .mkbd');if(!b)return;b.style.removeProperty('--z');if(matchMedia('(orientation:portrait)').matches&&innerWidth<700)return;
+ for(let i=0;i<3&&b.scrollHeight>b.clientHeight+2;i++){const z=parseFloat(b.style.getPropertyValue('--z')||1)*b.clientHeight/b.scrollHeight;b.style.setProperty('--z',Math.max(.55,z).toFixed(3))}}catch(e){}}
+function fitMd(){try{const m=document.querySelector('#md');if(!m)return;m.style.removeProperty('--z');
+ if(!(m.classList.contains('cal2')||m.classList.contains('ug2')||m.querySelector('.psw')))return;if(matchMedia('(orientation:portrait)').matches&&innerWidth<700)return;
+ for(let i=0;i<3&&m.scrollHeight>m.clientHeight+2;i++){const z=parseFloat(m.style.getPropertyValue('--z')||1)*m.clientHeight/m.scrollHeight;m.style.setProperty('--z',Math.max(.55,z).toFixed(3))}}catch(e){}}
+addEventListener('resize',()=>{fitMk();fitMd()});addEventListener('orientationchange',()=>setTimeout(()=>{fitMk();fitMd()},250));
 /* Layar judul: kalau panel lebih tinggi dari layar, perkecil otomatis */
 function fitTitle(){try{const t=document.querySelector('#scr.ti .tp');if(!t)return;t.style.zoom='';const hh=innerHeight-16;if(t.offsetHeight>hh)t.style.zoom=Math.max(.5,hh/t.offsetHeight).toFixed(3)}catch(e){}}
 addEventListener('resize',fitTitle);addEventListener('orientationchange',()=>setTimeout(fitTitle,250));
@@ -2486,6 +2582,7 @@ function goLand(){try{
  lock=()=>{try{const o=screen.orientation;o&&o.lock&&o.lock('landscape').catch(()=>{})}catch(e){}};
  if(rq&&!(document.fullscreenElement||document.webkitFullscreenElement)){const r=rq.call(d,{navigationUI:'hide'});r&&r.then?r.then(lock,lock):lock()}else lock();
 }catch(e){}}
+{const _m=modal;modal=function(){const r=_m.apply(this,arguments);setTimeout(fitMd,70);setTimeout(fitMd,500);return r}}
 {const _t=title;title=function(){const r=_t.apply(this,arguments);setTimeout(fitTitle,80);setTimeout(fitTitle,900);return r}}
 function boot(){modal('',{html:'<div class="eggmusik" role="img" aria-label="Telur mendengarkan musik"></div><p class="center"><b>Mau main dengan musik?</b></p><p class="sub center">Musik latar dan suara alam bisa dimatikan kapan saja.</p>',btns:[['🔊 Dengan musik',()=>{want=1;goLand();loading()},'p'],['🔇 Tanpa musik',()=>{want=0;goLand();loading()}]]})}
 function loading(){$('#ov').classList.remove('on');try{if(want)music(1)}catch(e){want=0}$('#bm').textContent=mus?'Musik: hidup':'Musik: mati';
@@ -2591,6 +2688,20 @@ function pfStyle(){if(document.getElementById('pfcss'))return;const st=document.
 #pfp .wdd li small{font-size:11.5px;color:var(--mute,#a9b4de)}#pfp .wdd li.on{background:rgba(240,199,94,.22)}#pfp .wdd mark{background:none;color:var(--gold,#f0c75e);font-weight:700}
 @media(max-width:640px){#pfp .pfg{grid-template-columns:repeat(2,minmax(0,1fr))}#pfp .pfg .s2{grid-column:1/-1}}
 @media(max-height:430px){#pfp{padding:6px}#pfp .pfc.wide{padding:10px 14px 8px;gap:6px;max-height:calc(100dvh - 12px)}#pfp .pfc.wide h2{font-size:16px}#pfp .pfc.wide .pfs{display:none}#pfp .pfg{gap:5px 10px}#pfp .pfg label{font-size:11px;gap:2px}#pfp .pfg input{padding:6px 9px;font-size:14px}#pfp .pff .pfx{padding:6px 16px}}
+/* dialog Muat/Simpan akun: scroll aman + layout 2 kolom di HP landscape */
+#pfp #akf{overflow:auto;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#pfp #akf input{font-size:16px}
+@media(max-height:560px) and (orientation:landscape){
+#pfp{padding:max(6px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+#pfp #akf{width:min(640px,100%);display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;padding:10px 16px;max-height:calc(100vh - 12px);max-height:calc(100dvh - 12px)}
+#pfp #akf h2,#pfp #akf .pfs,#pfp #akf .pfmsg,#pfp #akf .pfb{grid-column:1/-1}
+#pfp #akf h2{font-size:16px}
+#pfp #akf .pfs{font-size:12px;line-height:1.3}
+#pfp #akf label{font-size:11.5px;gap:2px}
+#pfp #akf input{padding:6px 10px}
+#pfp #akf .pfmsg{min-height:1.1em;font-size:12px}
+#pfp #akf .pfx{padding:7px 18px}
+}
 #pfp .pfx.p{background:var(--gold,#f0c75e);border-color:var(--gold,#f0c75e);color:#1b1b1b;font-weight:700}#pfp .pfx:disabled{opacity:.6;cursor:wait}
 #scr .tp .tcl{margin:2px auto 0;background:rgba(10,18,50,.66);color:#fff;border:1px solid rgba(240,199,94,.75);border-radius:999px;padding:8px 16px;font:600 13px system-ui,sans-serif;cursor:pointer;text-shadow:0 1px 3px #000;box-shadow:none}#scr .tp .tcl:hover,#scr .tp .tcl:focus-visible{background:rgba(240,199,94,.28)}
 .chm .kakun{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:rgba(0,0,0,.18);font-size:12.5px}
@@ -2769,11 +2880,11 @@ function duit(){
  const L=led(),C=dayCost(),t=L.inc-L.exp,day=C.total||1,aman=day*14,d=L.d||{};
  const top=sg=>Object.entries(d).filter(([k,v])=>sg>0?v>0:v<0).sort((a,b)=>sg>0?b[1]-a[1]:a[1]-b[1]).slice(0,3).map(([k,v])=>`${k} ${rp(Math.abs(v))}`).join(', ')||'belum ada';
  const rows=C.items.map(x=>`<tr><td>${x.l}${x.note?` <small>(${x.note})</small>`:''}</td><td>${rp(x.n)}</td></tr>`).join('');
- modal('Uang',{html:`<p>Saldo kamu sekarang: <b>${rp(S.money)}</b></p><p>Uang adalah modal usahamu. Dipakai untuk menyewa lapak dan kandang, membeli telur dan aksesoris, membayar bekal dungeon, dan mendaftar lomba. Uang didapat dari kerja, menjual ramuan atau kerajinan, hasil dungeon, dan hadiah lomba.</p>
+ modal('Uang',{cls:'ug2',html:`<div class=ug><div class=uc><p>Saldo kamu sekarang: <b>${rp(S.money)}</b></p><p>Uang adalah modal usahamu. Dipakai untuk menyewa lapak dan kandang, membeli telur dan aksesoris, membayar bekal dungeon, dan mendaftar lomba. Uang didapat dari kerja, menjual ramuan atau kerajinan, hasil dungeon, dan hadiah lomba.</p>
 <p style="margin:10px 0 4px"><b>Biaya otomatis tiap hari</b> (dipotong saat hari berganti)</p><table>${rows}<tr><td><b>Total per hari</b></td><td><b>${rp(C.total)}</b></td></tr><tr><td>Uang cukup untuk</td><td>${Math.floor(S.money/day)} hari tanpa penghasilan</td></tr><tr><td>Dana cadangan aman (14 hari)</td><td class="${S.money>=aman?'good':'bad'}">${S.money>=aman?'✔ cukup':'✖ kurang'} <small>butuh ${rp(aman)}</small></td></tr></table>
-<p style="margin:10px 0 4px"><b>Musim ini</b></p><table><tr><td>Pemasukan musim ini</td><td class="good">${rp(L.inc)}</td></tr><tr><td>Pengeluaran musim ini</td><td class="bad">${rp(L.exp)}</td></tr><tr><td>Laba musim ini</td><td class="${t<0?'bad':'good'}">${rp(t)}</td></tr></table>
+</div><div class=uc><p style="margin:10px 0 4px"><b>Musim ini</b></p><table><tr><td>Pemasukan musim ini</td><td class="good">${rp(L.inc)}</td></tr><tr><td>Pengeluaran musim ini</td><td class="bad">${rp(L.exp)}</td></tr><tr><td>Laba musim ini</td><td class="${t<0?'bad':'good'}">${rp(t)}</td></tr></table>
 <p class="sub" style="margin:8px 0 0">Pemasukan terbesar: ${top(1)}.<br>Pengeluaran terbesar: ${top(-1)}.</p>
-<p class="sub">Saldo yang menipis membuat kamu tidak bisa makan (POWER turun) dan pet kelaparan. Biaya harian ikut naik saat rumah naik level, kandang diperluas, monster bertambah besar, dan penghuni bertambah. Untuk jadi Grand Master, saldo dan laba total harus positif, jadi hitung HPP dan BEP sebelum belanja.</p>`,btns:[['Tutup',close,'p']]})}
+<p class="sub">Saldo yang menipis membuat kamu tidak bisa makan (POWER turun) dan pet kelaparan. Biaya harian ikut naik saat rumah naik level, kandang diperluas, monster bertambah besar, dan penghuni bertambah. Untuk jadi Grand Master, saldo dan laba total harus positif, jadi hitung HPP dan BEP sebelum belanja.</p></div></div>`,btns:[['Tutup',close,'p']]})}
 const PSW_FULL=['Pet','Summoner','Winner'];/* kepanjangan PSW: ubah di sini kalau berbeda */
 function pswInfo(){
  const R=rep(),nm=['PSW minimal 2','Minimal 3 pet dengan 3 elemen berbeda','Saldo, laba, dan musim berlaba','Minimal 1 sertifikat spell','Rencana Usaha sudah disusun'],
