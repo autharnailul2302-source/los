@@ -599,6 +599,22 @@ main.app{display:block;padding:0;max-width:none;height:100%}
 @keyframes lgg{0%,100%{opacity:.25;scale:.9}50%{opacity:.85;scale:1.1}}
 @keyframes lgs{0%{background-position:100% 0}26%,100%{background-position:0% 0}}
 @media(prefers-reduced-motion:reduce){#scr.ti .tp .lg,#scr.ti .tp .lg::before,#scr.ti .tp .lg::after{animation:none}#scr.ti .tp .lg::before{opacity:.45}}
+
+/* ===== Navigasi: medali keluar area + penanda tepi gulir (tombol panah layar dihapus) ===== */
+.vgo.medal{display:flex;align-items:center;gap:6px;padding:4px 16px 4px 6px;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.vgo.medal.r{flex-direction:row-reverse;padding:4px 6px 4px 16px}
+.vgo.medal img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));animation:medp 2s ease-in-out infinite;pointer-events:none}
+.vgo.medal:active img{transform:scale(.9)}
+@keyframes medp{50%{filter:drop-shadow(0 0 10px rgba(255,214,102,.95));transform:scale(1.08)}}
+.edgec{display:flex;align-items:center;gap:6px;padding:3px 14px 3px 4px}.edgec.r{padding:3px 4px 3px 14px}
+.edgec img{width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 2px 5px rgba(0,0,0,.6));animation:medp 2s ease-in-out infinite}
+.edgec b{font:700 14px Cinzel,Georgia,serif;letter-spacing:.5px}
+.scr{position:absolute;top:44%;width:30px;height:54px;display:grid;place-items:center;z-index:6;opacity:0;transition:opacity .5s;pointer-events:none;color:#ffe9a0;font-style:normal;text-shadow:0 2px 8px rgba(0,0,0,.8)}
+#vil .scr{z-index:8}
+.scr.l{left:4px}.scr.r{right:4px}
+.scr.l::before{content:"‹";font:700 46px/1 Georgia,serif}.scr.r::before{content:"›";font:700 46px/1 Georgia,serif}
+.scr.on{opacity:.7;animation:scrl 1.4s ease-in-out infinite}.scr.r.on{animation-name:scrr}
+@keyframes scrl{50%{transform:translateX(-4px)}}@keyframes scrr{50%{transform:translateX(4px)}}
 </style>
 <style id="vilcss">/* Kota Singgah side-scrolling */
 #vil{position:fixed;inset:0;z-index:20;overflow:hidden;background:#79b6ea;color:#fff;user-select:none;-webkit-user-select:none;touch-action:none;animation:vfi .6s ease both}
@@ -638,7 +654,7 @@ main.app{display:block;padding:0;max-width:none;height:100%}
 @media(prefers-reduced-motion:reduce){#vil .vtk{animation:none}}
 @media(hover:none){#vil .vtk kbd{display:none}#vil .vtk{padding-left:10px}}
 .vpad{position:absolute;left:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:8;display:flex;gap:10px}.vpad button{width:64px;height:64px;font-size:26px;border-radius:50%;margin:0;padding:0}
-@media(hover:hover) and (pointer:fine){.vpad{display:none}}
+
 .vrain,.vnt{position:absolute;inset:0;z-index:7;pointer-events:none}.vrain{background:repeating-linear-gradient(105deg,transparent 0 14px,rgba(190,215,255,.28) 14px 15px),rgba(20,40,90,.26);animation:rn .5s linear infinite}.vnt{background:rgba(10,16,70,.4);mix-blend-mode:multiply}
 .vlf{position:absolute;top:-20px;width:10px;height:14px;border-radius:0 80% 0 80%;background:#8cc455;opacity:.8;z-index:7;pointer-events:none;animation:vlf 9s linear infinite}
 @keyframes vlf{to{transform:translate(90px,110vh) rotate(540deg);transform:translate(90px,110dvh) rotate(540deg)}}
@@ -866,7 +882,17 @@ main.app{display:block;padding:0;max-width:none;height:100%}
 .ent#e_p .tag{position:relative;display:block;width:max-content;margin:0 auto 7px;padding:2px 10px;border-radius:10px;color:#2a1d05;font-size:12px;letter-spacing:1px;text-shadow:none;background:linear-gradient(#ffe9a0,#e0ae3e);border:1px solid #fff3c4;box-shadow:0 2px 6px rgba(0,0,0,.45)}
 .ent#e_p .tag::after{content:'';position:absolute;left:50%;top:100%;margin-left:-5px;border:5px solid transparent;border-top-color:#e0ae3e}
 .ent#e_p .eb::before{content:'';position:absolute;left:-14%;right:-14%;bottom:-9px;height:26px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,226,140,.38) 0,rgba(255,200,90,.16) 45%,transparent 72%);z-index:-2;pointer-events:none;animation:pglow 2.4s ease-in-out infinite}
-</style></head>
+</style><style id="vhudcss">
+/* HUD seragam: kemah dan semua peta side-scroll (kota, bukit, sungai) memakai HUD atas yang sama */
+body.invil .top{z-index:25}
+#vil .vhud{display:none}
+#vil .vbk{top:calc(env(safe-area-inset-top,0px) + 16px + clamp(40px,9.5vh,66px));right:10px;width:auto;min-height:0;padding:5px 14px;border-radius:16px;font:600 13px Inter,system-ui,sans-serif;background:rgba(10,18,48,.78);border:1px solid rgba(240,199,94,.7);color:#fff;backdrop-filter:blur(4px)}
+#vil .vpad button{width:68px;height:68px;border-radius:0;background:none;border:0;box-shadow:none;font-size:0;touch-action:none}
+#vil .vpad img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+#vil .vpad button:active img{transform:scale(.9)}
+@media(max-height:430px) and (orientation:landscape){#vil .vpad button{width:52px;height:52px}}
+</style>
+</head>
 <body>
 <main class="app">
 <header class="top"><button class="pt" id="bpt" aria-label="Buka panel karakter" title="Karakter, monster, misi GMS, teman"></button><div class="bar" id="bar"></div><div class="sys"><button class="ic2" id="bs2" title="Tas"><img src="images/ui-ic-bag.png" alt="Tas"></button><button class="ic2" id="br" title="Jurnal"><img src="images/ui-ic-scroll.png" alt="Jurnal"></button><button class="ic2" id="bgm" title="Menu"><img src="images/ui-ic-gear.png" alt="Menu"></button><button id="bn" hidden></button><button id="bt" hidden></button><button id="bm" hidden>Musik: mati</button></div></header>
@@ -1445,7 +1471,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 const $=s=>document.querySelector(s),r=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),cl=(x,a,b)=>Math.max(a,Math.min(b,x));
 const rp=n=>(n<0?'-':'')+'Rp '+Math.abs(Math.round(n)).toLocaleString('id-ID');
 const ST=['INT','STR','POWER','MP','HP'],EL={air:['💧','Air'],udara:['🌬️','Udara'],tanah:['🌍','Tanah'],api:['🔥','Api']};
-const LAPAK=30000,KANDANG=10000,TELUR=30000,AKS=3000;
+const LAPAK=30000,KANDANG=25000,TELUR=30000,AKS=3000;
 let S=null;
 /* Fase E1: Peta Permintaan Desa */
 const GOODS=[['Keranjang anyaman',3000,5000],['Sabun herbal',2500,4500],['Lentera botol',3500,6000],['Kantong kain',2000,3500],['Roti jahe',2800,5000],['Sapu ijuk',2200,4000]];
@@ -1454,7 +1480,7 @@ const SPC={gelumo:['Gelumo','air',0],bara:['Bara','api',0],kapas:['Kapas','udara
 const HYBP={'air|api':'uapkara','air|tanah':'rawakala','air|udara':'kabutara','api|tanah':'magmora','api|udara':'kilatra','tanah|udara':'debura'},isHyb=p=>p.spc&&SPC[p.spc][1]==='hib';
 /* Kapasitas kandang: 5 slot dasar (pet + telur). Tiap perluasan Kandang +2 slot. Biaya harian ikut naik per monster. */
 const KUP=[60000,120000,200000],MON={f:'',o:'baru'},petCap=()=>5+2*Math.min(KUP.length,(S&&S.kup)|0);
-function kdUp(){const k=S.kup|0;if(!S.kandang)return alert('Sewa Kandang dulu di tab Usaha.');if(k>=KUP.length)return;if(!spend(KUP[k],'Perluas kandang'))return alert('Uang kurang.');S.kup=k+1;log(`Kandang diperluas: sekarang muat ${petCap()} monster.`,'good');save();render();charModal('monster')}
+function kdUp(){const k=S.kup|0;if(!S.kandang)return alert('Beli Kandang dulu di tab Usaha.');if(k>=KUP.length)return;if(!spend(KUP[k],'Perluas kandang'))return alert('Uang kurang.');S.kup=k+1;log(`Kandang diperluas: sekarang muat ${petCap()} monster.`,'good');save();render();charModal('monster')}
 const RAR=[['Biasa','⚪',1,'#e8dcc0'],['Langka','🔵',1.15,'#4aa8ff'],['Epik','🟣',1.3,'#a56bff'],['Legendaris','🟡',1.5,'#f0c75e']];
 const pRar=p=>p.spc?SPC[p.spc][2]:-1,pName=p=>p.spc?stN(p)+(p.sj?' Sejati':''):EL[p.el][1],pMul=p=>RAR[Math.max(0,pRar(p))][2];
 /* Fase G2: evolusi */
@@ -1963,8 +1989,8 @@ function refleksi(i,after){
 function endSeason(){potExpire();const L=led();const t=L.inc-L.exp;log(`${sname()} selesai. Laba bersih ${rp(t)}.`,t>=0?'good':'bad');
  const done=S.s>=5;S.s++;
  if(done){refleksi(S.s-1,()=>finish());return}
- S.led.push({inc:0,exp:0,d:{}});S.day=1;S.lapak=false;S.kandang=false;S.swot=false;S.rk=false;S.q=0;save();
- modal('Rapor musim',{html:ledgerHtml(S.s-1)+`<p>Musim baru: ${sname()}. Lapak dan kandang harus disewa lagi.</p>`,btns:[['Lanjut',()=>refleksi(S.s-1,close),'p']]})}
+ S.led.push({inc:0,exp:0,d:{}});S.day=1;S.lapak=false;S.swot=false;S.rk=false;S.q=0;save();
+ modal('Rapor musim',{html:ledgerHtml(S.s-1)+`<p>Musim baru: ${sname()}. Lapak harus disewa lagi. Kandangmu tetap milikmu.</p>`,btns:[['Lanjut',()=>refleksi(S.s-1,close),'p']]})}
 function finish(){const inc=S.led.reduce((a,l)=>a+l.inc,0),exp=S.led.reduce((a,l)=>a+l.exp,0);
  const el=new Set(S.pets.map(p=>p.el)).size,ok=[S.psw>=2,S.pets.length>=3&&el>=3,S.money>0&&inc>exp&&musLaba()>=MLB,S.cert>=1,!!S.ru];
  const gm=ok.every(Boolean),cend=(S.kik||0)>=12&&(S.sw||0)>=6;if(gm)GMF=1;
@@ -2008,11 +2034,11 @@ function brew(){const bep=p=>p>vc()?Math.ceil(LAPAK/(p-vc())):'tidak ada';
  S.lastP=p;const d=Math.max(0,Math.round(9-p/1000+r(-1,1)+(rain()?1:0)+(wxOf()==='deras'?1:0))),n=Math.min(q,d);earn(n*p,'Penjualan ramuan');
  log(`Ramuan: dibuat ${q}, terjual ${n}, untung kotor ${rp(n*p-q*vc())}.`,n*p>=q*vc()?'good':'bad');close();pass()},'p'],['Batal',close]]});
  const u=()=>{const p=+$('#pp').value;$('#pb').textContent=`BEP lapak: ${bep(p)} botol (biaya tetap ${rp(LAPAK)} dibagi untung per botol ${rp(p-vc())}).`};$('#pp').oninput=u;u()}
-function rent(k){const c=k==='l'?LAPAK:KANDANG;if(!spend(c,k==='l'?'Sewa lapak':'Sewa kandang'))return alert('Uang kurang.');S[k==='l'?'lapak':'kandang']=true;log(`Menyewa ${k==='l'?'lapak':'kandang'} ${rp(c)}.`);render()}
-function buy(w){const c=w==='e'?TELUR:AKS;if(!spend(c,w==='e'?'Beli telur':'Beli aksesoris'))return alert('Uang kurang.');if(w==='e')S.eggs.push({el:null,nm:'Telur biasa'});else S.acc++;render()}
+function rent(k){const c=k==='l'?LAPAK:KANDANG;if(!spend(c,k==='l'?'Sewa lapak':'Beli kandang'))return alert('Uang kurang.');S[k==='l'?'lapak':'kandang']=true;log(`${k==='l'?'Menyewa lapak':'Membeli kandang'} ${rp(c)}.`);render()}
+function buy(w){if(w==='e'&&!S.kandang)return alert('Beli kandang dulu di tab Usaha, lalu ketuk kandang untuk membeli telur.');const c=w==='e'?TELUR:AKS;if(!spend(c,w==='e'?'Beli telur':'Beli aksesoris'))return alert('Uang kurang.');if(w==='e')S.eggs.push({el:null,nm:'Telur biasa'});else S.acc++;render()}
 /* Fase C: suara elemen Children of Dragon dan ritual Altar */
-const ELF={air:['Naia','Minta pasokan 5 botol bahan ramuan.'],udara:['Auri','Minta kamu menjawab soal pemasaran (4P: produk, harga, tempat, promosi; atau 7P untuk usaha jasa) dengan tepat.'],tanah:['Terra','Minta kandang yang layak (kandang harus sudah disewa) dan perbaikan lahan Rp 8.000.'],api:['Pyra','Minta kamu menjawab dilema etika usaha, lalu membuat produk dari limbah (kewirausahaan hijau).']};
-const ELFQ={air:'Aku minta pasokan 5 botol bahan ramuan.',udara:'Aku ingin kamu menjawab soal pemasaran (4P: produk, harga, tempat, promosi; atau 7P untuk usaha jasa) dengan tepat.',tanah:'Aku minta kandang yang layak (kandang harus sudah disewa) dan perbaikan lahan Rp 8.000.',api:'Aku ingin kamu menjawab dilema etika usaha, lalu membuat produk dari limbah (kewirausahaan hijau).'};
+const ELF={air:['Naia','Minta pasokan 5 botol bahan ramuan.'],udara:['Auri','Minta kamu menjawab soal pemasaran (4P: produk, harga, tempat, promosi; atau 7P untuk usaha jasa) dengan tepat.'],tanah:['Terra','Minta kandang yang layak (kandang harus sudah dibeli) dan perbaikan lahan Rp 8.000.'],api:['Pyra','Minta kamu menjawab dilema etika usaha, lalu membuat produk dari limbah (kewirausahaan hijau).']};
+const ELFQ={air:'Aku minta pasokan 5 botol bahan ramuan.',udara:'Aku ingin kamu menjawab soal pemasaran (4P: produk, harga, tempat, promosi; atau 7P untuk usaha jasa) dengan tepat.',tanah:'Aku minta kandang yang layak (kandang harus sudah dibeli) dan perbaikan lahan Rp 8.000.',api:'Aku ingin kamu menjawab dilema etika usaha, lalu membuat produk dari limbah (kewirausahaan hijau).'};
 const elfOk=k=>S.ef&&S.ef[k]===S.s;
 const altarI=()=>VNPC.findIndex(n=>n.a==='altar'&&n.sp===12);
 function altarState(note){const n=note?note+' ':'';
@@ -2028,7 +2054,7 @@ function altarElem(){const eg=S.eggs[0],lock=eg&&eg.el?eg.el:null,ks=lock?[lock]
  const t=lock?`Telurmu berelemen ${EL[lock][1]}, jadi hanya suara ${EL[lock][1]} yang bisa membantu.`:'Pilih elemen berdasarkan hasil SWOT-mu. Tiap suara elemen punya permintaan. Penuhi salah satunya agar ia mau membantu musim ini.';
  vsay(altarI(),t,ks.map(k=>[`${EL[k][0]} ${ELF[k][0]} · ${EL[k][1]}${elfOk(k)?' ✔':''}`,()=>altarReq(k)]).concat([['Kembali',()=>altarMenu(),'p']]))}
 function altarReq(k){const sp=elfSp(k);if(elfOk(k))return vsay(sp,`Aku sudah siap membantu musim ini.`,[['Kembali',()=>altarElem(),'p']]);
- vsay(sp,`${ELFQ[k]} Biaya: ${{air:rp(5*vc()),tanah:'Rp 8.000 (kandang harus sudah disewa)',udara:'Rp 3.000 untuk biaya pemasaran',api:'sekitar Rp 3.000 sampai Rp 4.000 sesuai produk'}[k]}.`,[['Penuhi permintaan',()=>elfReq(k),'p'],['Kembali',()=>altarElem()]])}
+ vsay(sp,`${ELFQ[k]} Biaya: ${{air:rp(5*vc()),tanah:'Rp 8.000 (kandang harus sudah dibeli)',udara:'Rp 3.000 untuk biaya pemasaran',api:'sekitar Rp 3.000 sampai Rp 4.000 sesuai produk'}[k]}.`,[['Penuhi permintaan',()=>elfReq(k),'p'],['Kembali',()=>altarElem()]])}
  const elfNo=(m,k)=>gAlert(m,()=>{if(!$('#ov').classList.contains('on'))altarReq(k)});
 const elfGrant=k=>{jingle('quest');S.ef=S.ef||{};S.ef[k]=S.s;log(`Suara ${EL[k][1]} (${ELF[k][0]}) setuju membantu di Altar musim ini.`,'good');save()};
 const elfDone=k=>{elfGrant(k);close();altarMenu(`Suara ${EL[k][1]} (${ELF[k][0]}) setuju membantu musim ini.`)};
@@ -2094,7 +2120,7 @@ function pyraPick(){const I=[['Tas dari plastik bekas',3500],['Lampu dari botol'
 window.elfReq=k=>{
  const sp=elfSp(k),back=[['Kembali',()=>altarReq(k),'p']],ok=()=>altarMenu(`Suara ${EL[k][1]} (${ELF[k][0]}) setuju membantu musim ini.`);
  if(k==='air'){if(!spend(5*vc(),'Pasokan elf'))return vsay(sp,'Uangmu belum cukup. Pasokan 5 botol butuh '+rp(5*vc())+'.',back);elfGrant(k);return vsay(sp,'Terima kasih, pasokan ini sudah cukup. Aku mau membantu summon-mu musim ini.',[['Kembali ke altar',ok,'p']])}
- if(k==='tanah'){if(!S.kandang)return vsay(sp,'Kandangmu belum ada. Sewa kandang dulu di tab Usaha (di perkemahan), lalu temui aku lagi.',back);if(!spend(8000,'Perbaikan lahan elf'))return vsay(sp,'Uangmu belum cukup. Perbaikan lahan butuh Rp 8.000.',back);elfGrant(k);return vsay(sp,'Lahannya sudah membaik. Aku mau membantu summon-mu musim ini.',[['Kembali ke altar',ok,'p']])}
+ if(k==='tanah'){if(!S.kandang)return vsay(sp,'Kandangmu belum ada. Beli kandang dulu di tab Usaha (di perkemahan), lalu temui aku lagi.',back);if(!spend(8000,'Perbaikan lahan elf'))return vsay(sp,'Uangmu belum cukup. Perbaikan lahan butuh Rp 8.000.',back);elfGrant(k);return vsay(sp,'Lahannya sudah membaik. Aku mau membantu summon-mu musim ini.',[['Kembali ke altar',ok,'p']])}
  if(k==='udara')return auriQ(r(0,AURI.length-1));
  return pyraQ(r(0,2))};
 function hatch(el){const eg=S.eggs.shift(),b=eg.bonus||0,sk=rollSpc(eg,el),m=RAR[SPC[sk][2]][2],f=()=>Math.round((r(8,12)+b)*m);const p={el,spc:sk,iq:Math.round((2+r(0,4)+Math.floor(S.st.INT/4)+b)*m),hp:f(),pw:f(),sp:f(),df:f(),fat:0,age:0,max:r(120,170)};S.pets.push(p);if(RAR[SPC[sk][2]]&&SPC[sk][2]>=1)jingle('rare');log(`Telur menetas di Altar: ${SPC[sk][0]} (${RAR[SPC[sk][2]][0]}, ${EL[el][1]}), kecerdasan ${p.iq}.`,'good')}
@@ -2123,7 +2149,7 @@ function showQ(Q){const{t,q,a,st,free}=Q,tab=Q.t===2?'hpp':'bep';
 var MT={back:null,bl:'Kembali'};
 const MTAB=[['dasar','🧰 Istilah'],['hpp','🏷️ HPP & Harga'],['bep','⚖️ BEP'],['swot','🧭 SWOT'],['sdm','🧩 5M'],['p4','📣 4P'],['risiko','🛡️ Risiko'],['wira','🌟 Wirausaha'],['etika','⚖️ Etika & CSR'],['digital','🪞 Digital'],['rencana','📝 Rencana']];
 const MBODY={
- dasar:`<p>Berjualan itu seperti bermain: <b>uang keluar dulu, baru uang masuk</b>. Supaya tidak rugi, kamu perlu tahu tiga hal: berapa modal tiap barang (<b>HPP</b>), dijual berapa (<b>harga jual</b>), dan berapa barang yang harus laku (<b>BEP</b>). Kamu tidak perlu pernah belajar ekonomi. Mulai dari istilah dasarnya.</p><dl class="mtd"><dt>Biaya tetap</dt><dd>Uang yang <b>tetap keluar</b> walau tidak ada yang beli. Contoh: sewa lapak, sewa kandang.</dd><dt>Biaya variabel</dt><dd>Uang yang keluar <b>setiap kali membuat 1 barang</b>. Makin banyak dibuat, makin besar. Contoh: bahan ramuan, gelas plastik.</dd><dt>Untung dan rugi</dt><dd>Untung = uang masuk dikurangi uang keluar. Kalau hasilnya minus, namanya rugi.</dd></dl><div class="mtx"><b>Contoh di semua tab: jualan es teh</b><br>Sewa lapak Rp 20.000 sehari (biaya tetap).<br>Teh dan gula Rp 1.500 + gelas Rp 500 = Rp 2.000 per gelas (biaya variabel).</div><p class="sub">Di game ini, biaya variabel per barang disamakan dengan HPP supaya hitungannya mudah.</p>`,
+ dasar:`<p>Berjualan itu seperti bermain: <b>uang keluar dulu, baru uang masuk</b>. Supaya tidak rugi, kamu perlu tahu tiga hal: berapa modal tiap barang (<b>HPP</b>), dijual berapa (<b>harga jual</b>), dan berapa barang yang harus laku (<b>BEP</b>). Kamu tidak perlu pernah belajar ekonomi. Mulai dari istilah dasarnya.</p><dl class="mtd"><dt>Biaya tetap</dt><dd>Uang yang <b>tetap keluar</b> walau tidak ada yang beli. Contoh: sewa lapak, perawatan kandang.</dd><dt>Biaya variabel</dt><dd>Uang yang keluar <b>setiap kali membuat 1 barang</b>. Makin banyak dibuat, makin besar. Contoh: bahan ramuan, gelas plastik.</dd><dt>Untung dan rugi</dt><dd>Untung = uang masuk dikurangi uang keluar. Kalau hasilnya minus, namanya rugi.</dd></dl><div class="mtx"><b>Contoh di semua tab: jualan es teh</b><br>Sewa lapak Rp 20.000 sehari (biaya tetap).<br>Teh dan gula Rp 1.500 + gelas Rp 500 = Rp 2.000 per gelas (biaya variabel).</div><p class="sub">Di game ini, biaya variabel per barang disamakan dengan HPP supaya hitungannya mudah.</p>`,
  hpp:`<h4>HPP: modal untuk membuat 1 barang</h4><p><b>HPP</b> (Harga Pokok Produksi) adalah jumlah semua biaya untuk membuat <b>satu</b> barang. Kalau kamu menjual di bawah HPP, setiap barang yang laku malah membuatmu rugi.</p><div class="mtx">Es teh: teh dan gula Rp 1.500 + gelas Rp 500 → <b>HPP Rp 2.000</b></div><h4>Untung: tambahan dari HPP</h4><p><b>Untung</b> dihitung dalam persen dari <b>HPP</b>. Untung 50% dari HPP Rp 2.000 berarti untung Rp 1.000 per gelas. Di gim ini, persen untung selalu dihitung dari HPP.</p><h4>Harga jual</h4><div class="mtf">Harga jual = HPP × (1 + untung)</div><p>Ubah persen jadi desimal dulu: 20% = 0,2 · 50% = 0,5 · 100% = 1.</p><div class="mtx">Es teh: Rp 2.000 × (1 + 0,5) = Rp 2.000 × 1,5 = <b>Rp 3.000</b></div>`,
  bep:`<p><b>BEP</b> (Break Even Point) atau <b>titik impas</b> adalah jumlah barang yang harus laku supaya usahamu <b>tidak rugi dan belum untung</b>. Barang yang laku setelah titik ini baru jadi untung.</p><div class="mtf">BEP (unit) = Biaya tetap ÷ (Harga jual − Biaya variabel per unit)</div><p>Bagian dalam kurung adalah <b>untung per barang</b>. Untung itu dipakai dulu untuk menutup biaya tetap.</p><div class="mtf">BEP (rupiah) = BEP (unit) × Harga jual</div><div class="mtx">Es teh: biaya tetap Rp 20.000, harga jual Rp 3.000, biaya variabel Rp 2.000.<br>BEP unit = 20.000 ÷ (3.000 − 2.000) = 20.000 ÷ 1.000 = <b>20 gelas</b><br>BEP rupiah = 20 × 3.000 = <b>Rp 60.000</b></div><p class="sub">Periksa: uang masuk Rp 60.000. Uang keluar Rp 20.000 + (20 × Rp 2.000) = Rp 60.000. Impas.</p>`,
  swot:`<p><b>SWOT</b> adalah cara mengenali dirimu dan keadaan sekitar sebelum mengambil keputusan. Ada empat kotak:</p><dl class="mtd"><dt>S · Strength (kekuatan)</dt><dd>Hal bagus dari <b>dalam dirimu</b>. Contoh: jago membuat ramuan.</dd><dt>W · Weakness (kelemahan)</dt><dd>Hal kurang dari <b>dalam dirimu</b>. Contoh: belum punya modal besar.</dd><dt>O · Opportunity (peluang)</dt><dd>Hal menguntungkan dari <b>luar</b>. Contoh: ada lomba berhadiah.</dd><dt>T · Threat (ancaman)</dt><dd>Hal merugikan dari <b>luar</b>. Contoh: musim hujan membuat bahan naik harga.</dd></dl><div class="mtx"><b>Cara cepat menjawab:</b> tanyakan dua hal.<br>1. Datang dari diriku atau dari luar? Dari diri sendiri = S atau W. Dari luar = O atau T.<br>2. Menguntungkan atau merugikan? Untung = S atau O. Rugi = W atau T.</div><p class="sub">Di kartu SWOT gim ini: stat karakter yang tinggi = S, yang rendah = W. Lomba berhadiah = O. Musim hujan, atau uang menipis sementara biaya hidup jalan terus = T.</p>`,
@@ -2233,8 +2259,8 @@ const SDQ=[
   o:[['Material: atur jumlah dan waktu membeli bahan sesuai penjualan',1],['Man: tambah teman yang menjaga lapak sampai malam setiap hari',0],['Machine: ganti lapak dengan yang lebih besar dan lebih mahal sewanya',0]],
   w:'Yang basi adalah bahannya. Perbaikannya ada pada cara mengatur bahan, bukan pada tenaga atau tempat.',
   e:'Tepat. Masalahnya ada pada bahan (Material): beli secukupnya sesuai perkiraan penjualan agar tidak terbuang.'},
- {h:'untung rugi',q:'Misalkan saldomu Rp 20.000 dan kamu ingin berjualan ramuan. Sewa kandang Rp 15.000, stok bahan nol, dan kamu tetap harus makan Rp 2.500 tiap hari. Mana yang lebih aman dilakukan lebih dulu?',
-  o:[['Membeli bahan secukupnya dulu supaya ada dagangan dan uang kembali masuk',1],['Menyewa kandang dulu agar tempatnya siap, bahan dibeli setelah uang terkumpul',0],['Menyimpan seluruh uang dan menunggu harga bahan turun sebelum membeli apa pun',0]],
+ {h:'untung rugi',q:'Misalkan saldomu Rp 20.000 dan kamu ingin berjualan ramuan. Sewa lapak Rp 15.000, stok bahan nol, dan kamu tetap harus makan Rp 2.500 tiap hari. Mana yang lebih aman dilakukan lebih dulu?',
+  o:[['Membeli bahan secukupnya dulu supaya ada dagangan dan uang kembali masuk',1],['Menyewa lapak dulu agar tempatnya siap, bahan dibeli setelah uang terkumpul',0],['Menyimpan seluruh uang dan menunggu harga bahan turun sebelum membeli apa pun',0]],
   w:'Uang yang habis untuk alat sebelum ada bahan membuat usaha tidak bisa berjalan, padahal biaya harian terus berjalan.',
   e:'Tepat. Dahulukan sumber daya yang langsung menghasilkan uang (bahan untuk dijual). Alat tambahan menyusul setelah uangnya ada.'},
  {h:'untung rugi',q:'Kamu bisa memilih satu. Pertama, membayar tenaga bantu Rp 5.000 per hari yang menambah penjualan 10 botol per hari. Kedua, membeli meja racik Rp 15.000 yang mempercepat kerja tetapi penjualan tidak bertambah. Untung per botol Rp 1.500. Mana yang lebih menguntungkan?',
@@ -2353,11 +2379,14 @@ const CATS=[['latih','🐾','Pet'],['usaha','🏪','Usaha'],['kik','📚','Belaj
 const mood=p=>p.fat<35?'Semangat! 💪':p.fat<70?'Lumayan... 🙂':'Lelah sekali 😵';
 function pat(){const p=sel();if(!p)return;const L=p.fat>70?['...zzz','Ingin istirahat','Lelah...']:['Kyuu!','Ayo latihan!','Aku siap!','Aku lapar~'];$('#say').textContent=L[r(0,L.length-1)]}
 const bar=(l,pc,t,c)=>`<div class=st><span>${l}</span><i><b style="width:${cl(pc,3,100)}%;background:${c}"></b></i><em>${t}</em></div>`;
-function render(){if(!S){return}applyItems();
- const mg=S.gender==='cewek'?'mcewek':'mcowok',p=sel(),idx=S.pets[S.sel]?S.sel:0,H=Math.round(cl(innerHeight*.3,120,280)),daily=dayCost().total;
+function fillHud(){if(!S)return;
  const PL={"uang": {"ar": 2.802, "l": "left:41.64%;top:22.78%;font-size:6.23cqw", "v": "left:41.64%;top:45.87%;font-size:7.93cqw"}, "hari": {"ar": 2.605, "l": "left:37.50%;top:13.72%;font-size:6.55cqw", "v": "left:37.50%;top:33.18%;font-size:8.33cqw;text-transform:uppercase", "b": "left:36.61%;top:63.57%;width:52.08%;height:13.95%"}, "musim": {"ar": 3.288, "l": "left:33.18%;top:18.71%;font-size:5.07cqw", "v": "left:33.18%;top:40.5%;font-size:4.7cqw;text-transform:uppercase"}, "psw": {"ar": 2.549, "l": "left:36.92%;top:16.80%;font-size:5.64cqw", "v": "left:36.92%;top:34.51%;font-size:7.18cqw"}};
  $('#bar').innerHTML=[['uang','Uang',rp(S.money)],['hari','Hari',`${S.day} dari 30`],['musim','Musim',sname()],['psw','PSW',S.psw]].map(([k,l,v])=>`<div class="hp clk" data-k=${k} tabindex=0 role=button title="Lihat penjelasan" aria-label="Lihat penjelasan ${l}" style="--ar:${PL[k].ar}"><img src="images/ui-hud-${k}.png" alt=""><span class=hl style="${PL[k].l}">${l}</span><b class=hv style="${PL[k].v}">${v}</b>${k==='hari'?`<i class=hb style="${PL.hari.b}"><u style="width:${S.day/30*100}%"></u></i>`:''}</div>`).join('');
  $('#bpt').innerHTML=`<i class="pav" role="img" aria-label="${S.name}" style="background-image:url(images/vn-${S.gender==='cewek'?'girl':'boy'}.webp)"></i><span><b>${S.name}</b><small>Calon GMS · ${rep().ok.filter(Boolean).length}/5</small></span>`;
+}
+function render(){if(!S){return}applyItems();
+ const mg=S.gender==='cewek'?'mcewek':'mcowok',p=sel(),idx=S.pets[S.sel]?S.sel:0,H=Math.round(cl(innerHeight*.3,120,280)),daily=dayCost().total;
+ fillHud();
  const nx=EVS.filter(e=>(e.t===2||e.t===(rain()?1:0))&&e.d[1]>=S.day&&!S.done[S.s+e.id]).sort((a,b)=>a.d[0]-b.d[0])[0];
  const st=$('#stage');st.dataset.rain=rain()?1:0;
  const sw=st.clientWidth||900,sh=st.clientHeight||500,sc=Math.max(sw/MAPW,sh/MAPH),Ww=MAPW*sc,Hh=MAPH*sc;G={W:Ww,H:Hh,sw,sh};
@@ -2366,7 +2395,7 @@ function render(){if(!S){return}applyItems();
  const eggs=S.eggs.map((e,k)=>(kdLv()&&!(S.rit&&k===0))?'':ent('e_g'+k,.72,.31+.022*k,`<img class="egi${S.rit&&k===0?' on':''}" src="images/telur-${eggKind(e)}-${S.rit&&k===0?'buka':'tidur'}.png" alt="Telur" style="height:${Math.round(Hh*.09)}px">`)).join('');
  const pts=S.pets.map((q,k)=>{const w=WD.pets[k];w._t=null;return ent('e_'+k,w.y,w.u,`<div class=say></div><span class=tag data-pet=${k}>${EL[q.el][0]}</span>${art(q)?`<img class=pim data-pet=${k} data-r=0 src="${art(q)}" alt="${pName(q)}" style="height:${Math.round(Hh*.17*STSC[q.st||0])}px;${glow(q)}">`:`<div class=spr data-pet=${k} data-g="${mg}" data-h="${Math.round(Hh*.17)}" data-r=0 role=img aria-label="Pet ${EL[q.el][1]}"></div>`}`)}).join('');
  const pl=ent('e_p',WD.y,WD.pu,`<div class=say></div><span class=tag>${S.name}</span><div class=spr data-g="${S.gender||'cowok'}" data-h="${Math.round(Hh*.208)}" data-r=0 role=img aria-label=Karakter></div>`);
- st.innerHTML=`<div class=world id=world style="width:${Ww}px;height:${Hh}px;top:${sh-Hh}px;transform:translateX(${-WD.cam}px)"><div class="wl px" data-k=".3"><div class="wl bgp" data-bg="${mapBgUrl()}" style="background-image:url(${mapBgUrl()})"></div></div><div class="wl px" data-k=".12"><div class="wl cl">${kbClouds(1)}</div></div><div class="wl px" data-k=".2"><div class="wl cl cl2">${kbClouds(2)}</div></div><div class=wl style="background-image:url(images/peta-kemah.png)"></div>${kdHouse(Ww,Hh)}${kbHouse(Ww,Hh)}${eggs}${pts}${pl}${window.klCamp?klCamp(ent,Ww,Hh):''}</div><div class=ban>${nx?(nx.d[0]<=S.day?'🏆 Sekarang: ':'🗓️ Hari '+nx.d[0]+': ')+nx.n:'🌾 Tidak ada lomba tersisa'}</div><div class=pad><button data-k=l aria-label=Kiri><img src=images/ui-arrow-l.png alt=""></button><button data-k=r aria-label=Kanan><img src=images/ui-arrow-r.png alt=""></button></div><button class="p tk" id=talk hidden></button><div class=hint2>← → / A D jalan · E bicara · ketuk peta untuk melangkah · ketuk kandang atau rumah untuk membuka menunya</div>`;
+ st.innerHTML=`<div class=world id=world style="width:${Ww}px;height:${Hh}px;top:${sh-Hh}px;transform:translateX(${-WD.cam}px)"><div class="wl px" data-k=".3"><div class="wl bgp" data-bg="${mapBgUrl()}" style="background-image:url(${mapBgUrl()})"></div></div><div class="wl px" data-k=".12"><div class="wl cl">${kbClouds(1)}</div></div><div class="wl px" data-k=".2"><div class="wl cl cl2">${kbClouds(2)}</div></div><div class=wl style="background-image:url(images/peta-kemah.png)"></div>${kdHouse(Ww,Hh)}${kbHouse(Ww,Hh)}${eggs}${pts}${pl}${window.klCamp?klCamp(ent,Ww,Hh):''}</div><div class=ban>${nx?(nx.d[0]<=S.day?'🏆 Sekarang: ':'🗓️ Hari '+nx.d[0]+': ')+nx.n:'🌾 Tidak ada lomba tersisa'}</div><i class="scr l" id=scl></i><i class="scr r" id=scr2></i><button class="p tk" id=talk hidden></button><div class=hint2>← → / A D jalan · E bicara · ketuk peta untuk melangkah · ketuk kandang atau rumah untuk membuka menunya</div>`;
  st.querySelectorAll('.pad button').forEach(b=>{const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();WD.keys[k]=1};['pointerup','pointerleave','pointercancel'].forEach(v=>b['on'+v]=()=>{WD.keys[k]=0})});
  $('#talk').onclick=()=>{if(WD.near!=null)talk(WD.near)};
  const pk=id=>{const e=$('#'+id);return{e,spr:e.querySelector('.spr,.pim'),say:e.querySelector('.say')}};
@@ -2379,8 +2408,8 @@ function render(){if(!S){return}applyItems();
  const co=$('#co');co.innerHTML='';if(S.over)return save();
  const o=(ic,l,c,f,cls,d)=>{const b=document.createElement('button');b.className='o '+(cls||'');b.disabled=!!d;b.innerHTML=`<span class=ic>${ic}</span><span><b>${l}</b>${c?`<small>${c}</small>`:''}</span>`;b.onclick=f;co.append(b)};
  const full=S.eggs.length+S.pets.length>=petCap(),wk=3000+S.st.STR*400;
- if(CAT==='latih'){o('🐾','Rawat & latih pet','Latih, makan mewah, fusi',care,'p',!S.pets.length);o('🥊','Latih tanding','Duel bergiliran, Rp 2.000, memakai 1 hari',sparMenu,'g',!S.pets.length);o('😴','Istirahat pet','Lelah -45%, memakai 1 hari',()=>rest(idx),'g',!S.pets.length);o('⚔️','Latihan diri','Rp 2.000, peluang +1 stat',train);o('🛏️','Tidur sampai besok','Hari berganti, lelah pet -15%, jam kembali pagi',tidur)}
- else if(CAT==='usaha'){o('<img src=images/ui-act-ramuan.png alt="">','Meja racik ramuan',`Stok ${S.ramuan|0} botol · ${known().length}/${Object.keys(RSP).length} resep dikenal · basi 2 sampai 5 hari`,makePotion);o('<img src=images/ui-act-kandang.png alt="">','Sewa kandang',S.kandang?'Sudah disewa':rp(KANDANG),()=>rent('k'),'g',S.kandang);o('<img src=images/ui-act-telur.png alt="">','Beli telur',full?'Slot penuh':rp(TELUR)+' · peluang Biasa 65%, Langka 28%, Epik 7%',()=>buy('e'),'g',full);o('<img src=images/ui-act-aksesoris.png alt="">','Beli aksesoris',rp(AKS),()=>buy('a'),'g');o('🏠',kbBtn()[0],kbBtn()[1],kbUp,'g',kbBtn()[2])}
+ if(CAT==='latih'){o('🐾','Rawat & latih pet','Latih, makan mewah, fusi',care,'p',!S.pets.length);o('🥊','Latih tanding','Duel bergiliran, Rp 2.000, memakai 1 hari',sparMenu,'g',!S.pets.length);o('😴','Istirahat pet','Lelah -45%, memakai 1 hari',()=>rest(idx),'g',!S.pets.length);o('⚔️','Latihan diri','Rp 2.000, peluang +1 stat',train)}
+ else if(CAT==='usaha'){o('<img src=images/ui-act-ramuan.png alt="">','Meja racik ramuan',`Stok ${S.ramuan|0} botol · ${known().length}/${Object.keys(RSP).length} resep dikenal · basi 2 sampai 5 hari`,makePotion);o('<img src=images/ui-act-kandang.png alt="">',S.kandang?'Kandang':'Beli kandang',S.kandang?`Slot ${S.eggs.length+S.pets.length}/${petCap()} · ${S.eggs.length} telur · beli telur dan perluas di menu kandang`:rp(KANDANG)+' · setelah itu beli telur lewat kandang',S.kandang?kdMenu:()=>rent('k'),'g');o('<img src=images/ui-act-aksesoris.png alt="">','Beli aksesoris',rp(AKS),()=>buy('a'),'g');o('🏠',kbBtn()[0],kbBtn()[1],kbUp,'g',kbBtn()[2])}
  else if(CAT==='kik'){o('📖','Catatan Rumus','HPP, BEP, SWOT dalam bahasa mudah',()=>materi());o('<img src=images/ui-act-bep.png alt="">','Soal BEP dan HPP',`Jatah hadiah ${2-S.q}/2 musim ini`,quiz);o('<img src=images/ui-act-swot.png alt="">','Kartu SWOT',S.swot?'Selesai musim ini':'+1 INT, syarat summon',swot,'',S.swot);o('🛡️','Kartu Risiko',S.rk?'Selesai musim ini':'+Rp 3.000, kenali risiko usaha',risk,'',S.rk);o('📝','Rencana Usaha',S.ru?'Sudah dibuat, bisa diubah':'+Rp 3.000, susun rencana usahamu',rencana);o('🧩','Latihan 5M',sdmDone().length+'/'+SDQ.length+' soal pernah benar, +Rp 2.000 per soal baru',sdm5)}
  else if(CAT==='lomba'){if(ev.length)ev.forEach(e=>o('🏆',e.n,e.reg?'Daftar '+rp(e.reg):'Info pasar',()=>event(e),'p'));else{const nl=EVS.filter(e=>(e.t===2||e.t===(rain()?1:0))&&e.d[0]>S.day&&!S.done[S.s+e.id]).sort((a,b)=>a.d[0]-b.d[0])[0];o('🏆','Belum ada lomba hari ini',nl?'Berikutnya hari '+nl.d[0]+': '+nl.n:'Tidak ada lomba lagi musim ini',()=>{},'g',true)}}
  else{const c=(t,v,g)=>v?`<span class="y">✔ ${t}</span>`:`<button class="n" data-g="${g}">✖ ${t}</button>`;
@@ -2419,7 +2448,7 @@ addEventListener('blur',()=>{WD.keys.l=WD.keys.r=0});
 addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>S&&render(),150)});
 $('#stage').addEventListener('pointerdown',e=>{if(!S||S.over||e.target.closest('button,.ban,.slots'))return;const pe=e.target.closest('[data-pet]'),rc=$('#stage').getBoundingClientRect();
  if(pe){const i=+pe.dataset.pet,q=WD.pets[i];if(!q)return;const sd=WD.pu<q.u?-1:1;if(Math.abs(q.u-WD.pu)*G.W<.3*G.H){WD.dir=-sd;talk(i);return}WD.goal={u:cl(q.u+sd*.16*G.H/G.W,.03,.97),talk:i}}
- else{if(!e.target.closest('.ent')&&bldTap(e))return;WD.goal={u:cl((e.clientX-rc.left+WD.cam)/G.W,.03,.97)}}});
+ else{const en=e.target.closest('.ent');if((!en||en.id==='e_kd'||en.id==='e_kb')&&bldTap(e))return;WD.goal={u:cl((e.clientX-rc.left+WD.cam)/G.W,.03,.97)}}});
 
 /* ===== Panel Karakter (potret kiri atas) ===== */
 const CTABS=[['karakter','🛡️ Karakter'],['monster','🐲 Monster'],['teman','🤝 Teman'],['misi','🏆 Misi GMS']];
@@ -2434,7 +2463,7 @@ function charTab(t,arg){
   const ch=[];if(S.hung)ch.push(['bad',`🍽️ Lapar: POWER -${S.hung}`]);if(S.ph)ch.push(['good',`🔥 Power Panas +${S.ph} (siang cerah)`]);if(S.pd)ch.push(['good',`❄️ Power Dingin +${S.pd} (saat hujan)`]);
   const chips=ch.length?`<div class=kfx>${ch.map(c=>`<span class="${c[0]}">${c[1]}</span>`).join('')}</div>`:'';
   const slots=B.concat(own.filter(x=>IT[x]&&!B.includes(x))).map(n=>{const h=own.includes(n),e=IT[n];return `<li class="kslot${h?' on':''}" style="--c:${(e&&cols[e[0]])||'#f0c75e'}" title="${n}${e?': '+e[0]+' +'+e[1]:''}"><i>${IEMO[n]||'🎒'}</i><b>${n}</b><small>${h?(e?e[0]+' +'+e[1]:'Item langka'):'Belum didapat'}</small></li>`}).join('');
-  const biz=[['🏪','Lapak',S.lapak],['🐣','Kandang',S.kandang]].map(a=>`<div class="kas${a[2]?' on':''}"><i>${a[0]}</i><b>${a[1]}</b><small>${a[2]?'Disewa':'Belum disewa'}</small></div>`).join('');
+  const biz=[['🏪','Lapak',S.lapak,'Disewa','Belum disewa'],['🐣','Kandang',S.kandang,'Dimiliki','Belum dibeli']].map(a=>`<div class="kas${a[2]?' on':''}"><i>${a[0]}</i><b>${a[1]}</b><small>${a[2]?a[3]:a[4]}</small></div>`).join('');
   return `<div class="chs v2"><div class=kleft><div class=kport><div class=pic><img src="images/vn_${S.gender==='cewek'?'cewek':'cowok'}_idle.png" onerror="this.onerror=null;this.src='images/vn-${S.gender==='cewek'?'girl':'boy'}.webp'" alt="${gEsc(S.name)}"></div><div class=knp2><h3>${gEsc(S.name)}</h3><span>${S.over?'Selesai 3 tahun':sname()+' · Hari '+S.day}</span></div></div><div class=kbiz style="margin-top:10px" aria-label="Aset usaha">${biz}</div>${akunBox()}</div><div class=kcol><h4 class=ksec>Atribut <small>garis = 5 poin · +N = bonus perlengkapan</small></h4><div class=kstats>${stats}</div>${chips}<h4 class=ksec>Perlengkapan <small>${own.filter(x=>B.includes(x)).length}/${B.length}</small></h4><ul class=keq>${slots}</ul></div></div>`}
  if(t==='monster'){
   const cap=petCap(),n=S.pets.length,eg=S.eggs||[],i=S.pets[arg]?arg:(S.pets[S.sel]?S.sel:0),p=S.pets[i],dl=dayCost().total;
@@ -2452,7 +2481,7 @@ function charTab(t,arg){
   const left=`<div class=mk-l><div class=mk-top><span class=mk-cap><b>Monster ${n}</b> · telur ${eg.length} · kapasitas ${cap}</span><span class=mk-pips aria-hidden=true>${pips}</span></div>${chips||sort?`<div class=mk-tools>${chips}${sort}</div>`:''}<div class=mk-grid>${idx.map(card).join('')}${eg.map(egg).join('')}${empty}</div>${up}<p class=sub style="margin:8px 0 0;font-size:12px">Tiap monster menambah biaya pakan harian: Rp 1.000 saat Anak, naik sampai Rp 2.500 saat Legend. Makin banyak dan makin besar monster, makin besar biaya hariannya.</p></div>`;
   const hero=p?`<div class=mkh style="--g:${ELC[p.el]}">${art(p)?`<img src="${art(p)}" alt="" style="${glow(p)}">`:`<span>${EL[p.el][0]}</span>`}</div>`:'';
   const det=p?`${hero}<h3 style="margin:0 0 6px;font:700 17px Cinzel,Georgia,serif;color:var(--gold)">${EL[p.el][0]} ${gEsc(pName(p))}${p.spc?` <small style="color:${RAR[pRar(p)][3]}">${RAR[pRar(p)][1]} ${RAR[pRar(p)][0]}</small>`:''}</h3><p style="margin:0 0 6px">${mood(p)}</p>${evH(p)}`+bar('Life',p.hp/50*100,p.hp,'#ff7b8a')+bar('Power',p.pw/50*100,p.pw,'#ffb454')+bar('Speed',p.sp/50*100,p.sp,'#5fd7ff')+bar('Defense',p.df/50*100,p.df,'#9aa8ff')+bar('INT',p.iq/50*100,p.iq,'#6ee7a0')+bar('Lelah',p.fat,p.fat+'%',p.fat<40?'#6ee7a0':p.fat<70?'#f0c75e':'#ff8a80')+bar('Umur',p.age/p.max*100,`${p.age}/${p.max}`,'#c9a6ff')+(p.age/p.max>.85?'<p class="sub bad" style="margin:4px 0 0">Hampir pensiun, akan meninggalkan telur warisan.</p>':'')+`<p class=sub style="margin:6px 0 0">Biaya harian ${rp(dl)}. Uang cukup ±${Math.floor(S.money/dl)} hari.</p>`
-   :`<div class=mk-empty><div class=mk-egg>${eggImg(eg[0],'mkegi','🥚')}</div><h3 style="margin:6px 0;font:700 17px Cinzel,Georgia,serif;color:var(--gold)">Belum ada monster</h3><p class=sub style="margin:0 0 8px">Ikuti langkah ini:</p><ol class=mk-steps><li class="${eg.length?'ok':''}">Beli telur di tab Usaha</li><li class="${S.kandang?'ok':''}">Sewa Kandang</li><li>Summon di Altar Kristal</li></ol><p class=sub style="margin:10px 0 0">Biaya harian sekarang ${rp(dl)}.</p></div>`;
+   :`<div class=mk-empty><div class=mk-egg>${eggImg(eg[0],'mkegi','🥚')}</div><h3 style="margin:6px 0;font:700 17px Cinzel,Georgia,serif;color:var(--gold)">Belum ada monster</h3><p class=sub style="margin:0 0 8px">Ikuti langkah ini:</p><ol class=mk-steps><li class="${S.kandang?'ok':''}">Beli Kandang di tab Usaha</li><li class="${eg.length?'ok':''}">Beli telur di kandang</li><li>Summon di Altar Kristal</li></ol><p class=sub style="margin:10px 0 0">Biaya harian sekarang ${rp(dl)}.</p></div>`;
   return `<div class=mk>${left}<div class=mk-d>${det}</div></div>`}
  if(t==='misi'){
   const R=rep(),why=[
@@ -2880,7 +2909,7 @@ function duit(){
  const L=led(),C=dayCost(),t=L.inc-L.exp,day=C.total||1,aman=day*14,d=L.d||{};
  const top=sg=>Object.entries(d).filter(([k,v])=>sg>0?v>0:v<0).sort((a,b)=>sg>0?b[1]-a[1]:a[1]-b[1]).slice(0,3).map(([k,v])=>`${k} ${rp(Math.abs(v))}`).join(', ')||'belum ada';
  const rows=C.items.map(x=>`<tr><td>${x.l}${x.note?` <small>(${x.note})</small>`:''}</td><td>${rp(x.n)}</td></tr>`).join('');
- modal('Uang',{cls:'ug2',html:`<div class=ug><div class=uc><p>Saldo kamu sekarang: <b>${rp(S.money)}</b></p><p>Uang adalah modal usahamu. Dipakai untuk menyewa lapak dan kandang, membeli telur dan aksesoris, membayar bekal dungeon, dan mendaftar lomba. Uang didapat dari kerja, menjual ramuan atau kerajinan, hasil dungeon, dan hadiah lomba.</p>
+ modal('Uang',{cls:'ug2',html:`<div class=ug><div class=uc><p>Saldo kamu sekarang: <b>${rp(S.money)}</b></p><p>Uang adalah modal usahamu. Dipakai untuk menyewa lapak, membeli kandang, telur, dan aksesoris, membayar bekal dungeon, dan mendaftar lomba. Uang didapat dari kerja, menjual ramuan atau kerajinan, hasil dungeon, dan hadiah lomba.</p>
 <p style="margin:10px 0 4px"><b>Biaya otomatis tiap hari</b> (dipotong saat hari berganti)</p><table>${rows}<tr><td><b>Total per hari</b></td><td><b>${rp(C.total)}</b></td></tr><tr><td>Uang cukup untuk</td><td>${Math.floor(S.money/day)} hari tanpa penghasilan</td></tr><tr><td>Dana cadangan aman (14 hari)</td><td class="${S.money>=aman?'good':'bad'}">${S.money>=aman?'✔ cukup':'✖ kurang'} <small>butuh ${rp(aman)}</small></td></tr></table>
 </div><div class=uc><p style="margin:10px 0 4px"><b>Musim ini</b></p><table><tr><td>Pemasukan musim ini</td><td class="good">${rp(L.inc)}</td></tr><tr><td>Pengeluaran musim ini</td><td class="bad">${rp(L.exp)}</td></tr><tr><td>Laba musim ini</td><td class="${t<0?'bad':'good'}">${rp(t)}</td></tr></table>
 <p class="sub" style="margin:8px 0 0">Pemasukan terbesar: ${top(1)}.<br>Pengeluaran terbesar: ${top(-1)}.</p>
@@ -3391,7 +3420,7 @@ function wxOf(){let x=Math.sin((S.s+1)*91.7+S.day*12.9898)*43758.5453;x-=Math.fl
 function wxMount(){const st=document.getElementById('stage');if(!st||!S)return;
  const k=wxOf();if(WX.k!==k){WX.k=k;WX.p=[]}
  const c=document.createElement('canvas');c.id='wx';st.append(c);
- const b=document.createElement('span');b.className='wxc';b.textContent=chipTxt();b.title=wxTip();st.append(b);st.insertAdjacentHTML('beforeend','<span class="edgec l">◀ Kota</span><span class="edgec r">Hutan ▶</span>')}
+ const b=document.createElement('span');b.className='wxc';b.textContent=chipTxt();b.title=wxTip();st.append(b);(st.querySelector('#world')||st).insertAdjacentHTML('beforeend','<span class="edgec l"><b>Kota</b></span><span class="edgec r"><b>Hutan</b></span>')}
 (function(){const _r=render;render=function(){_r.apply(this,arguments);wxMount();mapBg()}})();
 function wxNew(t,w,h,init){const R=Math.random,y=init?R()*h:-10-R()*40;
  if(t==='rain')return{t,x:R()*w*1.15,y:init?R()*h:-R()*h*.3,vy:520+R()*240,gy:h*(.62+R()*.34),s:0};
@@ -3457,14 +3486,21 @@ setInterval(kdFrame,140);
 /* ===== Kandang dan rumah bisa diklik: buka menu bangunan ===== */
 function bmPrev(f,n,r){return `<div class="bmp" style="aspect-ratio:${r};background:url(images/${f}) 0 0/${n*100}% 100% no-repeat" role="img" aria-label="Pratinjau bangunan"></div>`}
 function bmBusy(){return !S||S.over||$('#ov').classList.contains('on')}
+const KDE={'Telur biasa':['Dibeli di kandang','Biasa'],'Telur fusi':['Hasil fusi dua telur','Bonus stat +4'],'Secret Egg':['Hadiah lomba','Langka'],'Telur Dragon Keeper':['Hadiah Kompetisi Dragon Keeper','Hadiah lomba'],'Telur Kristal':['Jarahan dungeon','Minimal Epik, bonus stat +2'],'Telur warisan':['Diwariskan pet yang pensiun','Mewarisi elemen pet'],'Baby Dragon':['Hadiah lomba','Langka'],'Telur Lady of Water':['Hadiah lomba','Langka']};
+function kdSlots(cap){let h='';S.eggs.forEach((e,i)=>{h+=`<button type="button" class="kdsl egg" onclick="kdEgg(${i})" aria-label="Lihat detail ${e.nm}">${eggImg(e,'kdsi','🥚')}<small>Telur</small></button>`});
+ S.pets.forEach(()=>{h+=`<span class="kdsl pet" aria-label="Slot monster"><i>🐾</i><small>Monster</small></span>`});
+ for(let i=S.eggs.length+S.pets.length;i<cap;i++)h+=`<button type="button" class="kdsl empty" onclick="kdBuyE()" aria-label="Slot kosong, beli telur"><i>+</i><small>${rp(TELUR)}</small></button>`;
+ return `<div class="kds">${h}</div>`}
+function kdBuyE(){if(S.money<TELUR)return alert('Uang kurang.');buy('e');kdMenu()}
+function kdEgg(i){const e=S.eggs[i];if(!e)return kdMenu();const d=KDE[e.nm]||['Dari petualanganmu','Biasa'],el=e.el&&EL[e.el]?EL[e.el][1]:'';
+ modal(e.nm,{cls:'kdx',html:`<div class="kdw kdi"><div class="kdd">${eggImg(e,'kdsb','🥚')}</div><div class="kdr"><div class="bm"><div><b>${d[0]}</b><span>Asal</span></div><div><b>${d[1]}</b><span>Kelangkaan</span></div>${el?`<div><b>${el}</b><span>Elemen</span></div>`:''}${e.bonus?`<div><b>+${e.bonus}</b><span>Bonus stat</span></div>`:''}</div><p class="sub">Isi telur baru diketahui saat ditetaskan di Altar Kristal.</p></div></div>`,btns:[['Kembali',kdMenu,'p'],['Tutup',close]]})}
 function kdMenu(){if(bmBusy()||!kdLv())return;const L=kdLv(),k=S.kup|0,cap=petCap(),used=S.eggs.length+S.pets.length,full=used>=cap,sl=KDS[L],maxed=k>=KUP.length,btns=[];
- let note=full?'Slot penuh. Perluas kandang untuk menambah slot.':`Masih ada ${cap-used} slot kosong. Beli telur Rp ${TELUR.toLocaleString('id-ID')} untuk menambah isi kandang.`;
- if(!maxed)note+=` Tiap perluasan menambah 2 slot${k===0?' dan mengubah tampilan kandang':''}.`;else note+=' Kandang sudah diperluas sampai maksimal.';
- if(!full)btns.push([`Beli telur · ${rp(TELUR)}`,()=>{if(S.money<TELUR)return alert('Uang kurang.');buy('e');kdMenu()},'p']);
- if(!maxed)btns.push([`Perluas kandang · ${rp(KUP[k])}`,kdUp,'g']);
+ let note=full?'Slot penuh. Perluas kandang untuk menambah slot.':`Ketuk <b>+</b> untuk beli telur (${rp(TELUR)}). Ketuk telur untuk melihat detailnya.`;
+ if(!maxed)note+=` Perluasan: +2 slot${k===0?', tampilan baru':''}.`;else note+=' Kandang sudah maksimal.';
+  if(!maxed)btns.push([`Perluas kandang · ${rp(KUP[k])}`,kdUp,'g']);
  if(S.pets.length)btns.push(['Rawat & latih pet',()=>{close();care()}]);
  btns.push(['Tutup',close]);
- modal('Kandang Level '+L,{html:`${bmPrev(sl.f,sl.n,sl.r)}<div class="bm"><div><b>${L}</b><span>Level</span></div><div><b>${used}/${cap}</b><span>Slot terpakai</span></div><div><b>${S.eggs.length}</b><span>Telur</span></div><div><b>${S.pets.length}</b><span>Monster</span></div></div><p class="sub">${note}</p>`,btns})}
+ modal('Kandang Level '+L,{cls:'kdx',html:`<div class="kdw"><div class="kdl">${bmPrev(sl.f,sl.n,sl.r)}</div><div class="kdr"><div class="bm"><div><b>${L}</b><span>Level</span></div><div><b>${used}/${cap}</b><span>Slot terpakai</span></div><div><b>${S.pets.length}</b><span>Monster</span></div></div>${kdSlots(cap)}<p class="sub">${note}</p></div></div>`,btns})}
 function kbMenu(){if(bmBusy())return;const L=kbLv(),b=KBL[L],sl=KBS[L],u=S.hu,nx=KBL[L+1],R=res(),btns=[];
  const who=R.length?R.map(i=>NPC[i][0]).join(', '):'Belum ada penghuni';
  let note;
@@ -3472,11 +3508,11 @@ function kbMenu(){if(bmBusy())return;const L=kbLv(),b=KBL[L],sl=KBS[L],u=S.hu,nx
  else if(!nx)note='Level maksimal, ini rumah paling besar.';
  else note=`Upgrade ke <b>${nx.n}</b>: ${rp(nx.cost)} · ${nx.days} hari pembangunan · muat ${nx.cap} teman.`;
  if(!u&&nx)btns.push([`Upgrade ke ${nx.n} · ${rp(nx.cost)}`,()=>{if(S.money<nx.cost)return alert('Uang kurang. Upgrade ke '+nx.n+' butuh '+rp(nx.cost)+'.');kbUp();kbMenu()},'g']);
- btns.push(['Lihat penghuni',()=>friends(0)],['Tidur sampai besok',()=>{close();tidur()},'p'],['Tutup',close]);
- modal(b.n,{html:`${bmPrev(sl.f,sl.n,sl.r)}<div class="bm"><div><b>${L}</b><span>Level</span></div><div><b>${R.length}/${CAP()}</b><span>Penghuni</span></div><div><b>${u?'🔨':'✔'}</b><span>${u?'Dibangun':'Siap'}</span></div></div><p class="sub">Penghuni: ${who}.</p><p class="sub">${note}</p><p class="sub">Tidur: hari berganti dan lelah pet turun 15%.</p>`,btns})}
+ btns.unshift(['🛏️ Tidur sampai besok',()=>{close();tidur()},'p']);btns.push(['Tutup',close]);
+ modal(b.n,{cls:'kdx',html:`<div class="kdw"><div class="kdl">${bmPrev(sl.f,sl.n,sl.r)}</div><div class="kdr"><div class="bm"><div><b>${L}</b><span>Level</span></div><button type="button" class="bmb" onclick="friends(0)" aria-label="Lihat penghuni"><b>${R.length}/${CAP()}</b><span>Penghuni ›</span></button><div><b>${u?'🔨':'✔'}</b><span>${u?'Dibangun':'Siap'}</span></div></div><p class="sub kbn">${note}</p><p class="sub kbn">🛏️ Tidur: hari berganti, lelah pet turun 15%.</p></div></div>`,btns})}
 function bldAt(e){for(const [id,f] of [['kdh',kdMenu],['kbh',kbMenu]]){const el=document.getElementById(id);if(!el)continue;const r=el.getBoundingClientRect(),px=r.width*.08;if(e.clientX>=r.left+px&&e.clientX<=r.right-px&&e.clientY>=r.top+r.height*.1&&e.clientY<=r.bottom)return{el,f}}return null}
 function bldTap(e){const h=bldAt(e);if(!h)return false;h.f();return true}
-$('#stage').addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const h=(!e.target.closest('.ent,button,.ban'))?bldAt(e):null;document.querySelectorAll('.kdh.hv,.kbh.hv').forEach(x=>{if(!h||x!==h.el)x.classList.remove('hv')});if(h)h.el.classList.add('hv');$('#stage').style.cursor=h?'pointer':''});
+$('#stage').addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const h=(!e.target.closest('.ent:not(#e_kd):not(#e_kb),button,.ban'))?bldAt(e):null;document.querySelectorAll('.kdh.hv,.kbh.hv').forEach(x=>{if(!h||x!==h.el)x.classList.remove('hv')});if(h)h.el.classList.add('hv');$('#stage').style.cursor=h?'pointer':''});
 $('#stage').addEventListener('keydown',e=>{const d=e.target&&e.target.dataset&&e.target.dataset.bld;if(d&&(e.key==='Enter'||e.key===' ')){e.preventDefault();d==='kd'?kdMenu():kbMenu()}});
 function kbHouse(Ww,Hh){try{return kbHouse0(Ww,Hh)}catch(e){return''}}
 function kbHouse0(Ww,Hh){if(!S||!KBP)return'';const L=kbLv(),u=S.hu,ct=u?KBC[u.to]:null,ok=!!(ct&&ct.ok);
@@ -3638,8 +3674,8 @@ ortu:['Sebelum berangkat jauh, pamit dulu pada orang tua dan minta doa restunya.
 krama:['Ucapkan salam dan senyum dulu pada pembeli. Dagangan yang sama terasa lebih menarik kalau dilayani dengan ramah.','Kata "terima kasih", "tolong", dan "maaf" itu murah tapi nilainya mahal. Biasakan, bahkan pada penjual yang paling kecil.','Dengarkan orang bicara sampai selesai sebelum menjawab. Menyela itu mudah, menghargai itu butuh latihan.','Pada yang lebih tua, bicaralah dengan santun. Pada yang lebih muda, bersikaplah menuntun. Begitulah desa ini menjaga rukun.','Menawar boleh, tapi dengan sopan. Penjual juga punya HPP dan keluarga yang harus dihidupi.','Kalau berbuat salah, minta maaf dengan jujur dan segera perbaiki. Dari situ orang menilai wataknya.','Antre dengan tertib dan jaga kebersihan lapak. Hal kecil seperti itu yang membuat orang percaya.'],
 kik:['Kreativitas itu melihat yang biasa dengan cara yang baru. Sampah plastik bisa jadi tas, botol bekas bisa jadi lampu. Coba lagi di Gold and Garbage.','Inovasi bukan harus hal yang belum pernah ada. Memperbaiki cara lama supaya lebih murah atau lebih cepat pun sudah inovasi.','Wirausaha melihat masalah sebagai peluang. Desa kekurangan barang? Itulah pasarmu.','Sebelum membuka usaha, ingat 5M: Man, Money, Material, Machine, Method. Mana yang masih kurang di usahamu?','Kreatif saja belum cukup. Hitung HPP, tentukan harga, dan periksa BEP supaya idemu bertahan lama.','Coba ide kecil dulu, ukur hasilnya, lalu perbaiki. Itu cara pengusaha dan penemu bekerja.','Pasar berubah tiap musim. Pengusaha yang terus belajar dan menyesuaikan diri yang bertahan.']};
 function crClue(){const L=[],el=new Set(S.pets.map(p=>p.el)).size,egg=S.eggs.length,hasP=S.pets.length;
- if(!egg&&!hasP)L.push(`Pet bermula dari telur. Beli telur di tab Usaha seharga ${rp(30000)}. Peluangnya Biasa 65%, Langka 28%, Epik 7%.`);
- if(egg&&!S.kandang)L.push(`Telurmu belum bisa ditetaskan tanpa kandang. Sewa kandang di tab Usaha seharga ${rp(10000)}.`);
+ if(!egg&&!hasP)L.push(`Pet bermula dari telur. ${S.kandang?'Ketuk kandang di peta':'Beli kandang di tab Usaha, lalu ketuk kandang di peta'} untuk beli telur seharga ${rp(30000)}. Peluangnya Biasa 65%, Langka 28%, Epik 7%.`);
+ if(egg&&!S.kandang)L.push(`Telurmu belum bisa ditetaskan tanpa kandang. Beli kandang di tab Usaha seharga ${rp(KANDANG)}.`);
  if(egg&&S.acc<1)L.push(`Altar memakai satu aksesoris tiap summon. Beli aksesoris di tab Usaha seharga ${rp(3000)}.`);
  if(egg&&!S.swot)L.push('Sebelum summon, kerjakan Kartu SWOT musim ini di menu Belajar. Hasilnya dipakai memilih elemen pet.');
  if(egg&&S.kandang&&S.acc>0&&S.swot)L.push('Syarat summon-mu sudah lengkap! Temui Children of Dragon di Altar Kristal.');
@@ -3669,20 +3705,21 @@ function vscene(){const hills=(c,a,o,s)=>{let d='M0 320';for(let x=0;x<=3600;x+=
  return[`<svg width="3600" height="320" viewBox="0 0 3600 320">${far.slice(far.indexOf('>')+1,-6)}</svg>`,`<svg width="2600" height="240" viewBox="0 0 2600 240">${tr}</svg>`]}
 function openVillage(a,x0){if(!S||S.over)return;a=AREAS[a]?a:'old';const AR=AREAS[a];EDGE=1;VILF=1;V.a=a;V.W=AR.W;WD.keys.l=WD.keys.r=0;WD.goal=null;{const sx=x0||330,sc0=vcl(.45,innerHeight/VIEW,1.6),vw0=innerWidth/sc0;Object.assign(V,{x:sx,dir:sx>AR.W/2?-1:1,goal:null,gt:null,cam:vcl(0,sx-vw0/2,Math.max(0,AR.W-vw0)),dl:0,cur:-1,t:0})}V.k.l=V.k.r=0;
  const o=document.getElementById('vil'),hadOld=!!o;if(o)o.remove();const v=document.createElement('div');v.id='vil';v.dataset.a=a;if(hadOld)v.style.animation='none';
- let w=`<img class="vmap" src="${AR.m}" width="${AR.W}" height="${VH}" alt="" draggable="false">${[AR.nx,AR.nx2].filter(Boolean).map(e=>`<div class="vgo" style="left:${e[3]==='r'?AR.W-130:130}px">${e[2]}</div>`).join('')}${a==='old'?'<div class="vgo" style="left:130px">⟵ Perkemahan</div>':''}${a==='bukit'?'<div class="vgo" style="left:1985px">⛵ Dermaga</div>':''}${a==='sungai'?'<div class="vgo" style="left:270px">⛵ Dermaga</div>':''}`;VB.forEach(([x,fn])=>w+=`<div class="vbd" style="left:${x}px">${fn()}</div>`);VL.forEach(([x,fn])=>w+=`<div class="vbd" style="left:${x}px">${fn()}</div>`);
+ let w=`<img class="vmap" src="${AR.m}" width="${AR.W}" height="${VH}" alt="" draggable="false">${[AR.nx,AR.nx2].filter(Boolean).map(e=>vgoM(e[3]==='r'?AR.W-130:130,e[3],e[2])).join('')}${a==='old'?vgoM(130,'l','Perkemahan'):''}${a==='bukit'?'<div class="vgo" style="left:1985px">⛵ Dermaga</div>':''}${a==='sungai'?'<div class="vgo" style="left:270px">⛵ Dermaga</div>':''}`;VB.forEach(([x,fn])=>w+=`<div class="vbd" style="left:${x}px">${fn()}</div>`);VL.forEach(([x,fn])=>w+=`<div class="vbd" style="left:${x}px">${fn()}</div>`);
  VNPC.forEach(n=>w+=n.a!==a?'':`<div class="vn" data-i="${n.i}" style="left:${n.x}px"><div class="vsay"></div><b class="vtag">${n.m?'❗ ':''}${n.r}</b><div class="vf">${n.sp?SPR[n.sp].h:chibi(n.o)}</div></div>`);
  w+=`<div class="vn vp" id="vp"><div class="vsay"></div><b class="vtag">${S.name}</b><div class="vf"><div class="spr" data-g="${S.gender||'cowok'}" data-h="170" data-r="0" role="img" aria-label="Karakter"></div></div></div>`;w+=window.klVil?klVil():'';
- v.innerHTML=`<div class="vsk"></div><div id="vwd" style="width:${AR.W}px;height:${VH}px">${w}</div>${rain()?'<div class="vrain"></div>':''}${WX.ph==='malam'?'<div class="vnt"></div>':''}${[8,22,37,51,66,80,92].map((l,i)=>`<i class="vlf" style="left:${l}%;animation-delay:${-i*1.7}s;animation-duration:${8+i%3*2}s"></i>`).join('')}<div class="vhud" id="vhud"></div><button class="vbk" id="vbk">${a==='bukit'||a==='sungai'?'⟵ Pulang naik perahu':'⟵ Pulang ke kemah'}</button><div class="vttl">${AR.t}<small>${AR.s}</small></div><button class="p vtk" id="vtk" hidden></button><div class="vpad"><button data-k="l" aria-label="Kiri">◀</button><button data-k="r" aria-label="Kanan">▶</button></div><div id="vdl"></div>`;
- document.body.appendChild(v);
+ v.innerHTML=`<div class="vsk"></div><div id="vwd" style="width:${AR.W}px;height:${VH}px">${w}</div>${rain()?'<div class="vrain"></div>':''}${WX.ph==='malam'?'<div class="vnt"></div>':''}${[8,22,37,51,66,80,92].map((l,i)=>`<i class="vlf" style="left:${l}%;animation-delay:${-i*1.7}s;animation-duration:${8+i%3*2}s"></i>`).join('')}<div class="vhud" id="vhud"></div><button class="vbk" id="vbk">${a==='bukit'||a==='sungai'?'⟵ Pulang naik perahu':'⟵ Pulang ke kemah'}</button><div class="vttl">${AR.t}<small>${AR.s}</small></div><button class="p vtk" id="vtk" hidden></button><i class="scr l"></i><i class="scr r"></i><div id="vdl"></div>`;
+ document.body.appendChild(v);document.body.classList.add('invil');fillHud();
  V.el=VNPC.map(n=>{const e=v.querySelector(`.vn[data-i="${n.i}"]`);if(!e)return null;return{e,f:e.querySelector('.vf'),s:e.querySelector('.vsay')}});const p=v.querySelector('#vp');V.p={e:p,f:p.querySelector('.vf'),s:p.querySelector('.vsay'),spr:p.querySelector('.spr')};V.w=v.querySelector('#vwd');V.ls=[...v.querySelectorAll('.vl')];
  v.querySelector('#vbk').onclick=a==='bukit'||a==='sungai'?sailHome:vexit;v.querySelector('#vtk').onclick=()=>V.near!=null&&vdlg(V.near);
- v.querySelectorAll('.vpad button').forEach(b=>{const k=b.dataset.k;b.onpointerdown=e=>{e.preventDefault();V.k[k]=1};['pointerup','pointerleave','pointercancel'].forEach(n=>b['on'+n]=()=>{V.k[k]=0})});
- v.addEventListener('pointerdown',e=>{if(V.dl||e.target.closest('button,#vdl'))return;const n=e.target.closest('.vn[data-i]');if(n){const i=+n.dataset.i,x=VNPC[i].x;if(Math.abs(x-V.x)<110){V.dir=Math.sign(x-V.x)||V.dir;vdlg(i)}else{V.goal=x+(V.x<x?-80:80);V.gt=i}}else{V.goal=vcl(70,e.clientX/V.sc+V.cam,V.W-70);V.gt=null}});
- clearInterval(V.hi);V.hi=setInterval(()=>{if(!VILF)return;if(!S||S.over)return closeVillage();$('#vhud').innerHTML=`<span>🪙 ${rp(S.money)}</span><span>📅 Hari ${S.day}/30</span><span>${rain()?'🌧️':'☀️'} ${sname()}</span>`;if(!V.dl&&Math.random()<.35){const c=VNPC.filter(n=>n.a===V.a&&Math.abs(n.x-V.x)<650);const n=c[r(0,c.length-1)];if(n){const s=V.el[n.i].s;s.textContent=n.ln[r(0,n.ln.length-1)];s.classList.add('on');setTimeout(()=>s.classList.remove('on'),3200)}}},1800);
- $('#vhud').innerHTML=`<span>🪙 ${rp(S.money)}</span><span>📅 Hari ${S.day}/30</span><span>${rain()?'🌧️':'☀️'} ${sname()}</span>`;
+ v.addEventListener('pointerdown',e=>{if(V.dl||e.target.closest('button,#vdl'))return;const gm=e.target.closest('.vgo.medal');if(gm){V.goal=gm.dataset.d==='l'?0:V.W;V.gt=null;return}const n=e.target.closest('.vn[data-i]');if(n){const i=+n.dataset.i,x=VNPC[i].x;if(Math.abs(x-V.x)<110){V.dir=Math.sign(x-V.x)||V.dir;vdlg(i)}else{V.goal=x+(V.x<x?-80:80);V.gt=i}}else{V.goal=vcl(70,e.clientX/V.sc+V.cam,V.W-70);V.gt=null}});
+ clearInterval(V.hi);V.hi=setInterval(()=>{if(!VILF)return;if(!S||S.over)return closeVillage();fillHud();$('#vhud').innerHTML=`<span>🪙 ${rp(S.money)}</span><span>📅 Hari ${S.day}/30</span><span>${rain()?'🌧️':'☀️'} ${sname()}</span>`;if(!V.dl&&Math.random()<.35){const c=VNPC.filter(n=>n.a===V.a&&Math.abs(n.x-V.x)<650);const n=c[r(0,c.length-1)];if(n){const s=V.el[n.i].s;s.textContent=n.ln[r(0,n.ln.length-1)];s.classList.add('on');setTimeout(()=>s.classList.remove('on'),3200)}}},1800);
+ fillHud();$('#vhud').innerHTML=`<span>🪙 ${rp(S.money)}</span><span>📅 Hari ${S.day}/30</span><span>${rain()?'🌧️':'☀️'} ${sname()}</span>`;
  cancelAnimationFrame(V.raf);V.raf=requestAnimationFrame(vtick)}
+function vgoM(x,d,t){t=t.replace(/[⟵⟶➜←→]\s*/g,'').replace(/\s*[⟵⟶➜←→]/g,'').trim();return `<div class="vgo medal ${d}" data-d="${d}" style="left:${x}px" role="button" aria-label="Menuju ${t}"><img src="images/ui-arrow-${d}.png" alt=""><span>${t}</span></div>`}
+function vedge(vw,mv){const v=document.getElementById('vil');if(!v)return;const l=v.querySelector('.scr.l'),r=v.querySelector('.scr.r');if(!l||!r)return;const q=!mv&&V.goal==null&&!V.dl;l.classList.toggle('on',q&&V.cam>8);r.classList.toggle('on',q&&V.cam<V.W-vw-8)}
 function vgo(a,x){if(document.getElementById('vcv'))return;const cv=document.createElement('div');cv.id='vcv';document.body.appendChild(cv);void cv.offsetWidth;cv.style.opacity=1;setTimeout(()=>{if(!VILF){cv.remove();return}openVillage(a,x);const im=document.querySelector('#vil .vmap');let done=0;const off=()=>{if(done)return;done=1;cv.style.opacity=0;setTimeout(()=>cv.remove(),300)};if(!im||(im.complete&&im.naturalWidth))requestAnimationFrame(off);else{im.addEventListener('load',off,{once:true});im.addEventListener('error',off,{once:true});setTimeout(off,2000)}},260)}
-function closeVillage(){VILF=0;V.dl=0;clearInterval(V.hi);clearInterval(V.ty);const v=document.getElementById('vil');if(v)v.remove()}
+function closeVillage(){VILF=0;V.dl=0;clearInterval(V.hi);clearInterval(V.ty);const v=document.getElementById('vil');if(v)v.remove();document.body.classList.remove('invil')}
 function sailBukit(){$('#ov').classList.remove('on');if(VILF)vgo('bukit',1860);else openVillage('bukit',1860)}
 function sailSungai(){$('#ov').classList.remove('on');if(VILF)vgo('sungai',420);else openVillage('sungai',420)}
 function sailHome(){if(!VILF)return;vexit();pass()}
@@ -3717,8 +3754,8 @@ function vtick(t){if(!VILF)return;V.raf=requestAnimationFrame(vtick);const dt=Ma
  if(!lock&&!mv&&V.goal!=null){const d=V.goal-V.x;if(Math.abs(d)<8){V.goal=null;const g=V.gt;V.gt=null;if(g!=null){V.dir=Math.sign(VNPC[g].x-V.x)||V.dir;vdlg(g)}}else mv=Math.sign(d)}
  if(mv){V.dir=mv;V.x=vcl(70,V.x+mv*270*dt,V.W-70)}
  if(V.stp!=null){const d=V.stp-V.x;if(Math.abs(d)<4){V.x=V.stp;V.stp=null;const n=VNPC[V.sn];if(n)V.dir=Math.sign(n.x-V.x)||V.dir}else{mv=Math.sign(d);V.dir=mv;V.x+=mv*Math.min(Math.abs(d),270*dt)}}
- if(V.a==='old'&&!lock&&mv<0&&V.x<=72){V.k.l=V.k.r=0;V.goal=null;vexit();return}
- const NX=[AREAS[V.a].nx,AREAS[V.a].nx2].filter(Boolean).find(e=>(e[3]==='r'&&mv>0&&V.x>=V.W-72)||(e[3]==='l'&&mv<0&&V.x<=72));if(!lock&&mv&&NX){V.k.l=V.k.r=0;V.goal=null;vgo(NX[0],NX[1]);V.t=0;return}
+ if(V.a==='old'&&!lock&&mv<0&&V.x<=110){V.k.l=V.k.r=0;V.goal=null;vexit();return}
+ const NX=[AREAS[V.a].nx,AREAS[V.a].nx2].filter(Boolean).find(e=>(e[3]==='r'&&mv>0&&V.x>=V.W-110)||(e[3]==='l'&&mv<0&&V.x<=110));if(!lock&&mv&&NX){V.k.l=V.k.r=0;V.goal=null;vgo(NX[0],NX[1]);V.t=0;return}
  let near=null,nd=1e9;
  VNPC.forEach((n,i)=>{const o=V.el[i];if(!o)return;if(n.wd){if(V.cur===i)n.mv=0;else if(n.tu==null){n.wait-=dt;n.mv=0;if(n.wait<=0)n.tu=n.wd[0]+Math.random()*(n.wd[1]-n.wd[0])}else{const d=n.tu-n.x;if(Math.abs(d)<4){n.tu=null;n.wait=2+Math.random()*4;n.mv=0}else{n.mv=1;n.dir=Math.sign(d);n.x+=n.dir*70*dt}}}
   else n.dir=Math.sign(V.x-n.x)||n.dir||1;
@@ -3728,7 +3765,7 @@ function vtick(t){if(!VILF)return;V.raf=requestAnimationFrame(vtick);const dt=Ma
  V.near=near;const tk=document.getElementById('vtk');if(tk){const show=near!=null&&!V.dl&&!lock;tk.hidden=!show;if(show){const o=V.el[near];if(o&&tk.parentNode!==o.e)o.e.appendChild(tk);if(!tk.dataset.b){tk.dataset.b=1;tk.innerHTML='<kbd>E</kbd><i>💬</i><span>Bicara</span>';tk.setAttribute('aria-label','Bicara dengan warga terdekat (E)')}}}
  V.p.e.style.left=V.x+'px';V.p.e.style.bottom=vgy(V.x);V.p.e.classList.toggle('mv',!!mv);V.p.spr.dataset.r=mv?1:0;V.p.f.style.transform=`scaleX(${V.dir*FACE})`;
  if(window.klFollowVil)klFollowVil(dt,t,mv);const tg=vcl(0,V.x-vw/2,Math.max(0,V.W-vw));V.cam+=(tg-V.cam)*Math.min(1,dt*5);
- V.w.style.transform=`scale(${sc}) translate(${-V.cam}px,${-(VH-VIEW)}px)`;V.ls.forEach(l=>{l.style.transform=`translateX(${-V.cam*sc*l.dataset.k}px) scale(${sc})`})}
+ V.w.style.transform=`scale(${sc}) translate(${-V.cam}px,${-(VH-VIEW)}px)`;V.ls.forEach(l=>{l.style.transform=`translateX(${-V.cam*sc*l.dataset.k}px) scale(${sc})`});vedge(vw,mv)}
 addEventListener('keydown',e=>{if(!VILF||document.querySelector('#ov.on,#nite.on,#vn.on,#scr.on'))return;const k=e.key.toLowerCase();
  if(k==='escape'&&V.dl){vclose();e.stopImmediatePropagation();return}
  if(V.dl){if((k==='enter'||k===' ')&&V.ty){document.querySelector('#vdl .vtx')?.click();e.preventDefault();e.stopImmediatePropagation()}return}
@@ -3738,7 +3775,8 @@ addEventListener('blur',()=>{V.k.l=V.k.r=0});
 
 /* ===== Ujung kiri = Kota, ujung kanan = Hutan ===== */
 let EDGE=0;
-function edgeOpen(side){EDGE=1;WD.keys.l=WD.keys.r=0;WD.goal=null;
+setInterval(()=>{const st=document.getElementById('stage'),l=document.getElementById('scl'),r=document.getElementById('scr2');if(!st||!l||!r||!S||VILF)return;const vw=st.clientWidth,q=!(WD.keys.l||WD.keys.r||WD.goal)&&st.dataset.edge==='';l.classList.toggle('on',q&&WD.cam>8);r.classList.toggle('on',q&&WD.cam<G.W-vw-8)},150);
+function edgeOpen(side){EDGE=1;WD.keys.l=WD.keys.r=0;WD.goal=null;if(side>0){WD.pu=.9;EDGE=0}
  if(side<0)openVillage();
  else dgIntro()}
 setInterval(()=>{if(!S||S.over||sleeping)return;const st=document.getElementById('stage'),ov=document.getElementById('ov'),dg=document.getElementById('dg'),sc=document.getElementById('scr');
@@ -4088,6 +4126,54 @@ body:has(#scr.on) #kl,body:has(#vn.on) #kl,body:has(div#dg:not([hidden])) #kl,bo
 .mtd{margin:8px 0}.mtd dt{font-weight:700;color:var(--gold);margin-top:8px}.mtd dd{margin:2px 0 0 0;line-height:1.5}
 .mtf{margin:10px 0;padding:10px 12px;border-radius:10px;font-weight:700;text-align:center;color:var(--gold);border:1px dashed var(--gold);background:color-mix(in srgb,var(--gold) 8%,transparent)}
 .mtx{margin:10px 0;padding:9px 12px;border-radius:10px;line-height:1.6;border-left:3px solid var(--acc);background:color-mix(in srgb,var(--ink) 6%,transparent)}
+
+/* penanda keluar kemah: menempel di papan petunjuk pada peta (koordinat mengikuti gambar peta 2056x765) */
+.world .edgec{position:absolute;top:38.5%;bottom:auto;right:auto;z-index:4;display:flex;flex-direction:column;align-items:center;gap:0;padding:0;border:0;border-radius:0;background:none;transform:translate(-50%,-100%);color:#fff}
+.world .edgec{margin-top:-8px}.world .edgec.l{left:5.2%}.world .edgec.r{left:calc(83.8% + 20px)}
+.world .edgec b{font:700 20px Cinzel,Georgia,serif;letter-spacing:1px;color:#ffe08a;text-shadow:0 2px 3px #000,0 0 8px rgba(0,0,0,.9)}
+.world .edgec::after{content:"";position:absolute;left:50%;top:100%;width:190px;height:80px;transform:translate(-50%,-6px);border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,214,102,.55),rgba(255,214,102,0) 70%);mix-blend-mode:screen;pointer-events:none;z-index:-1;animation:edgg 2s ease-in-out infinite}
+@keyframes edgg{50%{opacity:.45}}
+
+/* menu kandang: 2 kolom landscape, 1 kolom portrait, tanpa scroll */
+#md.kdx{max-width:min(760px,96vw);padding:20px 22px 16px;overflow:hidden}
+#md.kdx h2{margin-bottom:8px}
+.kdw{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:14px 20px;align-items:center}
+.kdl,.kdd{display:flex;justify-content:center;align-items:center;min-width:0}
+.kdx .bmp{width:min(100%,46vh);width:min(100%,46dvh);margin:0 auto}
+.kdx .kdd .kdsb{width:min(100%,36vh,150px);height:auto;max-height:36vh;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+.kdx .kdr{min-width:0}
+.kdx .bm{grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 8px}
+.kdx .bm div{padding:4px 6px}.kdx .bm b{font-size:16px}.kdx .bm span{font-size:11px}
+.kdx .kdi .bm{grid-template-columns:1fr 1fr}.kdx .kdi .bm b{font-size:13px;line-height:1.25}
+.kdx .sub{margin:0;font-size:12.5px;line-height:1.4}
+.kds{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:0 0 8px}
+.kdsl{height:66px;margin:0;padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border-radius:12px;border:1px solid rgba(240,199,94,.55);background:rgba(255,255,255,.06);color:#fff;font:inherit;min-width:0}
+.kdsl small{font-size:10px;color:var(--mute);white-space:nowrap}
+.kdsl .kdsi{width:36px;height:36px;object-fit:contain}
+.kdsl.egg{cursor:pointer}.kdsl.egg:hover{border-color:#ffe08a;background:rgba(240,199,94,.14)}
+.kdsl i{font-style:normal;font-size:22px;line-height:36px}
+.kdsl.empty{border-style:dashed;border-color:rgba(255,255,255,.3);background:none;opacity:.75;cursor:pointer}
+.kdsl.empty:hover{opacity:1;border-color:#ffe08a}.kdsl.empty i{font-size:26px;color:#ffe08a}
+@media(max-height:480px){
+ #md.kdx{padding:12px 16px 10px}#md.kdx h2{font-size:16px;margin-bottom:6px}
+ .kdw{gap:8px 16px}.kdx .bmp{width:min(100%,50vh);width:min(100%,50dvh)}
+ .kdx .bm{margin-bottom:6px}.kdx .bm div{padding:2px 4px}.kdx .bm b{font-size:14px}.kdx .bm span{font-size:10px}
+ .kds{margin-bottom:6px;gap:5px;grid-template-columns:repeat(auto-fill,minmax(40px,1fr))}.kdsl{height:52px}.kdsl .kdsi{width:28px;height:28px}.kdsl i{font-size:18px;line-height:28px}.kdsl small{font-size:9px}
+ .kdx .sub{font-size:11px;line-height:1.3}
+ #md.kdx .row{margin-top:6px}#md.kdx .row button{padding:6px 14px;font-size:13px}
+}
+@media(max-width:600px) and (min-height:481px){
+ .kdw{grid-template-columns:1fr}.kdx .bmp{width:min(70%,24vh);width:min(70%,24dvh)}.kdx .kdd .kdsb{max-height:22vh}
+}
+
+#md.kdx .row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:10px}
+.kdx .kbn{margin:0 0 5px}
+@media(max-height:480px){.kdx .kbn{margin-bottom:3px}#md.kdx .row{gap:6px;margin-top:6px}}
+
+.kdx .bm .bmb{margin:0;padding:4px 6px;display:block;text-align:center;border:1px solid var(--bd);border-radius:10px;background:none;color:inherit;font:inherit;cursor:pointer;box-shadow:none}
+.kdx .bm .bmb b{display:block;font-size:16px}.kdx .bm .bmb span{font-size:11px;color:#ffe08a}
+.kdx .bm .bmb:hover{border-color:#ffe08a;background:rgba(240,199,94,.12)}
+@media(max-height:480px){.kdx .bm .bmb{padding:2px 4px}.kdx .bm .bmb b{font-size:14px}.kdx .bm .bmb span{font-size:10px}}
 </style>
 <script id="kl-js">
 /* ===== Kilau: monster misterius, pemandu & guru gim. Bukan pet: tidak masuk daftar monster, tidak bisa dipakai atau dinaikkan levelnya. ===== */
@@ -4120,10 +4206,10 @@ function adv(){
   if(!(s.kik>0))return{id:'bis3',short:'Penjualan pertama! Periksa Jurnal, lalu coba soal BEP dan HPP.',html:B('Penjualan pertamamu berhasil. Buka <b>Jurnal</b> dan bandingkan <b>uang masuk</b> dengan <b>biaya</b>. Selisihnya adalah labamu.','Berikutnya coba <b>Soal BEP dan HPP</b> di tab <b>Belajar</b> (jawaban benar +'+R(3000)+'). Setelah usahamu stabil, barulah pikirkan telur dan pet.')+ev}}
  if(s.rit)return{id:'rit',short:`Ritual di Altar berjalan, sisa ${s.rit.d} hari. Siapkan uang jasa ${R(5000)} per hari.`,html:B(`Ritual di Altar sedang berjalan, sisa <b>${s.rit.d} hari</b>.`,`Jasa pengiat ${R(5000)} per hari, pastikan uangmu cukup supaya ritual tidak terhenti.`,'Sambil menunggu, pakai harimu untuk cari uang atau latihan.')+ev};
  if(pt<3||!(eg||pt)){
-  const need=(eg?0:R0(30000))+(s.kandang?0:10000)+(acc?0:3000);
-  if(!eg&&m<30000)return{id:'cash',short:'Uangmu belum cukup untuk telur. Cari uang dulu, ya.',html:B(`Uangmu ${R(m)}. Telur harganya ${R(30000)}, dan kamu masih perlu kandang (${R(10000)}) dan aksesoris (${R(3000)}).`,'<b>Cari uang dulu:</b> racik ramuan di tab <b>Usaha</b>, berdagang di Kota Singgah, atau jelajahi hutan di ujung kanan peta.','Jangan lupa: makan dua kali sehari, total '+R(mealSum())+' tiap hari.')+ev};
-  if(!eg&&!s.rit)return{id:'egg',short:'Saatnya beli telur di tab Usaha.',html:B('Langkah berikutnya: <b>beli telur</b> di tab <b>Usaha</b> ('+R(30000)+').','Setelah itu kamu butuh kandang, aksesoris, dan kartu SWOT.',need>m?`Totalnya kira-kira ${R(need)}, sedangkan uangmu ${R(m)}. Cari tambahan uang dulu.`:'Uangmu cukup, ayo!')+ev};
-  if(!s.kandang)return{id:'kdg',short:'Sewa kandang di tab Usaha.',html:B(`Telur sudah ada. Sekarang <b>sewa kandang</b> di tab Usaha (${R(10000)}).`)+ev};
+  const need=(eg?0:R0(30000))+(s.kandang?0:KANDANG)+(acc?0:3000);
+  if(!eg&&m<30000)return{id:'cash',short:'Uangmu belum cukup untuk telur. Cari uang dulu, ya.',html:B(`Uangmu ${R(m)}. Telur harganya ${R(30000)}, dan kamu masih perlu kandang (${R(KANDANG)}) dan aksesoris (${R(3000)}).`,'<b>Cari uang dulu:</b> racik ramuan di tab <b>Usaha</b>, berdagang di Kota Singgah, atau jelajahi hutan di ujung kanan peta.','Jangan lupa: makan dua kali sehari, total '+R(mealSum())+' tiap hari.')+ev};
+  if(!s.kandang)return{id:'kdg',short:'Beli kandang di tab Usaha.',html:B('Langkah berikutnya: <b>beli kandang</b> di tab <b>Usaha</b> ('+R(KANDANG)+').','Telur dibeli lewat menu kandang setelah itu.',need>m?`Totalnya kira-kira ${R(need)}, sedangkan uangmu ${R(m)}. Cari tambahan uang dulu.`:'Uangmu cukup, ayo!')+ev};
+  if(!eg&&!s.rit)return{id:'egg',short:'Ketuk kandang di peta untuk beli telur.',html:B('Kandang sudah siap. <b>Ketuk kandang</b> di peta, lalu pilih <b>Beli telur</b> ('+R(30000)+').')+ev};
   if(!acc)return{id:'aks',short:'Beli aksesoris di tab Usaha.',html:B(`Beli <b>aksesoris</b> di tab Usaha (${R(3000)}). Satu aksesoris terpakai tiap summon.`)+ev};
   if(!s.swot)return{id:'swot',short:'Kerjakan kartu SWOT di tab Belajar.',html:B('Syarat summon berikutnya: <b>kartu SWOT</b> musim ini. Buka tab <b>Belajar</b>.','Kalau benar: INT +1 dan kamu boleh summon.')+ev};
   let ok=false;try{ok=Object.keys(EL).some(elfOk)}catch(e){}
@@ -4153,11 +4239,11 @@ const KB=[
 {k:['hpp','bep','titik impas','harga pokok','harga jual','untung','margin','markup','biaya tetap','biaya variabel','rumus'],a:()=>B('<b>HPP</b> (harga pokok produksi) = biaya membuat satu unit barang: bahan, tenaga, dan lainnya.','<b>Harga jual</b> = HPP × (1 + untung). Contoh: HPP '+R(5000)+' dengan untung 50% → jual '+R(7500)+'. Di gim ini, persen untung selalu dihitung dari HPP.','<b>BEP</b> (titik impas) = biaya tetap ÷ (harga jual − biaya variabel per unit). Hasilnya jumlah unit minimal yang harus laku supaya tidak rugi. BEP dalam rupiah = BEP unit × harga jual.','Latihan ada di tab <b>Belajar</b>, dan jawaban benar berhadiah!')},
 {k:['swot','kekuatan','kelemahan','peluang','ancaman','kartu swot'],a:()=>B('<b>Kartu SWOT</b> ada di tab <b>Belajar</b>. Kelompokkan pernyataan menjadi S, W, O, T:','• <b>S</b> kekuatan dan <b>W</b> kelemahan: faktor <b>internal</b> (dari dirimu).','• <b>O</b> peluang dan <b>T</b> ancaman: faktor <b>eksternal</b> (dari lingkungan).','Kalau benar: <b>INT +1</b> dan kamu boleh summon. Kartu ini harus dikerjakan <b>tiap musim</b>.')},
 {k:['kik','soal','kuis','quiz','belajar','latihan soal','modul','catatan','materi'],a:()=>B('Tab <b>Belajar</b> berisi tiga hal:','• <b>Catatan Rumus</b>: penjelasan HPP, harga jual, BEP, dan SWOT dengan contoh sederhana. Cocok kalau kamu belum pernah belajar ini.','• <b>Soal BEP/HPP</b>: jawaban benar memberi +'+R(3000)+'. Jatah hadiah 2 kali per musim, dan jawaban benar pertama memberi INT +1. Setelah jatah habis kamu tetap boleh latihan tanpa hadiah.','• <b>Kartu SWOT</b>: syarat summon tiap musim.')},
-{k:['hari','waktu','berapa hari','satu hari','tidur','durasi','kalender','tahun','lama gim'],a:()=>B('Gim berjalan <b>30 hari per musim</b>, dan ada <b>6 musim</b> (3 tahun).','<b>Hampir setiap aksi memakai 1 hari</b>: latih pet, racik, belajar, bepergian, ikut lomba. Pilih aksi dengan bijak.','Kamu juga bisa <b>Tidur sampai besok</b> di tab Pet untuk mengganti hari dan mengurangi lelah pet.')},
+{k:['hari','waktu','berapa hari','satu hari','tidur','durasi','kalender','tahun','lama gim'],a:()=>B('Gim berjalan <b>30 hari per musim</b>, dan ada <b>6 musim</b> (3 tahun).','<b>Hampir setiap aksi memakai 1 hari</b>: latih pet, racik, belajar, bepergian, ikut lomba. Pilih aksi dengan bijak.','Kamu juga bisa <b>Tidur sampai besok</b> lewat menu tenda (ketuk tenda di peta) untuk mengganti hari dan mengurangi lelah pet.')},
 {k:['biaya hidup','makan','pakan','lapar','kelaparan','pengeluaran','tagihan','biaya harian'],a:()=>B('<b>Biaya harian</b> (otomatis tiap hari berganti):','• makan kamu 2x sehari: '+R(mealSum()),'• pakan pet: '+R(ECO.feed[0])+' (Anak) sampai '+R(ECO.feed[3])+' (Legend) per pet','• penghuni rumah juga ikut makan ('+R(MEAL)+' per orang)','• listrik, air, dan perawatan rumah: '+R(ECO.home[1])+' (Rumah) atau '+R(ECO.home[2])+' (Rumah Besar)','• jerami dan kebersihan kandang: '+R(ECO.barn[1])+' sampai '+R(ECO.barn[2])+' per hari','Lihat rincian lengkap dengan mengetuk kotak <b>Uang</b> di atas layar.','Kalau uang tidak cukup untuk makan, <b>POWER-mu turun sementara</b> dan pet bisa kelaparan. Sisihkan uang harian!')},
 {k:['musim','kemarau','hujan','cuaca','pasar hujan'],a:()=>{let t='';try{t=`Sekarang: <b>${sname()}</b>, hari ${S.day} dari 30.<br>`}catch(e){}return t+B('Musim <b>Kemarau</b> dan <b>Hujan</b> bergantian.','Saat hujan, <b>harga bahan ramuan naik</b>, jadi hitung ulang BEP-mu. Ramuan penghangat lebih laris saat hujan, sedangkan kunyit asam lebih segar saat kemarau.','Lomba juga berbeda tiap musim.')}},
-{k:['telur','beli telur','menetas','kualitas telur','rare','epic','common','slot','penuh'],a:()=>B('<b>Telur</b> dibeli di tab <b>Usaha</b> seharga '+R(30000)+'. Peluangnya: Biasa 65%, Langka 28%, Epik 7%.','Total telur + pet maksimal <b>5</b>. Telur juga bisa didapat dari lomba.','Telur baru menetas lewat <b>ritual summon</b> di Altar Kristal.')},
-{k:['summon','memanggil','altar','ritual','children of dragon','penjaga altar','syarat summon','panggil pet'],a:()=>B('<b>Syarat summon:</b> telur, kandang ('+R(10000)+'), aksesoris ('+R(3000)+'), kartu SWOT musim ini, suara elemen yang mau membantu, dan slot pet kosong.','Setelah lengkap, pergi ke <b>Altar Kristal</b>, bicara dengan <b>Children of Dragon</b>, lalu mulai summon.','Ritual berjalan <b>1 sampai 3 hari</b> dan jasa pengiat '+R(5000)+' per hari. Satu aksesoris terpakai tiap summon.')},
+{k:['telur','beli telur','menetas','kualitas telur','rare','epic','common','slot','penuh'],a:()=>B('<b>Telur</b> dibeli lewat menu <b>kandang</b> (beli dulu di tab <b>Usaha</b>, lalu ketuk kandang di peta) seharga '+R(30000)+'. Peluangnya: Biasa 65%, Langka 28%, Epik 7%.','Total telur + pet maksimal <b>5</b>. Telur juga bisa didapat dari lomba.','Telur baru menetas lewat <b>ritual summon</b> di Altar Kristal.')},
+{k:['summon','memanggil','altar','ritual','children of dragon','penjaga altar','syarat summon','panggil pet'],a:()=>B('<b>Syarat summon:</b> telur, kandang ('+R(KANDANG)+'), aksesoris ('+R(3000)+'), kartu SWOT musim ini, suara elemen yang mau membantu, dan slot pet kosong.','Setelah lengkap, pergi ke <b>Altar Kristal</b>, bicara dengan <b>Children of Dragon</b>, lalu mulai summon.','Ritual berjalan <b>1 sampai 3 hari</b> dan jasa pengiat '+R(5000)+' per hari. Satu aksesoris terpakai tiap summon.')},
 {k:['elemen','suara elemen','naia','auri','terra','pyra','air','api','udara','tanah','kelemahan elemen','siklus'],a:()=>B('Ada 4 elemen: 💧 Air, 🔥 Api, 🌬️ Udara, 🌍 Tanah.','Siklus: <b>Air > Api > Udara > Tanah > Air</b>. Yang unggul mendapat <b>+25%</b>, yang lemah <b>−20%</b> saat bertanding.','Untuk summon, tiap elemen punya <b>suara</b> yang meminta sesuatu:','• Naia (Air): pasokan 5 botol bahan ramuan.','• Auri (Udara): jawab soal pemasaran (4P atau 7P) dengan tepat.','• Terra (Tanah): kandang layak dan perbaikan lahan '+R(8000)+'.','• Pyra (Api): jawab dilema etika usaha, lalu buat produk dari limbah (kewirausahaan hijau).','Bicara dengan Children of Dragon di Altar untuk memulainya.')},
 {k:['latih tanding','tanding','duel','sparring','pertarungan','bertarung','battle','guts','skill elemen','jurus elemen','jurus','bertahan','menyerah','arena','lawan pet','cara bertarung'],a:()=>B('<b>Pertarungan pet</b> berjalan bergiliran. Tiap babak kamu memilih:','• <b>Serang</b>: kerusakan biasa, Guts +10.','• <b>Jurus Elemen</b>: kerusakan besar, butuh <b>Guts 30</b>. Elemen unggul +25%, lemah −20%, dan spell yang cocok menambah kerusakan.','• <b>Bertahan</b>: kerusakan yang diterima separuh, Guts +25.','<b>Speed</b> menentukan siapa jalan duluan dan seberapa sering menghindar. <b>Defense</b> meredam kerusakan. <b>Life</b> dan stat <b>HP</b> karakter menambah nyawa. Pet yang lelah bertarung lebih lemah.','<b>Dua tempat bertarung:</b>','• <b>Turnamen</b> (Dragon Keeper, Lady of Water): tiap babak adalah satu pertarungan. Lolos babak menambah stat karakter.','• <b>Latih Tanding</b> (menu Rawat pet atau aksi Latih): lawan monster liar, '+R(2000)+' dan 1 hari. Tingkat Mudah, Sepadan, atau Sulit. Menang menaikkan stat pet, pet jadi lelah +20%.','Tes Kecerdasan Pet tetap adu INT, bukan pertarungan.')},
 {k:['rawat','latih pet','melatih','stat pet','life','power','speed','defense','lelah','istirahat','fusi','pensiun','umur pet','telur warisan','makan mewah'],a:()=>B('Tab <b>Pet</b>: rawat dan latih pet-mu.','• Latih (<b>Life, Power, Speed, Defense, INT</b>): '+R(3000)+' menambah sekitar 3 poin, dan memakai 1 hari.','• <b>Makan mewah</b> '+R(5000)+', <b>Istirahat</b> mengurangi lelah.','• <b>Latih tanding</b> '+R(2000)+': duel bergiliran melawan monster liar, menang menaikkan stat pet.','• <b>Fusi</b> menggabungkan 2 telur atau pet.','Pet yang <b>lelah</b> bertarung lebih lemah di turnamen dan latih tanding. Pet punya umur: saat pensiun ia meninggalkan <b>telur warisan</b>.')},
@@ -4169,7 +4255,7 @@ const KB=[
 {k:['ramuan','racik','resep','jamu','wedang','kunyit','bahan ramuan','meja racik','basi'],a:()=>B('<b>Meja racik</b> ada di tab <b>Usaha</b>. Resep yang ada: Wedang Jahe, Wedang Sereh, Jamu Masuk Angin, Kunyit Asam, Beras Kencur, dan Jamu Stamina.','Bahan dibeli, atau didapat gratis dari hutan dan dungeon (Jamu Stamina butuh bahan dari dalam dungeon).','Ramuan <b>basi dalam 2 sampai 5 hari</b>, jadi jangan menimbun. Tanya Lina dan Sari untuk resep baru.')},
 {k:['lapak','jual ramuan','menjual','sewa lapak','dagang','berdagang','permintaan'],a:()=>B('<b>Lapak</b> disewa '+R(30000)+' per musim untuk menjual ramuan.','Tiap jenis ramuan punya harga dan permintaan sendiri. <b>Permintaan turun saat harga naik</b>. Ramuan yang paling lama disimpan dijual lebih dulu.')},
 {k:['kerajinan','desa sungai','desa bukit','kota singgah','bepergian','perahu','barang kerajinan'],a:()=>B('Di Kota Singgah dan desa lain, warga meminta <b>barang kerajinan</b> tertentu yang belum tersedia di sana.','Hitung HPP, tetapkan harga, dan tentukan jumlah. Tiap barang yang laku menurunkan harga acuan karena pasar jenuh.','Harga acuan Kota Singgah <b>1,6×</b>, desa lain <b>1,9×</b>, tapi bepergian memakan <b>1 hari</b>. Hitung dulu apakah selisihnya menutup biaya hari itu.')},
-{k:['kandang','aksesoris','sewa kandang','beli aksesoris','perlengkapan'],a:()=>B('<b>Kandang</b>: disewa di tab <b>Usaha</b> seharga '+R(10000)+'. Tempat tinggal pet-mu, dan syarat summon.','<b>Aksesoris</b>: dibeli di tab <b>Usaha</b> seharga '+R(3000)+'. <b>Satu aksesoris terpakai</b> setiap kali summon, jadi beli lagi untuk pet berikutnya.')},
+{k:['kandang','aksesoris','beli kandang','sewa kandang','beli aksesoris','perlengkapan'],a:()=>B('<b>Kandang</b>: dibeli sekali di tab <b>Usaha</b> seharga '+R(KANDANG)+', jadi tidak perlu disewa lagi tiap musim. Tempat tinggal pet-mu, dan syarat summon.','<b>Aksesoris</b>: dibeli di tab <b>Usaha</b> seharga '+R(3000)+'. <b>Satu aksesoris terpakai</b> setiap kali summon, jadi beli lagi untuk pet berikutnya.')},
 {k:['rumah','kemah','tenda','bangun rumah','penghuni'],a:()=>B('Tempat tinggalmu bisa di-<b>upgrade</b> lewat tab Usaha: Tenda, lalu Rumah ('+R(KBL[2].cost)+', '+KBL[2].days+' hari, muat '+KBL[2].cap+' teman), lalu Rumah Besar ('+R(KBL[3].cost)+', '+KBL[3].days+' hari, muat '+KBL[3].cap+' teman). Selama dibangun, kapasitas belum bertambah.','Penghuni ikut makan, jadi biaya harianmu naik.')},
 {k:['teman','dina','bayu','sari','rani','joko','lina','tomo','rekan tim','kedekatan','tim'],a:()=>B('Warga seperti Dina, Bayu, Sari, Rani, Joko, Lina, dan Tomo bisa jadi <b>teman</b>.','⚔️ <b>Joko</b> (pembuat jaring) menolak berteman sebelum kamu <b>mengalahkan Kepiting Jaring-nya</b> dalam duel pet. Temui dia di <b>Desa Sungai</b> (naik perahu Kang Jarwo), pilih <b>Terima duel pet</b>, lalu bertarunglah. Bisa juga lewat tab Teman, tombol Bicara. Duelnya gratis, tetapi pet jadi lelah +20%.','Ajak bicara secara rutin. Kalau <b>kedekatan mencapai 40+</b>, mereka jadi rekan tim, yang dibutuhkan untuk lomba Gold and Garbage.','Lihat daftar teman di panel karakter (ketuk potretmu di kiri atas).')},
 {k:['kontrol','cara main','cara bermain','jalan','gerak','tombol','kontrolnya','controls','dock','menu','bantuan'],a:()=>B('<b>Kontrol:</b>','• Jalan: tombol panah atau A D, atau ketuk peta.','• Bicara dengan monster atau NPC: tombol E atau ketuk mereka.','• Perintah ada di <b>dock bawah</b>: Pet, Usaha, Belajar, Lomba, Summon.','• Kanan atas: <b>Tas</b>, <b>Jurnal</b>, <b>Menu</b>.','• Ketuk <b>potretmu</b> untuk melihat karakter, monster, misi GMS, dan teman.')},
