@@ -2979,7 +2979,7 @@ function guruDash(){
  if(!seen){try{localStorage.setItem('tl_gmat','1')}catch(e){}gMat()}}
 
 /* ---- Perbandingan tes awal dan tes akhir (tes 12 soal, 2 per topik; data lama 6 soal tetap terbaca). Nilai 0-100. ---- */
-const gPat=v=>/^([01]{6}|[01]{12})$/.test(v||'')?[...v].map(Number):null,
+const gPat=v=>{if(typeof v==='number'&&isFinite(v)){v=String(Math.round(v));v=v.length<=6?v.padStart(6,'0'):v.padStart(12,'0')}else v=String(v==null?'':v);return /^([01]{6}|[01]{12})$/.test(v)?[...v].map(Number):null},
  gTs=r=>{const a=gPat(r.pre),b=gPat(r.post),sm=x=>x?x.reduce((p,q)=>p+q,0):null,pc=x=>x?Math.round(sm(x)/x.length*100):null,pa=pc(a),pb=pc(b),rw=x=>sm(x)/x.length*100;return{a,b,sa:sm(a),sb:sm(b),na:a?a.length:0,nb:b?b.length:0,pa,pb,d:a&&b?Math.round(rw(b)-rw(a)):null}},
  gSg=n=>(n>0?'+':'')+n,gCl=n=>n>0?'good':n<0?'bad':'',
  gIc=v=>`<span class="${v?'good':'bad'}">${v?'✔':'✖'}</span>`,
