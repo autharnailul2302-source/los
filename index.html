@@ -2787,7 +2787,7 @@ function petTire(n){const q=P&&P.pet;if(!q||!q.src)return;const p=q.src,a=p.fat|
 function petHit(q,t){if(!t||t.hp<=0)return;t.hp-=q.dmg;t.pk=1;t.fl=.12;sfx('hit');
   const k=Math.hypot(t.x-q.x,t.y-q.y)||1,w=t.rare?.3:t.boss?.1:1;t.vx+=(t.x-q.x)/k*150*w;t.vy+=(t.y-q.y)/k*150*w;pop(t.x,t.y-12,'-'+q.dmg,'#9bdcff');
   if(t.hp<=0)reap()}
-/* Sprite pet bertekstur atlas di dungeon: Tarum evolusi 1-4, Silvara evolusi 1-4, Ratnaka evolusi 1-4, Nagi evolusi 1 (lihat TSET). Rincian Tarum (TRD = evolusi 1, TRD2 = evolusi 2, TRD3 = evolusi 3, TRD4 = evolusi 4): atlas 8 kolom, sel 140x92 jangkar kaki (70,84) untuk TRD; 115x86 jangkar (57,76) untuk TRD2. Baris: 0 diam(4), 1 jalan(4), 2 tebas(6), 3 skill kristal(8), 4 kena(4), 5 tumbang(6). Semua frame menghadap kanan/depan; gerak ke kiri memakai cermin. Baris kena/tumbang belum dipakai (pet tidak bisa tumbang). */
+/* Sprite pet bertekstur atlas di dungeon: Tarum evolusi 1-4, Silvara evolusi 1-4, Ratnaka evolusi 1-4, Nagi evolusi 1-4 (lihat TSET). Rincian Tarum (TRD = evolusi 1, TRD2 = evolusi 2, TRD3 = evolusi 3, TRD4 = evolusi 4): atlas 8 kolom, sel 140x92 jangkar kaki (70,84) untuk TRD; 115x86 jangkar (57,76) untuk TRD2. Baris: 0 diam(4), 1 jalan(4), 2 tebas(6), 3 skill kristal(8), 4 kena(4), 5 tumbang(6). Semua frame menghadap kanan/depan; gerak ke kiri memakai cermin. Baris kena/tumbang belum dipakai (pet tidak bisa tumbang). */
 const TRD={im:new Image(),cw:140,ch:92,ax:70,ay:84,g:.62,ti:[.2,.2,.2,.2],tw:[.1,.1,.1,.1],ta:[.08,.08,.09,.12,.12,.08],ts:[.09,.1,.1,.1,.1,.16,.1,.09],hit:.3,skfx:.5};TRD.im.src='images/tarum-dungeon-sprite.webp?v=1';
 TRD.la=TRD.ta.reduce((a,b)=>a+b,0);TRD.ls=TRD.ts.reduce((a,b)=>a+b,0);
 const TRD2=Object.assign({},TRD,{im:new Image(),cw:115,ch:86,ax:57,ay:76,g:.66});TRD2.im.src='images/tarum2-dungeon-sprite.webp?v=1';
@@ -2802,7 +2802,10 @@ const RTD2=Object.assign({},RTD1,{im:new Image(),cw:110,ch:104,ax:55,ay:91,g:.6}
 const RTD3=Object.assign({},RTD1,{im:new Image(),cw:120,ch:104,ax:60,ay:88,g:.64});RTD3.im.src='images/ratnaka3-dungeon-sprite.webp?v=1';
 const RTD4=Object.assign({},RTD1,{im:new Image(),cw:150,ch:105,ax:75,ay:93,g:.6});RTD4.im.src='images/ratnaka4-dungeon-sprite.webp?v=1';
 const NGD1=Object.assign({},TRD,{im:new Image(),cw:107,ch:96,ax:53,ay:83,g:.66});NGD1.im.src='images/nagi1-dungeon-sprite.webp?v=1';/* Nagi evolusi 1 */
-const TSET={tarum:[TRD,TRD2,TRD3,TRD4],silvara:[SVD1,SVD2,SVD3,SVD4],ratnaka:[RTD1,RTD2,RTD3,RTD4],nagi:[NGD1]};/* atlas per spesies, indeks = tahap evolusi (0-3). Tahap tanpa atlas memakai gambar lama */
+const NGD2=Object.assign({},NGD1,{im:new Image(),cw:125,ch:102,ax:62,ay:85,g:.7});NGD2.im.src='images/nagi2-dungeon-sprite.webp?v=1';
+const NGD3=Object.assign({},NGD1,{im:new Image(),cw:136,ch:108,ax:68,ay:86,g:.72});NGD3.im.src='images/nagi3-dungeon-sprite.webp?v=1';
+const NGD4=Object.assign({},NGD1,{im:new Image(),cw:121,ch:99,ax:60,ay:88,g:.76});NGD4.im.src='images/nagi4-dungeon-sprite.webp?v=1';
+const TSET={tarum:[TRD,TRD2,TRD3,TRD4],silvara:[SVD1,SVD2,SVD3,SVD4],ratnaka:[RTD1,RTD2,RTD3,RTD4],nagi:[NGD1,NGD2,NGD3,NGD4]};/* atlas per spesies, indeks = tahap evolusi (0-3). Tahap tanpa atlas memakai gambar lama */
 const tSetOf=p=>{const a=p&&TSET[p.spc];return a&&a[Math.min(3,p.st|0)]};
 const tB=q=>tSetOf(q.src)||TRD;
 const tOK=q=>{const d=tB(q);return d.im.complete&&d.im.naturalWidth>0};
