@@ -60,11 +60,13 @@ function kdUp(){const k=S.kup|0;if(!S.kandang)return alert('Beli Kandang dulu di
 const RAR=[['Biasa','⚪',1,'#e8dcc0'],['Langka','🔵',1.15,'#4aa8ff'],['Epik','🟣',1.3,'#a56bff'],['Legendaris','🟡',1.5,'#f0c75e']];
 const pRar=p=>p.spc?SPC[p.spc][2]:-1,pDef=p=>p.spc?stN(p)+(p.sj?' Sejati':''):EL[p.el][1],pName=p=>p.nick?p.nick:pDef(p),pMul=p=>RAR[Math.max(0,pRar(p))][2];
 /* Fase G2: evolusi */
-const EVN={gelumo:['Gelumo','Gelumar','Gelumora','Samudrakara'],bara:['Bara','Barani','Barakila','Jwalakesa'],kapas:['Kapas','Kapasu','Kapasara','Cakrawala'],kerikil:['Kerikil','Kerikor','Kerikara','Girimaha'],nayara:['Nayara','Nayari','Nayarel','Nayaratna'],salar:['Salar','Salarok','Salaraja','Salamandara'],tornia:['Tornia','Tornel','Tornaros','Badaiyuda'],tarum:['Tarum','Tarumon','Taruvast','Kawacagiri'],silvara:['Silvara','Silvaren','Silvaris','Silvanova'],jwalira:['Jwalira','Jwalaka','Jwalendra','Jwalamaha'],ratnaka:['Ratnaka','Ratnaki','Ratnarasa','Ratnamaha'],bayura:['Bayura','Bayuri','Bayuraja','Bayumaha'],nagi:['Nagi','Nagara','Nagaraja',''],uapkara:Array(4).fill('Uapkara'),rawakala:Array(4).fill('Rawakala'),kabutara:Array(4).fill('Kabutara'),magmora:Array(4).fill('Magmora'),kilatra:Array(4).fill('Kilatra'),debura:Array(4).fill('Debura')},NGL={air:'Tirtanaga',api:'Agninaga',udara:'Bayunaga',tanah:'Bhuminaga'},STG=['Anak','Muda','Dewasa','Legend'],EVR=[null,[50,20],[90,60],[130,0]];
+const EVN={gelumo:['Gelumo','Gelumar','Gelumora','Samudrakara'],bara:['Bara','Barani','Barakila','Jwalakesa'],kapas:['Kapas','Kapasu','Kapasara','Cakrawala'],kerikil:['Kerikil','Kerikor','Kerikara','Girimaha'],nayara:['Nayara','Nayari','Nayarel','Nayaratna'],salar:['Salar','Salarok','Salaraja','Salamandara'],tornia:['Tornia','Tornel','Tornaros','Badaiyuda'],tarum:['Tarum','Tarumon','Taruvast','Kawacagiri'],silvara:['Silvara','Silvaren','Silvaris','Silvanova'],jwalira:['Jwalira','Jwalaka','Jwalendra','Jwalamaha'],ratnaka:['Ratnaka','Ratnaki','Ratnarasa','Ratnamaha'],bayura:['Bayura','Bayuri','Bayuraja','Bayumaha'],nagi:['Nagi','Nagara','Nagaraja','Nagasagara'],uapkara:Array(4).fill('Uapkara'),rawakala:Array(4).fill('Rawakala'),kabutara:Array(4).fill('Kabutara'),magmora:Array(4).fill('Magmora'),kilatra:Array(4).fill('Kilatra'),debura:Array(4).fill('Debura')},STG=['Anak','Muda','Dewasa','Legend'],EVR=[null,[50,20],[90,60],[130,0]];
 /* Item evolusi dari Gua Pulau Sedaya: tiap evolusi butuh stat + umur/juara + 1 item sesuai tahap. SDG_C = kedekatan dengan Tomo agar gerbang gua mau dibuka. */
-const EVI=[null,{n:'Kerang Sedaya',e:'🐚',c:'#7fe3ff'},{n:'Mutiara Sedaya',e:'🔮',c:'#c9a6ff'},{n:'Permata Samudra',e:'💎',c:'#ffd76a'}],SDG_C=60;
+const EVI=[null,{n:'Kerang Sedaya',e:'🐚',f:'item-evo-kerang.png',c:'#7fe3ff'},{n:'Mutiara Sedaya',e:'🔮',f:'item-evo-mutiara.png',c:'#c9a6ff'},{n:'Permata Samudra',e:'💎',f:'item-evo-permata.png',c:'#ffd76a'}],SDG_C=60;
+/* Ikon item evolusi: gambar images/item-evo-*.png, emoji sebagai cadangan jika gambar gagal dimuat */
+EVI.forEach(x=>{if(x){x.em=x.e;x.e=`<img class="evi-ic" src="images/${x.f}" alt="" style="height:1.3em;width:auto;vertical-align:-.3em" onerror="this.outerHTML='${x.em}'">`}});
 const eviS=()=>{S.evi=S.evi||{1:0,2:0,3:0};return S.evi};
-const stN=p=>{const s=p.st||0;return p.spc==='nagi'&&s===3?NGL[p.el]:EVN[p.spc][s]},stTot=p=>p.hp+p.pw+p.sp+p.df;
+const stN=p=>{const s=p.st||0;return EVN[p.spc][s]},stTot=p=>p.hp+p.pw+p.sp+p.df;
 /* Popup evolusi: tampil setelah animasi ganti hari selesai dan tidak ada jendela lain yang terbuka */
 function evoFlush(){if(window.EVQf||!(window.EVQ&&window.EVQ.length))return;window.EVQf=1;let tries=0;
  const go=()=>{const ov=document.getElementById('ov'),busy=document.getElementById('nite')||(ov&&ov.classList.contains('on'));
@@ -72,16 +74,20 @@ function evoFlush(){if(window.EVQf||!(window.EVQ&&window.EVQ.length))return;wind
   window.EVQf=0;const e=window.EVQ.shift();if(!e)return;
   const p=e.p,em=(EL[p.el]||['🐾'])[0],pic=(u,k)=>u?`<img src="${u}" alt="" style="filter:drop-shadow(0 4px 8px rgba(0,0,0,.4))" onerror="this.outerHTML='<span class=evf>${em}</span>'">`:`<span class=evf>${em}</span>`;
   try{sfx('coin')}catch(x){}
-  modal('✨ Evolusi!',{cls:'evm',html:`<div class=evx><div class="evp"><div class=evi>${pic(e.oim)}</div><b>${gEsc(e.old)}</b><small>${STG[e.n-1]}</small></div><i class=eva>➜</i><div class="evp nw"><div class=evi>${pic(art(p))}</div><b>${gEsc(pName(p))}</b><small>${STG[e.n]}</small></div></div><p class=good style="text-align:center;margin:8px 0 2px"><b>${gEsc(e.old)}</b> berevolusi menjadi <b>${gEsc(pName(p))}</b>!</p><p class=sub style="text-align:center">Stat kini +${e.n*10}% dari bentuk Anak. Kamu bisa melihat syarat tahap berikutnya di info pet.</p>`,
+  const ELC={air:'#4aa8ff',udara:'#b6ecff',tanah:'#8fcf6a',api:'#ff8a4a'},col=ELC[p.el]||'#f0c75e',LB={hp:'Life',pw:'Power',sp:'Speed',df:'Defense',iq:'IQ'},
+   chg=e.ob&&e.nb?Object.keys(LB).map((k,x)=>`<div class="evo-s" style="--i:${x}"><small>${LB[k]}</small><b>${e.ob[k]} <i>➜</i> ${e.nb[k]}</b><em>+${e.nb[k]-e.ob[k]}</em></div>`).join(''):'',
+   sps=Array.from({length:14},()=>`<i class="evo-sp" style="--x:${Math.round(Math.random()*96)}%;--d:${(2.4+Math.random()*2).toFixed(1)}s;--l:${(Math.random()*3).toFixed(1)}s">✦</i>`).join(''),
+   nxt=e.n<3?`Tahap berikutnya: <b>${gEsc(EVN[p.spc][e.n+1])}</b> (${STG[e.n+1]}). Cek syaratnya di info pet.`:'Bentuk <b>Legend</b> tercapai. Aura elemen kini menyala.';
+  modal('✨ Evolusi!',{cls:'evm evm'+e.n,html:`<div class="evo-rb"><span>${STG[e.n]}</span> · Tahap ${e.n+1} dari 4</div><div class="evo-stage" style="--c:${col}"><div class="evo-rays"></div>${sps}<div class=evx><div class="evp"><div class=evi>${pic(e.oim)}</div><b>${gEsc(e.old)}</b><small>${STG[e.n-1]}</small></div><i class=eva>➜</i><div class="evp nw"><div class=evi>${pic(art(p))}</div><b>${gEsc(pName(p))}</b><small>${STG[e.n]}</small></div></div></div><p class=good style="text-align:center;margin:8px 0 6px"><b>${gEsc(e.old)}</b> berevolusi menjadi <b>${gEsc(pName(p))}</b>!</p>${chg?`<div class="evo-g">${chg}</div>`:''}<p class=sub style="text-align:center;margin:6px 0 0">Stat kini +${e.n*10}% dari bentuk Anak. ${nxt}</p>`,
    btns:[['Lihat pet',()=>{close();const j=S.pets.indexOf(p);if(j>=0)petModal(j);setTimeout(evoFlush,300)},'p'],['Lanjut',()=>{close();setTimeout(evoFlush,300)}]]})};
  setTimeout(go,900)}
 function evoCheck(p){if(!p.spc||isHyb(p))return;const s=p.st||0;if(s>=3)return;const n=s+1,q=EVR[n];if(stTot(p)<q[0]||p.age<q[1]||(n===3&&!p.won)||(eviS()[n]|0)<1)return;
- const old=pName(p),oim=art(p),m=(1+.1*n)/(1+.1*s);['hp','pw','sp','df','iq'].forEach(k=>p[k]=Math.round(p[k]*m));eviS()[n]--;p.st=n;(window.EVQ=window.EVQ||[]).push({p,old,oim,n});log(`${old} berevolusi menjadi ${pName(p)} (${STG[n]})! Stat kini +${n*10}% dari bentuk Anak.`,'good')}
+ const old=pName(p),oim=art(p),m=(1+.1*n)/(1+.1*s),ob={};['hp','pw','sp','df','iq'].forEach(k=>ob[k]=p[k]|0);['hp','pw','sp','df','iq'].forEach(k=>p[k]=Math.round(p[k]*m));const nb={};['hp','pw','sp','df','iq'].forEach(k=>nb[k]=p[k]|0);eviS()[n]--;p.st=n;(window.EVQ=window.EVQ||[]).push({p,old,oim,n,ob,nb});log(`${old} berevolusi menjadi ${pName(p)} (${STG[n]})! Stat kini +${n*10}% dari bentuk Anak.`,'good')}
 const evH=p=>{if(!p.spc)return '';if(isHyb(p))return `<p class=sub style="margin:2px 0 6px">Hibrida · tahap tunggal${p.sj?' · Sejati ✨':''}</p>`;const s=p.st||0;let h=`<p class=sub style="margin:2px 0 6px">Tahap ${s+1}/4 · ${STG[s]}${p.sj?' · Sejati ✨':''}${s===3?' · aura elemen ✨':''}`;if(s<3){const q=EVR[s+1];h+=` · menuju ${STG[s+1]}: stat ${stTot(p)}/${q[0]}, ${s+1===3?(p.won?'juara ✔':'butuh juara 1 kejuaraan'):'umur '+p.age+'/'+q[1]}, ${EVI[s+1].e} ${Math.min(1,eviS()[s+1]|0)}/1`}return h+'</p>'};
 /* Panel evolusi di menu Rawat pet: tahap sekarang, bentuk berikutnya, syarat, dan progresnya */
 const evBox=p=>{if(!p.spc)return '';
  if(isHyb(p))return `<div class=rev><b>Evolusi</b><small>Monster hibrida: satu tahap saja, tidak berevolusi.</small></div>`;
- const s=p.st||0,nm=k=>p.spc==='nagi'&&k===3?NGL[p.el]:EVN[p.spc][k],chips=STG.map((g,k)=>`<span class="${k<s?'ok':k===s?'on':''}" title="${nm(k)}">${g}</span>`).join('');
+ const s=p.st||0,nm=k=>EVN[p.spc][k],chips=STG.map((g,k)=>`<span class="${k<s?'ok':k===s?'on':''}" title="${nm(k)}">${g}</span>`).join('');
  let body;
  if(s>=3)body=`<small>Tahap akhir tercapai: <b>${nm(3)}</b>.</small>`;
  else{const n=s+1,q=EVR[n],pc=(a,m)=>Math.max(0,Math.min(100,Math.round(a/m*100))),t=stTot(p),
@@ -790,7 +796,7 @@ const EVS=[
 ];
 const sel=()=>S.pets[S.sel]||S.pets[0],pf=p=>1-p.fat/150;
 /* Siklus elemen: Air > Api > Udara > Tanah > Air. Unggul +25%, lemah -20% */
-const CYC={air:'api',api:'udara',udara:'tanah',tanah:'air'},elM=(a,b)=>CYC[a]===b?1.25:CYC[b]===a?.8:1;
+const CYC={air:'api',api:'udara',udara:'tanah',tanah:'air'},elM=(a,b,sa,sb)=>sa==='nagi'?(sb==='nagi'?1:1.25):sb==='nagi'?.8:CYC[a]===b?1.25:CYC[b]===a?.8:1;/* sa/sb = spesies penyerang/bertahan; Nagi unggul melawan semua elemen */
 /* Spell: [elemen, bonus skor]. Jumlah spell aktif dibatasi MP: 1 + MP/4 */
 const SPL={'Water Cyclone':['air',6],'Tornado':['udara',5],'Lizard Fire':['api',5],'Cyclone':['tanah',5]};
 const spB=p=>S.spells.filter(x=>SPL[x]&&SPL[x][0]===p.el).map(x=>SPL[x][1]).sort((a,b)=>b-a).slice(0,1+Math.floor(S.st.MP/4)).reduce((a,b)=>a+b,0);
@@ -798,7 +804,7 @@ const spB=p=>S.spells.filter(x=>SPL[x]&&SPL[x][0]===p.el).map(x=>SPL[x][1]).sort
 const pwr=p=>(p.hp+p.pw+p.sp+p.df+spB(p)+S.st.HP*.3)*pf(p),pwrF=f=>f.hp+f.pw+f.sp+f.df;
 function foeOf(e){S.foes=S.foes||{};const k=S.s+e.id;if(!S.foes[k]){const b=8+S.s*2+(e.id==='drg'?4:e.id==='wat'?2:0),j=()=>b+r(-2,2);S.foes[k]={nm:['Golem Batu','Elf Hutan','Ksatria Awan','Naga Muda','Penyihir Rawa'][r(0,4)],el:Object.keys(EL)[r(0,3)],hp:j(),pw:j(),sp:j(),df:j(),iq:4+S.s+(e.id==='iq2'?2:0)+r(-1,1)}}if(!/^iq2?$/.test(e.id))S.foes[k].nm='Garuda';return S.foes[k]}
 const OPP={iq:22,iq2:30,wat:28,drg:30};
-EVS.forEach(e=>{if(OPP[e.id]){e.pet=1;const iqT=e.id==='iq'||e.id==='iq2';e.p=()=>{const p=sel();if(!p)return 0;const f=foeOf(e),a=iqT?(p.iq*3+S.st.INT)*pf(p):pwr(p)*elM(p.el,f.el),b=iqT?f.iq*3+8:pwrF(f);return cl(1/(1+Math.exp(-(a/b-1)*6)),.05,.92)};if(e.id!=='drg')e.need=()=>S.pets.length?'':'Kamu butuh minimal 1 pet.'}});
+EVS.forEach(e=>{if(OPP[e.id]){e.pet=1;const iqT=e.id==='iq'||e.id==='iq2';e.p=()=>{const p=sel();if(!p)return 0;const f=foeOf(e),a=iqT?(p.iq*3+S.st.INT)*pf(p):pwr(p)*elM(p.el,f.el,p.spc,f.spc),b=iqT?f.iq*3+8:pwrF(f);return cl(1/(1+Math.exp(-(a/b-1)*6)),.05,.92)};if(e.id!=='drg')e.need=()=>S.pets.length?'':'Kamu butuh minimal 1 pet.'}});
 const evOn=()=>EVS.filter(e=>(e.t===2||e.t===(rain()?1:0))&&S.day>=e.d[0]&&S.day<=e.d[1]&&!S.done[S.s+e.id]);
 /* Modal */
 const CANCELRX=/^(kembali|batal|tutup|lewati|nanti|sampai nanti|nanti dulu|ok)\b/i;
@@ -1008,14 +1014,34 @@ function ledgerHtml(i){const rows=(i===undefined?S.led.map((l,j)=>[j,l]):[[i,S.l
  rows.forEach(([j,l])=>h+=`<tr><td>Thn ${Math.floor(j/2)+1} ${j%2?'Hujan':'Kemarau'}</td><td>${rp(l.inc)}</td><td>${rp(l.exp)}</td><td class="${l.inc-l.exp<0?'bad':'good'}">${rp(l.inc-l.exp)}</td></tr>`);
  h+='</table>';if(i!==undefined){h+='<p class="sub">Rincian: '+Object.entries(S.led[i].d).map(([k,v])=>`${k} ${rp(v)}`).join('; ')+'</p>'}return h}
 /* Event */
+/* Tampilan khusus event: tiap event punya warna, ikon, label, dan kalimat pemikat sendiri (popup biasa tidak berubah) */
+const EVT={
+ iq:{c:'#5ec8ff',ic:'🧠',tag:'UJIAN KECERDASAN',hook:'Adu pintar petmu di Kuil dan rebut PSW.'},
+ wat:{c:'#3d9bff',ic:'air',tag:'KOMPETISI BESAR',hook:'Turnamen air tiga babak. Juara membawa pulang telur Lady of Water.'},
+ spl:{c:'#b88cff',ic:'✨',tag:'UJIAN SIHIR',hook:'Buktikan penguasaan mantramu dan pilih spell pertamamu.'},
+ gg:{c:'#f0c75e',ic:'egg',tag:'LOMBA TIM LINTAS DESA',hook:'Ubah sampah jadi emas bersama rekan timmu.'},
+ psr:{c:'#6aa8ff',ic:'🌧️',tag:'KABAR PASAR',hook:'Hujan mengubah harga bahan dan selera pembeli.'},
+ iq2:{c:'#4fd1c5',ic:'🧩',tag:'UJIAN LANJUTAN',hook:'Soal lebih sulit, hadiah lebih besar.'},
+ drg:{c:'#ff7b4a',ic:'🐉',tag:'KOMPETISI NAGA',hook:'Tiga babak di Lembah Naga. Siapkan dua pet yang kuat.'},
+ gg2:{c:'#59c3b0',ic:'egg',tag:'LOMBA TIM · MUSIM HUJAN',hook:'Lomba tim lintas desa kembali, kali ini di tengah hujan.'}
+};
+const evImg=(f,fb)=>`<img class="evx-i" src="images/${f}" alt="" draggable="false" onerror="this.outerHTML='${fb}'">`;
+const evIc=k=>k==='air'?elI('air'):k==='egg'?evImg('telur.png','🥚'):k==='coin'?evImg('koin.png','🪙'):k==='psw'?evImg('ui-c-trophy.png','⭐'):k==='acc'?evImg('item-aksesoris.png','💍'):k==='cert'?evImg('sertifikat.png','📜'):k==='el3'?elI('udara')+elI('api')+elI('tanah'):k.startsWith('el:')?elI(k.slice(3)):k;
+const evRw=t=>/secret egg|telur/i.test(t)?'egg':/^rp\b/i.test(t)?'coin':/psw/i.test(t)?'psw':/water cyclone/i.test(t)?'el:air':/tornado|lizard|cyclone/i.test(t)?'el3':/spell|mantra/i.test(t)?'✨':/jubah/i.test(t)?'🧥':/pedang/i.test(t)?'⚔️':/aksesori/i.test(t)?'acc':/sertifikat/i.test(t)?'cert':/panas/i.test(t)?'🔥':/dingin/i.test(t)?'❄️':'🎁';
+const evRwList=r=>r.replace(/\([^)]*\)/g,m=>m.replace(/,/g,'\u0001')).split(/,\s*|\s+dan\s+/).map(x=>x.replace(/\u0001/g,',').replace(/^dan\s+/i,'').trim()).filter(Boolean);
 function event(e){
- if(!e.reg){modal(e.n,{html:`<p>${e.info}</p>`,btns:[['Mengerti',()=>{S.done[S.s+e.id]=1;close()},'p']]});return}
- const msg=e.need();if(msg){modal(e.n,{html:`<p>${e.pl}. ${msg}</p>`,btns:[['Tutup',close]]});return}
- let h=(e.pet?petSel(e)+foeBox(e):'')+`<p>Tempat: ${e.pl}. Registrasi <b>${rp(e.reg)}</b>. Hadiah: ${e.rw}.</p>`;
- if(e.gg)h+=`<p>Rekan timmu: <b>${teamOf().map(i=>NPC[i][0]).join(', ')}</b> (+${teamOf().length*6} skor). Kamu menentukan produk dan harganya.</p>`;
- else{const p=e.p();h+=`<p>Perkiraan peluang menang: <b>${Math.round(p*100)}%</b>. ${e.pet?`Lomba ini ${e.id==='wat'||e.id==='drg'?3:2} babak. Tiap babak yang kamu lolosi menambah 1 stat karakter (ke ${e.key} atau stat lain). Peluang di atas hanya perkiraan; tiap babak kamu mainkan sendiri sebagai pertarungan bergiliran.`:`Kalau kalah, ada peluang 50% ${e.key} +1.`}</p>`;
- const w=e.id==='iq'?25000:e.id==='iq2'?30000:e.id==='drg'?50000:null;if(w)h+=`<p>Nilai harapan uang: ${Math.round(p*100)}% x ${rp(w)} dikurangi ${rp(e.reg)} = <b>${rp(p*w-e.reg)}</b>. Peluang impasnya ${Math.round(e.reg/w*100)}%.</p>`}
- modal(e.n,{arena:e.pet&&!/^iq2?$/.test(e.id)?'pra':'',html:h,btns:[['Ikut',()=>join(e),'p'],['Lewati',close]]})}
+ const T=EVT[e.id]||{c:'#f0c75e',ic:'🏆',tag:'EVENT',hook:''},cls='evx evx-'+e.id;
+ const ban=`<div class="evx-ban"><span class="evx-big">${evIc(T.ic)}</span><div><small class="evx-tag">${T.tag}</small><p class="evx-hook">${T.hook}</p></div></div>`;
+ if(!e.reg){modal(e.n,{cls,html:ban+`<div class="evx-note"><p>${e.info}</p></div>`,btns:[['Mengerti',()=>{S.done[S.s+e.id]=1;close()},'p']]});return}
+ const msg=e.need();if(msg){modal(e.n,{cls,html:ban+`<div class="evx-warn"><p>${e.pl}. ${msg}</p></div>`,btns:[['Tutup',close]]});return}
+ const when=e.d[0]===e.d[1]?'Hari '+e.d[0]:'Hari '+e.d[0]+'–'+e.d[1];
+ const rl=evRwList(e.rw),mi=Math.max(0,rl.findIndex(t=>/secret egg|telur/i.test(t))),od=[mi,...rl.keys()].filter((x,k,a)=>a.indexOf(x)===k);
+ const chips=od.map((k,n)=>{const t=rl[k];return `<span class="evx-ch${n===0?' big':''}" style="--i:${n}">${evIc(evRw(t))} ${t[0].toUpperCase()+t.slice(1)}</span>`}).join('');
+ let h=ban+`<div class="evx-inf"><div class="evx-c"><small>Biaya daftar</small><b>${evIc('coin')} ${rp(e.reg)}</b></div><div class="evx-c"><small>Tempat</small><b>${e.pl}</b></div><div class="evx-c"><small>Jadwal</small><b>${when}</b></div></div><div class="evx-rw"><small>Hadiah</small><div class="evx-rl">${chips}</div></div>`+(e.pet?petSel(e)+foeBox(e):'');
+ if(e.gg)h+=`<div class="evx-team"><span>Rekan timmu</span><b>${teamOf().map(i=>NPC[i][0]).join(', ')}</b><em>+${teamOf().length*6} skor</em></div><p class="sub">Kamu menentukan produk dan harganya.</p>`;
+ else{const p=e.p(),pc=Math.round(p*100);h+=`<div class="evx-od"><span>Perkiraan peluang menang</span><b>${pc}%</b><i><u style="width:${pc}%"></u></i></div><p class="sub">${e.pet?`Lomba ini ${e.id==='wat'||e.id==='drg'?3:2} babak. Tiap babak yang kamu lolosi menambah 1 stat karakter (ke ${e.key} atau stat lain). Peluang di atas hanya perkiraan; tiap babak kamu mainkan sendiri sebagai pertarungan bergiliran.`:`Kalau kalah, ada peluang 50% ${e.key} +1.`}</p>`;
+  const w=e.id==='iq'?25000:e.id==='iq2'?30000:e.id==='drg'?50000:null;if(w)h+=`<p class="sub">Nilai harapan uang: ${pc}% x ${rp(w)} dikurangi ${rp(e.reg)} = <b>${rp(p*w-e.reg)}</b>. Peluang impasnya ${Math.round(e.reg/w*100)}%.</p>`}
+ modal(e.n,{cls,arena:e.pet&&!/^iq2?$/.test(e.id)?'pra':'',html:h,btns:[['Ikut · '+rp(e.reg),()=>join(e),'p'],['Nanti saja',close]]})}
 function join(e){if(!spend(e.reg,'Registrasi lomba')){modal(e.n,{html:'<p class="bad">Uangmu kurang untuk registrasi.</p>',btns:[['Tutup',close]]});return}
  S.done[S.s+e.id]=1;if(e.gg){gg(e);return}const p0=e.p();if(e.pet&&!/^iq2?$/.test(e.id)){const q=sel(),n=e.id==='wat'||e.id==='drg'?3:2;tourney(e,q,n,adv=>{const won=adv===n;if(won)q.won=1;q.fat=Math.min(100,q.fat+30);if(!won)q.pw++;fin(e,won,adv)});return}if(e.pet){const q=sel(),n=e.id==='wat'||e.id==='drg'?3:2,pr=Math.pow(p0,1/n);let adv=0;while(adv<n&&Math.random()<pr)adv++;const won=adv===n;if(won)q.won=1;q.fat=Math.min(100,q.fat+30);if(!won)q.pw++;
  for(let i=0;i<adv;i++){const k=Math.random()<.5?e.key:ST[r(0,4)];S.st[k]++;log(`Lolos babak ${i+1} di ${e.n}: ${k} +1.`,'good')}
@@ -1023,14 +1049,44 @@ function join(e){if(!spend(e.reg,'Registrasi lomba')){modal(e.n,{html:'<p class=
 function fin(e,won,adv){
  if(won){e.win();if(S.pickSpell){S.pickSpell=0;spellPick();return}modal('Menang!',{html:'<p>'+S.log[0][0]+'</p>',btns:[['Lanjut',()=>{close();pass()},'p']]})}
  else{if(!adv&&Math.random()<.5){S.st[e.key]++;log(`Kalah di ${e.n}, tapi ${e.key} naik 1.`)}else log(`Kalah di ${e.n}${adv?' setelah lolos '+adv+' babak':''}.`,'bad');modal('Belum beruntung',{html:'<p>'+S.log[0][0]+' Periksa lagi analisis biaya-manfaatmu.</p>',btns:[['Lanjut',()=>{close();pass()},'p']]})}}
-function gg(e){const ideas=[['Tas dari plastik bekas',3500],['Lampu dari botol',4000],['Pot dari ban bekas',3000]];
- let h='<p>Ubah sampah jadi emas. Pilih ide, hitung HPP, lalu tetapkan harga jual. Untung ideal sekitar 40 sampai 150 persen dari HPP.</p><div class="row"><select id="gi">'+ideas.map((x,i)=>`<option value="${i}">${x[0]} (HPP ${rp(x[1])})</option>`).join('')+'</select></div><div class="row">Harga jual <input type="number" id="gp" value="6000" step="500"></div><p class="sub">HPP = bahan bekas + tenaga + kemasan. Untung (%) = (harga dikurangi HPP) dibagi HPP.</p>';
- modal(e.n,{html:h,btns:[['Presentasikan',()=>{const i=ideas[+$('#gi').value],p=+$('#gp').value,m=(p-i[1])/i[1];
- const pr=m>=.4&&m<=1.5?40:m>0?20:0,sc=pr+r(15,30)+Math.min(20,S.st.INT*2)+r(5,10)+teamOf().length*6;
- let t=`<p>Untung ${Math.round(m*100)}% dari HPP. Skor tim: <b>${sc}</b> dari 100.</p>`;
- if(sc>=70){S.psw++;jingle('quest');S.eggs.push({el:null,nm:'Secret Egg'});earn(30000,'Hadiah lomba');S.acc++;const L=Object.keys(SPL).filter(x=>!S.spells.includes(x)),sp=L.length?L[r(0,L.length-1)]:null;if(sp)S.spells.push(sp);else earn(15000,'Hadiah lomba');t+=`<p class="good">Juara! PSW +1, Secret Egg, Rp 30.000, aksesoris +1, dan ${sp?'mantra sihir '+sp:'Rp 15.000 (semua spell sudah kamu kuasai)'}.</p>`;log('Juara Gold and Garbage.','good')}
- else if(sc>=50){S.st.INT++;earn(10000,'Hadiah lomba');t+='<p>Peringkat tengah: INT +1 dan Rp 10.000.</p>'}else t+='<p class="bad">Produkmu belum layak jual. Periksa harga dan untungnya.</p>';
- modal('Hasil presentasi',{html:t,btns:[['Lanjut',()=>{close();pass()},'p']]})},'p'],['Batal',close]]})}
+function ggInit(ideas){const m=$('#md'),gp=m.querySelector('#gp'),gi=m.querySelector('#gi'),cards=[...m.querySelectorAll('.gg-c')],inf=m.querySelector('.gg-i'),tip=m.querySelector('.gg-tip');
+ const V=[['rg','Rugi','Harga di bawah HPP. Setiap barang laku malah nombok.'],['lo','Tipis','Untung belum cukup. Naikkan sedikit.'],['ok','Pas!','Zona ideal. Juri akan suka harga ini.'],['hi','Kemahalan','Untung terlalu besar. Pembeli dan juri ragu.']];
+ function upd(){const i=ideas[+gi.value],p=+gp.value,g=p-i[1],u=g/i[1],k=u<0?0:u<.4?1:u<=1.5?2:3,v=V[k];
+  m.querySelector('.gg-pr').textContent=rp(p);m.querySelector('.gg-pct').textContent=(u>0?'+':'')+Math.round(u*100)+'%';
+  m.querySelector('.gg-gain').textContent=(g>=0?'Untung ':'Rugi ')+rp(Math.abs(g))+' per barang';
+  m.querySelector('.gg-m').style.setProperty('--x',(cl((u+.2)/2.2,0,1)*100).toFixed(1)+'%');
+  const vd=m.querySelector('.gg-v');vd.dataset.k=v[0];vd.innerHTML='<b>'+v[1]+'</b> '+v[2];m.querySelector('.gg-m').dataset.k=v[0]}
+ cards.forEach(c=>c.onclick=()=>{cards.forEach(x=>x.setAttribute('aria-checked',x===c));gi.value=c.dataset.i;upd()});
+ m.querySelectorAll('.gg-st').forEach(b=>b.onclick=()=>{gp.value=+gp.value+(+b.dataset.d);upd()});
+ gp.oninput=upd;inf.onclick=()=>{const o=tip.hidden;tip.hidden=!o;inf.setAttribute('aria-expanded',o)};upd()}
+function gg(e){const ideas=[['Tas dari plastik bekas',3500,'🛍️'],['Lampu dari botol',4000,'🏮'],['Pot dari ban bekas',3000,'🪴']];
+ let h='<p class="gg-t">Ubah sampah jadi emas. Pilih ide, lalu temukan harga yang pas untuk juri.</p><div class="gg-cs" role="radiogroup" aria-label="Pilih ide produk">'+ideas.map((x,i)=>`<button type="button" class="gg-c" role="radio" aria-checked="${i===0}" data-i="${i}"><span class="gg-e">${x[2]}</span><b>${x[0]}</b><small>HPP ${rp(x[1])}</small></button>`).join('')+'</div><input type="hidden" id="gi" value="0">'
+ +'<div class="gg-pb"><button type="button" class="gg-st" data-d="-250" aria-label="Turunkan harga">\u2212</button><div class="gg-pv"><small>Harga jual</small><strong class="gg-pr"></strong></div><button type="button" class="gg-st" data-d="250" aria-label="Naikkan harga">+</button></div>'
+ +'<input type="range" id="gp" min="1000" max="15000" step="250" value="6000" aria-label="Harga jual">'
+ +'<div class="gg-m" aria-hidden="true"><div class="gg-bar"><i class="gg-pin"></i></div><div class="gg-sc"><span>Rugi</span><span>40%</span><span>150%</span><span>Mahal</span></div></div>'
+ +'<div class="gg-rs"><span class="gg-pct"></span><span class="gg-gain"></span></div><p class="gg-v" role="status" aria-live="polite"></p>'
+ +'<button type="button" class="gg-i" aria-expanded="false">\u24d8 Cara hitung</button><p class="gg-tip" hidden>HPP = bahan bekas + tenaga + kemasan.<br>Untung (%) = (harga \u2212 HPP) \u00f7 HPP. Targetkan 40\u2013150%.</p>';
+ modal(e.n,{cls:'ggm',html:h,btns:[['Presentasikan',()=>{const i=ideas[+$('#gi').value],p=+$('#gp').value,m=(p-i[1])/i[1];
+const pr=m>=.4&&m<=1.5?40:m>0?20:0,kr=r(15,30),it=Math.min(20,S.st.INT*2),pt=r(5,10),tm=teamOf().length*6,sc=Math.min(100,pr+kr+it+pt+tm);
+ let rw=[],rk,sb,stars,cls,tip='';
+ if(sc>=70){S.psw++;jingle('quest');S.eggs.push({el:null,nm:'Secret Egg'});earn(30000,'Hadiah lomba');S.acc++;const L=Object.keys(SPL).filter(x=>!S.spells.includes(x)),sp=L.length?L[r(0,L.length-1)]:null;if(sp)S.spells.push(sp);else earn(15000,'Hadiah lomba');rw=[['🏅','PSW +1'],['🥚','Secret Egg'],['🪙','Rp 30.000'],['🎀','Aksesoris +1'],sp?['📜','Mantra '+sp]:['🪙','Rp 15.000']];rk='Juara!';sb='Timmu menyulap sampah jadi emas.';stars=3;cls='w';log('Juara Gold and Garbage.','good')}
+ else if(sc>=50){S.st.INT++;earn(10000,'Hadiah lomba');rw=[['🧠','INT +1'],['🪙','Rp 10.000']];rk='Peringkat tengah';sb='Sedikit lagi menuju juara (butuh skor 70).';stars=2;cls='m'}
+ else{rk='Belum layak jual';sb='Juri belum yakin dengan produkmu.';stars=1;cls='l'}
+ if(sc<70)tip=pr<40?'Tip: untung 40 sampai 150 persen dari HPP memberi poin harga penuh (+40).':'Tip: naikkan INT dan ajak rekan tim untuk menambah skor.';
+ const rows=[['🏷️','Harga & untung',pr,Math.round(m*100)+'% dari HPP'],['💡','Kreativitas',kr,''],['🧠','Kecerdasan (INT)',it,''],['🎤','Presentasi',pt,'']];if(tm)rows.push(['🤝','Rekan tim',tm,'']);
+ const sps=cls==='w'?Array.from({length:16},()=>`<i class="ggr-sp" style="--x:${r(2,96)}%;--d:${(2.4+Math.random()*2).toFixed(1)}s;--l:${(Math.random()*2.5).toFixed(1)}s">✦</i>`).join(''):'';
+ const JL={'Bu Maya':{w:['Aku jualan tiap hari, dan barang seperti ini pasti laku di lapakku!','Harganya pas. Pembeli senang, kantongmu juga senang.'],m:['Idenya menarik, tapi harganya perlu disesuaikan supaya pembeli mau.'],rg:['Harga segitu? Kamu malah nombok, Nak. Hitung HPP dulu!'],lo:['Untungnya tipis sekali. Ditawar sedikit saja, kamu sudah rugi.'],hi:['Kemahalan! Pembeli di pasar pasti pindah ke lapak sebelah.']},
+  'Pak Raka':{w:['Di catatanku HPP tertutup dan untungnya sehat. Nilai bagus!','Hitunganmu rapi. Pembukuanmu nanti pasti tenang.'],m:['Hitunganmu hampir tepat. Periksa lagi selisih harga dan HPP.'],rg:['Di catatanku ini tertulis rugi. Harga jual harus di atas HPP.'],lo:['Untung di bawah 40 persen itu tipis. Naikkan sedikit harganya.'],hi:['Untung di atas 150 persen tidak wajar. Pembeli akan keberatan.']},
+  'Pak Gondo':{w:['Hasil karya yang kokoh. Aku sendiri mau pakai barang ini!','Sampah jadi barang berguna. Kerjamu rapi, Nak.'],m:['Bahannya bagus. Tinggal dimatangkan lagi hitungan dan pengerjaannya.'],rg:['Kerja keras tapi nombok? Itu bukan usaha, itu sedekah!'],lo:['Capek-capek bikin, untungnya cuma secuil. Hargai kerjamu.'],hi:['Barang bekas, harga selangit? Jangan serakah, Nak.']},
+  'Bu Laras':{w:['Dari sampah lahir manfaat. Alam pasti berterima kasih padamu.','Ide yang baik untuk bumi dan untuk dompet.'],m:['Niatnya baik. Tinggal harganya dibuat lebih adil.'],rg:['Menolong bumi boleh, tapi jangan sampai usahamu yang tumbang.'],lo:['Untung secukupnya itu baik, tapi ini terlalu tipis untuk bertahan.'],hi:['Rezeki yang adil itu berkah. Turunkan sedikit harganya.']},
+  'Pak Seno':{w:['Manis seperti jerukku! Barang ini pasti diburu pembeli.','Harga dan ide sama-sama segar. Aku beli satu!'],m:['Lumayan, Nak. Sedikit lagi, produkmu bisa juara.'],rg:['Jual rugi itu seperti buah busuk. Cepat dibenahi!'],lo:['Untungnya terlalu kecil. Jangan takut menaikkan harga.'],hi:['Mahal sekali. Jeruk saja kujual wajar, apalagi barang bekas.']}},
+  jn=Object.keys(JL),jk=jn[r(0,jn.length-1)],ck=sc>=70?'w':sc>=50?'m':m<0?'rg':m<.4?'lo':m>1.5?'hi':'m',jl=JL[jk][ck],say=jl[r(0,jl.length-1)],
+  jv=(()=>{try{return VNPC.find(v=>v.n===jk)||null}catch(e){return null}})(),jpic=(()=>{try{if(jv)return vnPt(jv)}catch(e){}return '⚖️'})(),
+  jy=`<div class="ggr-j"><span class="ggr-av">${jpic}</span><div><small>${gEsc(jk)}${jv&&jv.r?' · '+gEsc(jv.r):''} · Juri</small><p>${gEsc(say)}</p></div></div>`;
+ const t=`<div class="ggr ${cls}">${sps}<div class="ggr-a"><div class="ggr-st" aria-label="${stars} dari 3 bintang">${[0,1,2].map(i=>`<span class="${i<stars?'on':''}" style="--i:${i}">★</span>`).join('')}</div><h3 class="ggr-rk">${rk}</h3><p class="ggr-sb">${sb}</p><div class="ggr-sc"><b class="ggr-n" data-t="${sc}">${sc}</b><small>/ 100</small></div><div class="ggr-bar"><u style="--w:${sc}%"></u></div>${rw.length?`<div class="ggr-rw">${rw.map((x,i)=>`<span style="--i:${i}"><i>${x[0]}</i>${gEsc(x[1])}</span>`).join('')}</div>`:''}${tip?`<p class="ggr-tip">${tip}</p>`:''}</div><div class="ggr-b"><ul class="ggr-rows">${rows.map((x,i)=>`<li style="--i:${i}"><span>${x[0]}</span><b>${x[1]}${x[3]?`<small>${x[3]}</small>`:''}</b><em>+${x[2]}</em></li>`).join('')}</ul>${jy}</div></div>`;
+ modal('Hasil presentasi',{cls:'ggr-m',html:t,btns:[['Lanjut',()=>{close();pass()},'p']]});$('#md').scrollTop=0;
+ {const L=(ms,f)=>setTimeout(()=>{if($('#md .ggr'))f()},ms);for(let k=0;k<stars;k++)L(350+k*200,()=>{window._gsN=k;sfx('star')});L(1000,()=>sfx(cls==='w'?'win':cls==='l'?'lose':'coin'));L(1100,()=>sfx('talk'));rw.forEach((x,k)=>L(1500+k*140,()=>sfx('coin')))}
+ {const n=$('#md .ggr-n');if(n&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)){const T=+n.dataset.t,t0=performance.now(),D=1100;n.textContent=0;const f=x=>{const k=Math.min(1,(x-t0)/D);n.textContent=Math.round(T*(1-Math.pow(1-k,3)));k<1&&requestAnimationFrame(f)};requestAnimationFrame(f)}}},'p'],['Batal',close]]});ggInit(ideas)}
 /* Aksi */
 function work(after){walkFx();const g0=Math.round((3000+S.st.STR*400+r(0,2000))*wxM('work')),m0=S.money;earn(g0,'Kerja harian');const g=S.money-m0;log(`Kerja kasar: +${rp(g0)}.${wxNote('work')}`);workFx('+'+rp(g0),()=>{pass();after&&after(g)})}
 function find(){walkFx();const x=Math.random(),g=Math.round((x<.4?r(2000,5000):x<.7?r(7000,12000):r(0,1000))*wxM('find'));earn(g,'Jual temuan');log(`Mencari barang di hutan: temuan terjual ${rp(g)}.${wxNote('find')}`);pass()}
@@ -1496,7 +1552,7 @@ function rencana(){const R=S.ru||{},v=k=>gEsc(R[k]==null?'':R[k]),T=(id,k,ph)=>'
 function mark(a,i){S.sc=S.sc||{};const L=S.sc[a]=S.sc[a]||[];if(L.indexOf(i)<0){L.push(i);save();queueSend()}}
 const evo=i=>event(EVS[i]);
 const foeBox=e=>{const f=foeOf(e),p=sel();if(!p)return '';if(e.id==='iq'||e.id==='iq2')return `<p>Lawan final: <b>${f.nm}</b> (INT ${f.iq}). Pet-mu: INT ${p.iq}, INT karakter ${S.st.INT}.</p>`;
- const m=elM(p.el,f.el);return `<div class=chips><span>Lawan final: ${f.nm} ${elI(f.el)}</span><span>Life ${f.hp}</span><span>Power ${f.pw}</span><span>Speed ${f.sp}</span><span>Defense ${f.df}</span></div><p class=sub>Elemen: ${m>1?'petmu unggul (+25%)':m<1?'petmu lemah (-20%)':'seimbang'}. Spell cocok menambah skor +${spB(p)}, HP karakter menambah dukungan.</p>`};
+ const m=elM(p.el,f.el,p.spc,f.spc);return `<div class=chips><span>Lawan final: ${f.nm} ${elI(f.el)}</span><span>Life ${f.hp}</span><span>Power ${f.pw}</span><span>Speed ${f.sp}</span><span>Defense ${f.df}</span></div><p class=sub>Elemen: ${m>1?'petmu unggul (+25%)':m<1?'petmu lemah (-20%)':'seimbang'}. Spell cocok menambah skor +${spB(p)}, HP karakter menambah dukungan.</p>`};
 const pwTxt=()=>{const b=rain()?(S.pd||0):(S.ph||0),t=[];if(S.hung)t.push('-'+S.hung+' lapar');if(b)t.push('+'+b+(rain()?' dingin':' panas'));return t.length?` <small>(${t.join(', ')})</small>`:''};
 function spellPick(){const l=['Tornado','Lizard Fire','Cyclone'].filter(x=>!S.spells.includes(x));
  if(!l.length){earn(15000,'Hadiah lomba');log('Semua spell tes ini sudah kamu kuasai: diganti uang Rp 15.000.','good');modal('Menang!',{html:'<p>Semua spell tes ini sudah kamu punya. Hadiahnya diganti Rp 15.000.</p>',btns:[['Lanjut',()=>{close();pass()},'p']]});return}
@@ -1507,7 +1563,7 @@ const petSel=e=>`<div class=row>Pilih pet <select onchange='S.sel=+this.value;ev
 const evPanel=p=>{
  if(!p.spc)return{ready:0,html:'<div class=pk-em><b>Belum bisa berevolusi</b><p>Pet versi lama tanpa spesies tidak punya jalur evolusi. Pet hasil tetasan baru berevolusi lewat tahap Anak, Muda, Dewasa, dan Legend.</p></div>'};
  if(isHyb(p))return{ready:0,html:'<div class=pk-em><b>🧬 Monster hibrida</b><p>Hibrida hanya punya satu tahap dan tidak berevolusi.</p></div>'};
- const s=p.st||0,nm=k=>p.spc==='nagi'&&k===3?NGL[p.el]:EVN[p.spc][k],pc=(a,m)=>Math.max(0,Math.min(100,Math.round(a/m*100))),
+ const s=p.st||0,nm=k=>EVN[p.spc][k],pc=(a,m)=>Math.max(0,Math.min(100,Math.round(a/m*100))),
   line=STG.map((g,k)=>`<div class="pk-st${k<s?' ok':k===s?' on':''}"><i>${k<s?'✓':k+1}</i><b>${nm(k)}</b><small>${g}</small></div>`).join('<span class=pk-ln></span>');
  if(s>=3)return{ready:0,html:`<div class=pk-ev>${line}</div><div class="pk-tip good">🏁 Tahap akhir tercapai: <b>${nm(3)}</b>.</div>`};
  const n=s+1,q=EVR[n],t=stTot(p),it=eviS()[n]|0,
@@ -1539,7 +1595,7 @@ function tr(i,k,bonus){const p=S.pets[i];if(!spend(3000,'Latihan pet'))return al
 /* ===== Pertarungan pet bergiliran (gaya Monster Rancher): dipakai di turnamen dan Latih Tanding ===== */
 var IDLE_SLOW=1.8; /* pengali pelambat animasi idle (pet dan monster): makin besar makin pelan */
 const BT={};
-function bMk(nm,el,s,m,im,pet){const mx=Math.round(s.hp*m*2+20+(pet?S.st.HP*2:0));return{nm,el,pw:s.pw*m,sp:s.sp*m,df:s.df*m,mx,hp:mx,g:40,d:0,im,pet,sk:pet?spB(s):0}}
+function bMk(nm,el,s,m,im,pet){const mx=Math.round(s.hp*m*2+20+(pet?S.st.HP*2:0));return{nm,el,spc:s.spc,pw:s.pw*m,sp:s.sp*m,df:s.df*m,mx,hp:mx,g:40,d:0,im,pet,sk:pet?spB(s):0}}
 function battle(o){const p=o.pet,m=pf(p);BT.b={A:bMk(pName(p),p.el,p,m,art(p),1),F:bMk(o.foe.nm,o.foe.el,o.foe,1,'',0),lg:['Pertarungan dimulai!'],rd:1,ev:[],o};bUI()}
 /* ===== Layar pertarungan: monster tampil di arena, serangan beranimasi (gaya Monster Rancher) ===== */
 /* Sprite musuh beranimasi. s[state]=[baris, urutan kolom, ms per frame, loop?] ; sheet 6 kolom x 5 baris (idle, jalan, serang, kena, skill) */
@@ -1569,7 +1625,7 @@ function bMount(){const B=BT.b,{A,F}=B,pet=B.o.pet,
  picA=typeof kerOn==='function'&&kerOn(pet)&&FSP.Kerikil?fsPic('Kerikil',1,glow(pet),A.nm):typeof kerOn==='function'&&kerOn(pet)?`<div class=rpk data-s=idle role=img aria-label="${A.nm}" style="background-image:url(${KERSPR});${glow(pet)}"></div>`:A.im?`<img class=ltp src="${A.im}" alt="${A.nm}" style="${glow(pet)}" onerror="this.outerHTML='<span class=lte>${EL[A.el][0]}</span>'">`:`<span class=lte>${EL[A.el][0]}</span>`,
  picF=fsPic(F.nm)||`<span class="lte btm">${BFOE[F.nm]||EL[F.el][0]}</span>`,
  hud=(c,s)=>`<div class="btp ${s==='A'?'l':'r'}" style="--ec:${ELC[c.el]||'#f0c75e'}"><div class=btn1><b>${c.nm}</b><i class=btel>${elI(c.el)} ${EL[c.el][1]}</i></div><div class="btbar bthp${s}"><u></u><em></em></div><div class="btbar btgu${s==='A'?'':' fo'}"><u></u><em>Guts <span class="btgt${s==='A'?'':'F'}"></span></em></div></div>`,
- mu0=elM(A.el,F.el),muT=mu0>1?'Elemenmu unggul +25%':mu0<1?'Elemenmu lemah −20%':'Elemen seimbang',muC=mu0>1?'up':mu0<1?'dn':'',
+ mu0=elM(A.el,F.el,A.spc,F.spc),muT=mu0>1?'Elemenmu unggul +25%':mu0<1?'Elemenmu lemah −20%':'Elemen seimbang',muC=mu0>1?'up':mu0<1?'dn':'',
  FT=n=>{const d=typeof FSP!=='undefined'&&FSP[n];return d?((d.z||1)<1.3?1.35:1):1.1},tA=[1,1.05,1.1,1.18][(pet.st|0)]||1;
  modal(B.o.title,{cls:'ltx btx',arena:B.o.arena,html:`<div class=btw><div class=bth>${hud(A,'A')}<div class=btmid><div class=btrd>Babak 1</div><span class="btmu ${muC}">${muT}</span></div>${hud(F,'F')}</div>
  <div class=bts><div class="btf l" style="--ec:${ELC[A.el]||'#f0c75e'};--tier:${tA}"><div class=btsh></div>${picA}<div class=ltf></div></div><div class="btf r" style="--ec:${ELC[F.el]||'#f0c75e'};--tier:${FT(F.nm)}"><div class=btsh></div>${picF}<div class=ltf></div></div></div>
@@ -1578,7 +1634,7 @@ function bMount(){const B=BT.b,{A,F}=B,pet=B.o.pet,
 if(!window.__btKeys){window.__btKeys=1;addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||/^(INPUT|SELECT|TEXTAREA)$/.test((e.target||{}).tagName))return;const k={'1':'a','2':'s','3':'b'}[e.key];if(!k||!document.querySelector('.btw .btab')||!BT.b||BT.b.done)return;e.preventDefault();bTurn(k)})}
 function bHP(s,hp){const B=BT.b,c=s==='A'?B.A:B.F,u=document.querySelector('.bthp'+s+' u'),em=document.querySelector('.bthp'+s+' em');if(!u)return;const p=Math.max(0,hp)/c.mx;u.style.width=p*100+'%';u.style.background=p>.5?'linear-gradient(90deg,#3fbf7f,#6ee7a0)':p>.25?'linear-gradient(90deg,#d99a1c,#f0c75e)':'linear-gradient(90deg,#c62828,#ff7b6b)';em.textContent=`HP ${Math.max(0,hp)}/${c.mx}`}
 function bLogUp(n){const B=BT.b,l=document.querySelector('.btl');if(!l)return;l.innerHTML=B.lg.slice(Math.max(0,n-1),n+1).map((x,i,r)=>`<div class="${i===r.length-1?'now':''}">${x}</div>`).join('')}
-function bFill(){const B=BT.b,{A,F}=B,q=x=>document.querySelector(x);bHP('A',A.hp);bHP('F',F.hp);const ga=q('.btgu:not(.fo)');ga.querySelector('u').style.width=A.g+'%';ga.classList.toggle('rdy',A.g>=30);q('.btgt').textContent=A.g;const gf=q('.btgu.fo');if(gf){gf.querySelector('u').style.width=F.g+'%';gf.classList.toggle('rdy',F.g>=30);q('.btgtF').textContent=F.g}q('.btrd').textContent='Babak '+B.rd;bLogUp(B.lg.length-1);const sk=q('.bta.sk');if(sk){const off=A.g<30,em=elM(A.el,F.el);sk.classList.toggle('off',off);sk.setAttribute('aria-disabled',off?'true':'false');sk.querySelector('small').innerHTML=off?`Butuh Guts 30 · kurang ${30-A.g}`:`Guts 30 · kerusakan besar${em>1?' · <span class=ef>Unggul!</span>':em<1?' · <span class=ef>Kurang efektif</span>':''}`}}
+function bFill(){const B=BT.b,{A,F}=B,q=x=>document.querySelector(x);bHP('A',A.hp);bHP('F',F.hp);const ga=q('.btgu:not(.fo)');ga.querySelector('u').style.width=A.g+'%';ga.classList.toggle('rdy',A.g>=30);q('.btgt').textContent=A.g;const gf=q('.btgu.fo');if(gf){gf.querySelector('u').style.width=F.g+'%';gf.classList.toggle('rdy',F.g>=30);q('.btgtF').textContent=F.g}q('.btrd').textContent='Babak '+B.rd;bLogUp(B.lg.length-1);const sk=q('.bta.sk');if(sk){const off=A.g<30,em=elM(A.el,F.el,A.spc,F.spc);sk.classList.toggle('off',off);sk.setAttribute('aria-disabled',off?'true':'false');sk.querySelector('small').innerHTML=off?`Butuh Guts 30 · kurang ${30-A.g}`:`Guts 30 · kerusakan besar${em>1?' · <span class=ef>Unggul!</span>':em<1?' · <span class=ef>Kurang efektif</span>':''}`}}
 function bUI(){const B=BT.b;if(!B.mounted||!document.querySelector('.btw')){bMount();B.mounted=1}bFill()}
 function bSpr(f,st,ms){const k=f&&f.querySelector('.rpk');if(!k)return;k.dataset.s=st;setTimeout(()=>{if(!f.classList.contains('ko'))k.dataset.s='idle'},ms)}
 function bFx(e,W,rm){const B=BT.b,fl=x=>W.querySelector('.btf.'+(x==='A'?'l':'r')),me=fl(e.s),os=e.s==='A'?'F':'A',ot=fl(os),sd=e.s==='A'?1:-1,att=e.s==='A'?B.A:B.F,col=ELC[att.el]||'#f0c75e',cx=f=>f.offsetLeft+f.offsetWidth/2,
@@ -1597,7 +1653,7 @@ function bPlay(done){const B=BT.b,ev=B.ev||[],W=document.querySelector('.bts'),a
  setTimeout(()=>{B.busy=0;ab&&ab.classList.remove('busy');done()},ev.length*T+(rm?100:200))}
 function bAct(a,d,k){const B=BT.b,s=a===B.A?'A':'F';if(k==='s'&&a.g<30)k='a';if(k==='s')a.g-=30;else a.g=Math.min(100,a.g+10);
  if(Math.random()<cl((d.sp-a.sp)*.02+.07,.03,.35)){B.lg.push(`${a.nm} ${k==='s'?'merapal jurus':'menyerang'}, tetapi ${d.nm} menghindar!`);B.ev.push({s,k:'m',li:B.lg.length-1});return}
- const em=k==='s'?elM(a.el,d.el):1;let x=Math.max(2,Math.round((a.pw*(k==='s'?2.2:1)+(k==='s'?a.sk:0))*em*(.85+Math.random()*.3)*(12/(12+d.df*.7))));if(d.d)x=Math.max(1,Math.round(x/2));d.hp=Math.max(0,d.hp-x);
+ const em=k==='s'?elM(a.el,d.el,a.spc,d.spc):1;let x=Math.max(2,Math.round((a.pw*(k==='s'?2.2:1)+(k==='s'?a.sk:0))*em*(.85+Math.random()*.3)*(12/(12+d.df*.7))));if(d.d)x=Math.max(1,Math.round(x/2));d.hp=Math.max(0,d.hp-x);
  B.lg.push(`${a.nm} ${k==='s'?'merapal jurus '+elI(a.el):'menyerang'}: <b class=${a.pet?'good':'bad'}>${x} kerusakan</b>${em>1?' (unggul!)':em<1?' (kurang efektif)':''}${d.d?' (ditahan)':''}.`);B.ev.push({s,k,x,em,hp:d.hp,li:B.lg.length-1})}
 function bTurn(k){const B=BT.b,{A,F}=B;if(B.busy||B.done)return;if(k==='s'&&A.g<30){B.lg.push('Guts belum cukup untuk jurus. Serang atau bertahan dulu.');return bUI()}
  const fk=F.g>=30&&Math.random()<.3?'s':Math.random()<.15?'b':'a';A.d=F.d=0;B.ev=[];
@@ -2018,7 +2074,8 @@ function sfx(k){try{if(!sfxOn)return;AC=AC||new (window.AudioContext||window.web
  else if(k==='step'){_stp^=1;N(0,.05,.16,_stp?520:430,.7,'lowpass');T(_stp?120:100,0,.05,.08,'sine')}
  else if(k==='coin'){T(1319,0,.08,.14,'triangle');T(1760,.07,.2,.14,'triangle')}
  else if(k==='chest'){[523,659,784,1047].forEach((f,i)=>T(f,i*.07,.3,.14,'triangle'));N(0,.15,.2,2000,1,'bandpass',600)}
- else if(k==='talk'){for(let i=0;i<3;i++)T(280+Math.random()*220,i*.055,.05,.1,'square')}
+
+ else if(k==='star'){const n=window._gsN|0,f=Math.pow(1.2599,n);T(660*f,0,.3,.22,'triangle');T(1320*f,.05,.25,.1,'sine')} else if(k==='talk'){for(let i=0;i<3;i++)T(280+Math.random()*220,i*.055,.05,.1,'square')}
 }catch(e){}}
 /* Bunyi ketuk: bereaksi saat disentuh (pointerdown) untuk tombol DAN elemen yang bisa diketuk (kotak dialog prolog, tab, kartu, apa pun berkursor tangan). D-pad dan tombol serang dungeon punya bunyi sendiri. */
 let _sfxPd=0;
@@ -2502,23 +2559,30 @@ function loadLvl(){window.DGL=lvl;preTiles(lvl===0?'f':'d');if(lvl===0)genForest
    Lantai digambar SEKALI ke canvas offscreen (wc) saat kotak pertama kali terlihat, lalu tiap frame cukup satu drawImage. */
 const TL={f:['rumput-1','rumput-2','rumput-3'],d:['batu-1','batu-4','batu-3','batu-2']},TW={f:[62,18,20],d:[48,24,20,8]},TI={f:[],d:[]},TSZ=T*8;
 let wc=null,wx=null,BS=1;
-function preTiles(kd){if(TI[kd].length)return;TL[kd].forEach((n,k)=>{const im=new Image();im.onload=()=>rebake();im.src='images/tile-'+n+'.webp';TI[kd][k]=im});if(kd==='d'&&!WI){WI=new Image();WI.onload=()=>rebake();WI.src='images/tile-tembok.webp'}}
+/* Tileset Gua Sedaya: images/tile-sedaya-lantai.webp = grid 4x4 (256px) = 16 lantai; images/tile-sedaya-tembok.webp = 4 panel dinding (format sama dgn tile-tembok). Tema lantai per kedalaman (lvl%5): B1-2 batu+air, B3-4 lumut+karang, B5/kelipatan 5 (boss) ukiran trisula. Nomor tile = baris*4+kolom. */
+const SDT=[{w:{0:30,1:25,5:20,9:15,2:6,3:4}},{w:{0:20,10:25,8:15,15:15,11:10,12:10,3:5}},{w:{0:25,5:20,15:20,6:12,13:10,7:8,4:5}}],SDI=[];let SDW=null,SDL=null,WIO=null;
+const sdTheme=l=>{const m=l%5;return m===0?2:m>=3?1:0};
+function sdPre(){if(SDL)return;SDL=new Image();SDL.onload=()=>{for(let n=0;n<16;n++){const c=document.createElement('canvas');c.width=c.height=TSZ;c.getContext('2d').drawImage(SDL,(n&3)*256,(n>>2)*256,256,256,0,0,TSZ,TSZ);SDI[n]=c}rebake()};SDL.src='images/tile-sedaya-lantai.webp';SDW=new Image();SDW.onload=()=>{if(SD)WI=SDW;rebake()};SDW.src='images/tile-sedaya-tembok.webp'}
+/* Lantai Gua Sedaya: tiap blok 8x8 memakai tile berbeda yang tepinya tidak saling nyambung, jadi di batas blok dicampur halus 3 kotak ke dalam supaya tidak ada garis kotak keras */
+function sdFeather(i,j,x,y,z,im){const c=i&7,r=j&7,bi=i>>3,bj=j>>3;for(const[d,dx,dy]of[[c,-1,0],[7-c,1,0],[r,0,-1],[7-r,0,1]]){if(d>=3)continue;const n=sdFloor((bi+dx)<<3,(bj+dy)<<3);if(!n||n===im)continue;wx.globalAlpha=.5*(1-d/3);wx.drawImage(n,c*T,r*T,T,T,x,y,z,z)}wx.globalAlpha=1}
+function sdFloor(i,j){if(!SDI.length)return null;const bx=i>>3,by=j>>3;let h=(Math.imul(bx+7,73856093)^Math.imul(by+13,19349663))>>>0;h=((h^(h>>>13))>>>0)%100;const w=SDT[sdTheme(lvl)].w;let a=0,last=0;for(const k in w){last=+k;a+=w[k];if(h<a)return SDI[+k]}return SDI[last]}
+function preTiles(kd){if(SD&&kd==='d'){sdPre();if(SDW&&SDW.complete&&SDW.naturalWidth)WI=SDW;return}if(SDW&&WI===SDW)WI=WIO;if(TI[kd].length)return;TL[kd].forEach((n,k)=>{const im=new Image();im.onload=()=>rebake();im.src='images/tile-'+n+'.webp';TI[kd][k]=im});if(kd==='d'&&!WIO){WIO=new Image();WIO.onload=()=>rebake();WIO.src='images/tile-tembok.webp'}if(kd==='d')WI=WIO}
 /* Tembok dungeon: images/tile-tembok.webp = 4 panel 384x512 berjajar (polos, lumut, retak, kristal). Satu panel = 3x4 kotak (128px per kotak); tiap blok 3x4 memilih panel lewat hash. Susunan bata keempat panel sama, jadi antarblok tetap nyambung. */
 const WW=[56,16,17,11];let WI=null;
 function wallVar(i,j){let h=(Math.imul(((i/3)|0)+11,73856093)^Math.imul(((j/4)|0)+5,19349663))>>>0;h=((h^(h>>>15))>>>0)%100;let a=0;for(let k=0;k<4;k++){a+=WW[k];if(h<a)return k}return 0}
-function tileImg(kd,i,j){const bx=i>>3,by=j>>3;let h=(Math.imul(bx+7,73856093)^Math.imul(by+13,19349663))>>>0;h=((h^(h>>>13))>>>0)%100;
+function tileImg(kd,i,j){if(SD&&kd==='d'){const q=sdFloor(i,j);if(q)return q}const bx=i>>3,by=j>>3;let h=(Math.imul(bx+7,73856093)^Math.imul(by+13,19349663))>>>0;h=((h^(h>>>13))>>>0)%100;
   const w=TW[kd];let k=0,a=0;for(;k<w.length;k++){a+=w[k];if(h<a)break}return TI[kd][Math.min(k,w.length-1)]}
 function initBake(){BS=klPerf()?1:Math.min(2,Math.max(1,Math.round(devicePixelRatio||1)));wc=document.createElement('canvas');wc.width=MW*T*BS;wc.height=MH*T*BS;wx=wc.getContext('2d')}
 function bakeCell(i,j){if(!wc)return;const F=lvl===0,v=map[j][i],x=i*T*BS,y=j*T*BS,z=T*BS;
   if(v===1){const im=tileImg(F?'f':'d',i,j);
-    if(im&&im.complete&&im.naturalWidth){const k=im.naturalWidth/TSZ;wx.drawImage(im,(i&7)*T*k,(j&7)*T*k,T*k,T*k,x,y,z,z)}
+    if(im&&((im.complete&&im.naturalWidth)||im.tagName==='CANVAS')){const k=(im.naturalWidth||im.width)/TSZ;wx.drawImage(im,(i&7)*T*k,(j&7)*T*k,T*k,T*k,x,y,z,z);if(SD&&!F)sdFeather(i,j,x,y,z,im)}
     else{wx.fillStyle=F?((i+j)&1?'#3f7a47':'#3a7342'):((i+j)&1?'#2b3560':'#262f58');wx.fillRect(x,y,z,z)}}
   else if(v===2){if(F){if(!tree)makeTree();wx.drawImage(tree[(i*7+j*3)%2],x,y,z,z)}else if(WI&&WI.complete&&WI.naturalWidth){const k=WI.naturalWidth/1536,c=128*k;wx.drawImage(WI,wallVar(i,j)*384*k+(i%3)*c,(j%4)*c,c,c,x,y,z,z);
     if(j>0&&map[j-1][i]===1){wx.fillStyle='rgba(150,130,230,.28)';wx.fillRect(x,y,z,2*BS)}
     if(j<MH-1&&map[j+1][i]===1){wx.fillStyle='rgba(8,6,24,.45)';wx.fillRect(x,y+z-3*BS,z,3*BS)}}
   else{wx.fillStyle='#1c1740';wx.fillRect(x,y,z,z);wx.fillStyle='#4d3f8a';wx.fillRect(x,y,z,6*BS)}}}
 function rebake(){if(!wc||!map||!seen)return;for(let j=0;j<MH;j++)for(let i=0;i<MW;i++)if(seen[j][i])bakeCell(i,j)}
-const SPD={"tree1":["images/pohon-1.png"],"tree2":["images/pohon-2.png"],"mush":["images/jamur.png"],"pot":["images/pot.png"],"chest":["images/peti-tutup.png"],"chestO":["images/peti-buka.png"],"stairs":["images/tangga.png"],"hole":["images/lubang.png"],"coin":["images/koin.png"],"heart":["images/hati.png"],"sword":["images/pedang-karat.png"],"boots":["images/sepatu-angin.png"],"dheart":["images/hati-naga.png"],"ring":["images/cincin-kilat.png"],"amulet":["images/jimat.png"],"egg":["images/telur-api-tidur.png"],"herb":["images/herbal.png"],"h_jahe":["images/bahan-jahe.png"],"h_kunyit":["images/bahan-kunyit.png"],"h_sereh":["images/bahan-sereh.png"],"h_kencur":["images/bahan-kencur.png"],"h_asam":["images/bahan-asam.png"],"h_gula":["images/bahan-gula.png"],"h_beras":["images/bahan-beras.png"],"h_temulawak":["images/bahan-temulawak.png"],"h_madu":["images/bahan-madu.png"]};
+const SPD={"tree1":["images/pohon-1.png"],"tree2":["images/pohon-2.png"],"mush":["images/jamur.png"],"pot":["images/pot.png"],"chest":["images/peti-tutup.png"],"evo1":["images/item-evo-kerang.png"],"evo2":["images/item-evo-mutiara.png"],"evo3":["images/item-evo-permata.png"],"chestO":["images/peti-buka.png"],"stairs":["images/tangga.png"],"hole":["images/lubang.png"],"coin":["images/koin.png"],"heart":["images/hati.png"],"sword":["images/pedang-karat.png"],"boots":["images/sepatu-angin.png"],"dheart":["images/hati-naga.png"],"ring":["images/cincin-kilat.png"],"amulet":["images/jimat.png"],"egg":["images/telur-api-tidur.png"],"herb":["images/herbal.png"],"h_jahe":["images/bahan-jahe.png"],"h_kunyit":["images/bahan-kunyit.png"],"h_sereh":["images/bahan-sereh.png"],"h_kencur":["images/bahan-kencur.png"],"h_asam":["images/bahan-asam.png"],"h_gula":["images/bahan-gula.png"],"h_beras":["images/bahan-beras.png"],"h_temulawak":["images/bahan-temulawak.png"],"h_madu":["images/bahan-madu.png"]};
 const ITI={'Pedang Karat':'sword','Sepatu Angin':'boots','Hati Naga':'dheart','Cincin Kilat':'ring','Jimat Jangkauan':'amulet'};
 const SPI={};for(const k in SPD){const im=new Image();im.onload=()=>{if(k.startsWith('tree')){tree=null;rebake()}};im.src=SPD[k][0];SPI[k]=im}
 /* gambar ikon RPG, titik tengah (x,y), lebar w; fallback emoji bila belum termuat */
@@ -2527,8 +2591,10 @@ const hk=k=>{const i=SPI['h_'+k];return i&&i.complete&&i.naturalWidth?'h_'+k:'he
 function makeTree(){tree=['tree1','tree2'].map(k=>{const cv2=document.createElement('canvas');cv2.width=cv2.height=T*2;const c=cv2.getContext('2d');c.fillStyle='#1d4a2b';c.fillRect(0,0,T*2,T*2);const im=SPI[k];if(im&&im.complete&&im.naturalWidth){const h=T*2*.98,w=h*im.naturalWidth/im.naturalHeight;c.drawImage(im,T-w/2,T*2*.01,w,h)}else{c.font=(T*1.9)+'px serif';c.textAlign='center';c.textBaseline='middle';c.fillText('🌲',T,T+4)}return cv2})}
 /* Sprite monster: sheet 5 kolom x 3 baris. Baris 0 depan, 1 belakang, 2 samping (menghadap kanan); tiap baris 5 frame.
    FD = [file, tinggi gambar, terbang?, fps]. Hutan memakai leaf. Dungeon: lantai 1 slime, lantai 2 +golem, lantai 3 dan seterusnya +kelelawar. */
-const FD={leaf:['images/monster-hutan-sprite.webp',44,0,9],slime:['images/dungeon-slime.webp',38,0,8],golem:['images/dungeon-golem.webp',48,0,7],bat:['images/dungeon-kelelawar.webp',44,1,12],kalinci:['images/dungeon-kalinci.webp',84,0,9,6],garuda:['images/dungeon-garudanaga.webp',76,1,10,6],boss:['images/dungeon-boss.webp',124,1,8,7]};
-const FT={slime:{hp:1,sp:1,r:10},golem:{hp:1.8,sp:.7,r:13},bat:{hp:.7,sp:1.5,r:9},kalinci:{hp:4,sp:1,r:15},garuda:{hp:2.2,sp:1,r:14},boss:{hp:8,sp:1,r:18}},FK=['slime','golem','bat'];let fcnt=0;
+const FD={leaf:['images/monster-hutan-sprite.webp',44,0,9],slime:['images/dungeon-slime.webp',38,0,8],golem:['images/dungeon-golem.webp',48,0,7],bat:['images/dungeon-kelelawar.webp',44,1,12],kalinci:['images/dungeon-kalinci.webp',84,0,9,6],garuda:['images/dungeon-garudanaga.webp',76,1,10,6],boss:['images/dungeon-boss.webp',124,1,8,7],
+/* Monster Gua Sedaya: tiap sheet 5 kolom x 3 baris (depan, belakang, samping kanan). [file, tinggi sel, terbang, fps, kolom] */
+aqua:['images/sedaya-aquablim.webp',46,0,8,5],kera:['images/sedaya-kerangga.webp',50,0,7,5],duri:['images/sedaya-durilaut.webp',48,0,8,5],okta:['images/sedaya-oktavia.webp',50,0,8,5],lumi:['images/sedaya-luminara.webp',48,1,10,5],karn:['images/sedaya-karangnaga.webp',56,1,9,5],lev:['images/sedaya-leviathan.webp',160,1,8,5]};
+const FT={slime:{hp:1,sp:1,r:10},golem:{hp:1.8,sp:.7,r:13},bat:{hp:.7,sp:1.5,r:9},kalinci:{hp:4,sp:1,r:15},garuda:{hp:2.2,sp:1,r:14},boss:{hp:8,sp:1,r:18},aqua:{hp:1,sp:1,r:10},kera:{hp:1.8,sp:.7,r:13},duri:{hp:1.3,sp:.9,r:12},okta:{hp:1.5,sp:1.05,r:12},lumi:{hp:.9,sp:1.4,r:10},karn:{hp:2.4,sp:1.1,r:14}},FK=['slime','golem','bat'],SK=['aqua','kera','duri','okta','lumi','karn'];let fcnt=0;
 const FI={};
 /* ===== Kalinci Kristal: monster super langka (muncul acak di dungeon) =====
    Peluang muncul per lantai = base + perFloor x nomor lantai + pity x lantai berturut-turut tanpa muncul (maks max).
@@ -2571,7 +2637,7 @@ function kalLoot(f){
 /* ===== Garudanaga: monster dungeon lanjutan (mulai lantai GAR.from) =====
    Peluang tiap monster biasa diganti Garudanaga = base + per x (lantai - from), maksimal max. Sheet 6 kolom x 3 baris: baris 0 diam (hadap depan), baris 1 terbang (hadap kanan), baris 2 bersiap (kolom 0 sampai 3) dan menerjang (kolom 4). */
 const GAR={from:4,base:.18,per:.04,max:.4};
-const pickFoe=()=>{const b=FK[(fcnt++)%Math.min(FK.length,lvl)];return lvl>=GAR.from&&Math.random()<Math.min(GAR.max,GAR.base+GAR.per*(lvl-GAR.from))?'garuda':b};
+const pickFoe=()=>{if(SD)return SK[(fcnt++)%Math.min(SK.length,lvl+1)];const b=FK[(fcnt++)%Math.min(FK.length,lvl)];return lvl>=GAR.from&&Math.random()<Math.min(GAR.max,GAR.base+GAR.per*(lvl-GAR.from))?'garuda':b};
 function garAI(f,dt,dx,dy,d,sp){
   const ux=dx/d,uy=dy/d;f.t0=(f.t0||0)-dt;f.wd=0;f.dash=0;
   if(!f.st){f.st='chase';f.t0=1.2}
@@ -2626,8 +2692,20 @@ function bosLoot(f){
   const force=/[?&]bos=telur/.test(location.search),got=force||Math.random()<BOS.egg+BOS.eggPity*(S.bgm|0);
   if(got){S.bgm=0;sc(1,(x,y)=>drops.push({x,y,k:'e',v:1}))}else S.bgm=(S.bgm|0)+1;
   S.bwin=(S.bwin|0)+1;bolts=[];
-  log(`Raja Garudanaga penjaga Dungeon B${lvl} dikalahkan! Segel tangga terbuka${got?', dan sebutir telur kristal jatuh':''}.`,'good');
+  log(`${SD?'Leviathan Sedaya penjaga Gua Sedaya':'Raja Garudanaga penjaga Dungeon'} B${lvl} dikalahkan! Segel tangga terbuka${got?', dan sebutir telur kristal jatuh':''}.`,'good');
   kBan('👑 RAJA GARUDANAGA TUMBANG!','Segel tangga terbuka.'+(got?' Sebutir telur kristal jatuh. Ambil sebelum pergi!':' Rampas jarahan di sekitarnya!'),'#ffd76a',3.4,.5);kBeep(2)}
+/* Leviathan Sedaya (boss Gua Sedaya): sheet 5 kolom x 3 baris (0 depan, 1 belakang, 2 samping kanan). Memakai AI boss yang sama (bosAI) dengan Raja Garudanaga. */
+function drawLev(f,d,o){
+  const I=o.i,cw=I.naturalWidth/5,ch=I.naturalHeight/3,h=d[1],w=cw*h/ch,k=h/226,sl=f.st==='sleep',atkSt=f.st==='dash'||f.st==='wind';
+  const ax=atkSt?(f.dx||0):(f.ax||0),ay=atkSt?(f.dy||0):(f.ay||0);
+  let row=0;if(atkSt||f.st==='rest'||(f.go&&Math.abs(ax)>Math.abs(ay)))row=2;else if(f.go&&ay<0)row=1;
+  const col=Math.floor(tm*(sl?2:f.dash?12:6)+f.ph)%5,flip=row===2&&ax<0,bob=sl?0:Math.sin(tm*4+f.ph)*3-6-(f.dash?4:0);
+  cx.fillStyle='rgba(0,0,0,.3)';cx.beginPath();cx.ellipse(f.x,f.y+14,34,10,0,0,7);cx.fill();
+  if(f.en||f.st==='cast'||f.st==='rise'){cx.save();cx.globalCompositeOperation='lighter';const rg=cx.createRadialGradient(f.x,f.y-24,6,f.x,f.y-24,60+Math.sin(tm*6)*5);rg.addColorStop(0,f.en?'rgba(255,110,50,.5)':'rgba(90,170,255,.45)');rg.addColorStop(1,'rgba(0,0,0,0)');cx.fillStyle=rg;cx.fillRect(f.x-70,f.y-90,140,140);cx.restore()}
+  if(f.st==='ring'){const p=1-Math.max(0,f.t0)/.8,rd=20+90*p;cx.strokeStyle='rgba(130,210,255,'+(.25+.5*p)+')';cx.lineWidth=3;cx.beginPath();cx.ellipse(f.x,f.y+8,rd,rd*.6,0,0,7);cx.stroke()}
+  cx.save();cx.translate(f.x+(f.st==='wind'?Math.sin(tm*90)*2:0),f.y+14+bob);if(flip)cx.scale(-1,1);
+  cx.drawImage(f.fl>0&&o.w?o.w:I,col*cw,row*ch,cw,ch,-w/2,-h+6*k,w,h);cx.restore();
+  return h*.62+8}
 function drawBoss(f,d,o){
   const I=o.i,cw=I.naturalWidth/7,ch=I.naturalHeight/4,k=d[1]/226,w=cw*k,h=ch*k,n=Math.floor(tm*6+f.ph);
   let row=0,col=[0,1,2,1][n%4],L=0; /* L=1: sel menghadap kiri, L=2: menghadap kanan */
@@ -2647,7 +2725,8 @@ function drawBoss(f,d,o){
 
 function loadFoe(){for(const k in FD){if(FI[k])continue;const im=new Image(),o={i:im,w:null};FI[k]=o;im.onload=()=>{try{const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const g=c.getContext('2d');g.drawImage(im,0,0);g.globalCompositeOperation='source-in';g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);o.w=c}catch(e){o.w=null}};im.src=FD[k][0]}}
 function drawFoe(f){
-  const k=lvl===0?'leaf':f.t,d=FD[k],o=FI[k];if(!d||!o||!o.i.complete||!o.i.naturalWidth)return 0;
+  const k=lvl===0?'leaf':f.t;if(SD&&k==='boss'&&FI.lev&&FI.lev.i.complete&&FI.lev.i.naturalWidth)return drawLev(f,FD.lev,FI.lev);
+  const d=FD[k],o=FI[k];if(!d||!o||!o.i.complete||!o.i.naturalWidth)return 0;
   if(k==='garuda')return drawGaruda(f,d,o);
   if(k==='boss')return drawBoss(f,d,o);
   const I=o.i,nc=d[4]||5,cw=I.naturalWidth/nc,ch=I.naturalHeight/3,h=d[1],w=cw*h/ch,ax=Math.abs(f.ax||0),ay=Math.abs(f.ay||0);
@@ -2671,7 +2750,7 @@ function finish(died){
   state='end';petTire(bossOn()?10:4);const pq=P.pet&&P.pet.src,pm=pq?`<br>🐾 <b>${gEsc(P.pet.nm)}</b> lelah ${pq.fat|0}% (+${P.pf|0}% dari perjalanan ini)${pq.fat>=90?'. Terlalu lelah, istirahatkan dulu sebelum dibawa lagi.':pq.fat>=70?'. Butuh istirahat atau makan mewah.':''}`:'';const c=died?Math.floor(coins/2):coins,rupiah=c*COIN;
   earn(rupiah,'Jarahan dungeon');S.items=S.items||[];const nw=[],bl=[];let bh=0;for(const k in (P.bg||{})){const n=died?Math.floor(P.bg[k]/2):P.bg[k];if(n>0){bhn()[k]=(bhn()[k]|0)+n;bh+=n;bl.push(BHN[k][1]+' ×'+n)}}
   gearInit();P.inv.forEach(n=>{const d=GSL.find(x=>x[3]===n);if(!d||S.gear.some(g=>g.n===n))return;const g={id:'g'+(++S.gid),n,sl:d[0],r:'b',m:{[d[2]]:1},ap:0};S.gear.push(g);if(!S.eq[g.sl]){S.eq[g.sl]=g.id;eqApply(g)}nw.push(n)});const srn=[];(P.gr||[]).forEach(g=>{S.gear.push(g);if(!S.eq[g.sl]){S.eq[g.sl]=g.id;eqApply(g)}srn.push(g)});
-  let kmsg='',evm='';if(SD&&P.ev){const E=eviS(),L=[];[1,2,3].forEach(t=>{const n=P.ev[t]|0;if(n){E[t]=(E[t]|0)+n;L.push(EVI[t].e+' '+EVI[t].n+' ×'+n)}});if(L.length){evm='<br><b>Item evolusi dibawa pulang:</b> '+L.join(', ')+'.';log('Item evolusi dari Gua Sedaya: '+L.join(', ')+'.','good')}else evm='<br>Belum ada item evolusi kali ini. Coba lagi, makin dalam makin langka.'}(P.eggs||[]).forEach(e=>{if(S.eggs.length+S.pets.length<petCap()){S.eggs.push(e);kmsg+='<br>🥚 <b>Telur Kristal</b> dibawa pulang (minimal Epik, bonus stat +2). Tetaskan di Altar.';log('Telur Kristal dibawa pulang dari Dungeon. Tetaskan di Altar.','good')}else{earn(TELUR,'Telur Kristal dijual');kmsg+='<br>Slot telur dan pet penuh, jadi Telur Kristal dijual '+rp(TELUR)+'.';log('Slot penuh: Telur Kristal dijual '+rp(TELUR)+'.','good')}});
+  let kmsg='',evm='';if(SD&&P.ev){const E=eviS(),L=[],LH=[];[1,2,3].forEach(t=>{const n=P.ev[t]|0;if(n){E[t]=(E[t]|0)+n;L.push(EVI[t].em+' '+EVI[t].n+' ×'+n);LH.push(EVI[t].e+' '+EVI[t].n+' ×'+n)}});if(L.length){evm='<br><b>Item evolusi dibawa pulang:</b> '+LH.join(', ')+'.';log('Item evolusi dari Gua Sedaya: '+L.join(', ')+'.','good')}else evm='<br>Belum ada item evolusi kali ini. Coba lagi, makin dalam makin langka.'}(P.eggs||[]).forEach(e=>{if(S.eggs.length+S.pets.length<petCap()){S.eggs.push(e);kmsg+='<br>🥚 <b>Telur Kristal</b> dibawa pulang (minimal Epik, bonus stat +2). Tetaskan di Altar.';log('Telur Kristal dibawa pulang dari Dungeon. Tetaskan di Altar.','good')}else{earn(TELUR,'Telur Kristal dijual');kmsg+='<br>Slot telur dan pet penuh, jadi Telur Kristal dijual '+rp(TELUR)+'.';log('Slot penuh: Telur Kristal dijual '+rp(TELUR)+'.','good')}});
   log(`${died?'Tumbang di':'Pulang dari'} ${SD?'Gua Sedaya B'+lvl:lvl?'Dungeon B'+lvl:'hutan'}: ${c} koin jadi ${rp(rupiah)}${nw.length?', item baru: '+nw.join(', '):''}${srn.length?', super langka: '+srn.map(g=>g.n+' ('+gTxt(g)+')').join(', '):''}${bh?', bahan: '+bl.join(', '):''}.`,died?'bad':'good');
   ovShow(died?'Kamu tumbang':'Kembali ke desa',`${died?'Kamu pingsan dan ditemukan warga. Hanya separuh koin yang terbawa. ':''}Koin ${c} dijual ${rp(rupiah)}.${bh?'<br>Bahan dibawa pulang: '+bl.join(', ')+' (dipakai gratis saat meracik di rumah).':''}${nw.length?'<br>Item baru (dipasang otomatis jika slotnya kosong): '+nw.map(n=>(ITI[n]?`<img src="${SPD[ITI[n]][0]}" alt="" style="height:20px;vertical-align:middle">`:ITEMS.find(i=>i[0]===n)[1])+' '+n+' ('+IT[n][0]+' +1)').join(', ')+'.':''}${srn.length?'<br>✨ <b>Super Langka!</b> '+srn.map(g=>g.n+' ('+gTxt(g)+', '+gQual(g)+')').join(', ')+'. Pasang lewat Karakter, Perlengkapan.':''}${P.up.length?'<br>Stat naik di perjalanan ini: '+P.up.map(u=>u[0]+' +1 ('+u[1]+(u[2]?', '+u[2]:'')+')').join('; ')+'.':''}${kmsg}${evm}${pm}<br>Perjalanan memakan 1 hari.`,[['Pulang',()=>{root.hidden=true;state='off';cancelAnimationFrame(raf);pass()},'p']]);
 }
@@ -2690,7 +2769,7 @@ function floorReward(n){S.dgc=S.dgc||{};if(S.dgc[n])return;S.dgc[n]=1;const k=bu
   log(`Pertama kali menamatkan Dungeon B${n}: ${k} +1 permanen (${P.up[P.up.length-1][1]}).`,'good');save();pop(P.x,P.y-40,'Lantai B'+n+' tamat! '+k+' +1','#f0c75e')}
 /* XP monster dungeon: slime 1, kelelawar 2, golem 3. Butuh XP naik tiap kali: 8 + 3 x jumlah kenaikan (maks 50). Satu kenaikan = +1 stat permanen. Maks 2 kenaikan per perjalanan (= per hari); XP berlebih tidak dihitung. S.dxp = XP sekarang, S.dxn = total kenaikan dari XP. */
 const xpNeed=()=>Math.min(50,8+3*(S.dxn|0));
-function gainXp(f){if(lvl<1||P.xg>=2)return;const v=({slime:1,bat:2,golem:3,garuda:5,kalinci:6,boss:12})[f.t]||1;S.dxp=(S.dxp|0)+v;S.dxn=S.dxn|0;pop(f.x,f.y-22,'+'+v+' XP','#a78bfa');
+function gainXp(f){if(lvl<1||P.xg>=2)return;const v=({slime:1,bat:2,golem:3,garuda:5,kalinci:6,boss:12,aqua:1,kera:3,duri:2,okta:2,lumi:2,karn:4})[f.t]||1;S.dxp=(S.dxp|0)+v;S.dxn=S.dxn|0;pop(f.x,f.y-22,'+'+v+' XP','#a78bfa');
   const need=xpNeed();if(S.dxp<need)return;const k=bumpStat('latihan B'+lvl);
   if(!k){S.dxp=need-1;return}
   S.dxp-=need;S.dxn++;P.xg++;log(`Latihan tarung di Dungeon B${lvl}: ${k} +1 permanen (${P.up[P.up.length-1][1]}).`,'good');save();pop(P.x,P.y-40,'XP penuh! '+k+' +1','#a78bfa');
@@ -2723,13 +2802,14 @@ function swing(){
 /* ===== Gua Pulau Sedaya (SD=1): mulai langsung di B1 tanpa hutan, diberi warna biru, dan menjatuhkan item evolusi. Ubah peluang di SDR. =====
    f = peluang per monster, c = per peti, mn = lantai minimal. Boss: Mutiara pasti, Permata peluang bossP. Kalinci Kristal: Mutiara + Kerang. Item evolusi tidak hilang walau tumbang. */
 const SDR={f:{1:.09,2:.05,3:.008},c:{1:.35,2:.15,3:.05},mn:{1:1,2:3,3:5},bossP:.45};
-function evDrop(t,x,y){P.ev[t]=(P.ev[t]|0)+1;pop(x,y-16,EVI[t].e+' '+EVI[t].n+'!',EVI[t].c);try{jingle(t>1?'rare':'chest')}catch(e){}}
+function evDrop(t,x,y){P.ev[t]=(P.ev[t]|0)+1;pop(x,y-16,EVI[t].n+'!',EVI[t].c,'evo'+t);try{jingle(t>1?'rare':'chest')}catch(e){}}
 function sdLoot(f){if(!P||!P.ev)return;const x=f.x,y=f.y;
   if(f.boss){evDrop(2,x,y);if(Math.random()<SDR.bossP)setTimeout(()=>{if(P&&P.ev)evDrop(3,x+8,y-10)},350);return}
   if(f.rare){evDrop(2,x,y);evDrop(1,x+10,y);return}
   [1,2,3].forEach(t=>{if(lvl>=SDR.mn[t]&&Math.random()<SDR.f[t])evDrop(t,x,y-(t-1)*10)})}
 function sdChest(c){[1,2,3].forEach(t=>{if(lvl>=SDR.mn[t]&&Math.random()<SDR.c[t])evDrop(t,c.x,c.y-(t-1)*12)})}
-function sdTint(){let t=document.getElementById('dgTint');if(!SD){if(t)t.remove();return}
+function sdTint(){let t=document.getElementById('dgTint');if(t)t.remove();return}
+function sdTintOld(){let t=document.getElementById('dgTint');if(!SD){if(t)t.remove();return}
   if(!t){t=document.createElement('div');t.id='dgTint';t.style.cssText='position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(70,170,210,.30),rgba(20,70,130,.40));mix-blend-mode:multiply';cv.after(t)}
   setTimeout(()=>{if(SD&&P&&state==='play'){kBan('🌊 GUA SEDAYA','Kerang, Mutiara, dan Permata penyimpan kekuatan evolusi tersembunyi di sini.','#7fe3ff',3.4,.3);kBeep(1)}},500)}
 /* ===== Pet pendamping dungeon: ikut menyerang otomatis, tidak bisa tumbang. Kill dari pet tidak memberi XP stat permanen. ===== */
@@ -2776,10 +2856,10 @@ function drawBara(q){
   if(bolt&&q.shot&&q.atk>=.14&&q.atk<=B.hit[q.akind]+.04){const k=Math.min(1,(q.atk-.14)/Math.max(.05,B.hit[q.akind]-.14));
     for(let i=0;i<3;i++){const kk=Math.max(0,k-i*.08),bx=q.shot.x+(q.shot.tx-q.shot.x)*kk,by=q.shot.y-4+(q.shot.ty-q.shot.y)*kk,r=7-i*2;
       const gr=cx.createRadialGradient(bx,by,0,bx,by,r);gr.addColorStop(0,'rgba(255,240,170,'+(1-i*.3)+')');gr.addColorStop(.5,'rgba(255,150,40,'+(.8-i*.25)+')');gr.addColorStop(1,'rgba(255,80,20,0)');cx.fillStyle=gr;cx.beginPath();cx.arc(bx,by,r,0,7);cx.fill()}}}
-function mkPet(){const p=(S.pets||[]).find(x=>x.dg&&(x.fat|0)<90);if(!p)return null;
+function mkPet(){const p=(S.pets||[]).find(x=>x.dg&&(x.fat|0)<90&&(!SD||x.el==='air'));if(!p)return null;
   const ft=Math.max(.3,1-(p.fat||0)/150),dmg=Math.max(1,Math.min(4,Math.round((p.pw||10)*ft/8))),ker=p.spc==='kerikil'&&!((p.st|0)>0),bara=p.spc==='bara'&&(p.st|0)<=3,tar=!!tSetOf(p),rate=Math.max(ker?.75:.45,1.15-(p.sp||10)/60);
   const im=new Image(),u=art(p);if(u)im.src=u;
-  return{x:0,y:0,r:7,cd:.8,rate,r0:rate,src:p,dmg,spd:90+(p.sp||10)*1.2,im,el:p.el,st:p.st||0,nm:pName(p),at:0,ker,bara,atk:-1,pend:null,chase:false,fx:1,fy:0,akind:2,shot:null,skcd:4,skfx:0,bst:Math.min(3,p.st|0),tar,face:1}}
+  return{x:0,y:0,r:7,cd:.8,rate,r0:rate,src:p,dmg,spd:90+(p.sp||10)*1.2,im,el:p.el,st:p.st||0,nm:pName(p),at:0,ker,bara,kap:p.spc==='kapas'&&(p.st|0)===1,atk:-1,pend:null,chase:false,fx:1,fy:0,akind:2,shot:null,skcd:4,skfx:0,bst:Math.min(3,p.st|0),tar,face:1}}
 /* Kelelahan pet di dungeon: naik tiap lantai yang ditinggalkan (+4, lantai boss +10). Efek bertahap: damage turun (rumus lama) dan di atas 70% serangan melambat. Pet tidak pernah berhenti menyerang atau tumbang. */
 function petCalc(q){const p=q&&q.src;if(!p)return;const f=p.fat||0,ft=Math.max(.3,1-f/150);q.dmg=Math.max(1,Math.min(4,Math.round((p.pw||10)*ft/8)));q.rate=q.r0*(f>70?1+(f-70)/60:1)}
 function petTire(n){const q=P&&P.pet;if(!q||!q.src)return;const p=q.src,a=p.fat|0,b=Math.min(100,a+n);p.fat=b;P.pf=(P.pf|0)+(b-a);petCalc(q);
@@ -2787,7 +2867,7 @@ function petTire(n){const q=P&&P.pet;if(!q||!q.src)return;const p=q.src,a=p.fat|
 function petHit(q,t){if(!t||t.hp<=0)return;t.hp-=q.dmg;t.pk=1;t.fl=.12;sfx('hit');
   const k=Math.hypot(t.x-q.x,t.y-q.y)||1,w=t.rare?.3:t.boss?.1:1;t.vx+=(t.x-q.x)/k*150*w;t.vy+=(t.y-q.y)/k*150*w;pop(t.x,t.y-12,'-'+q.dmg,'#9bdcff');
   if(t.hp<=0)reap()}
-/* Sprite pet bertekstur atlas di dungeon: Tarum evolusi 1-4, Silvara evolusi 1-4, Ratnaka evolusi 1-4, Nagi evolusi 1-4 (lihat TSET). Rincian Tarum (TRD = evolusi 1, TRD2 = evolusi 2, TRD3 = evolusi 3, TRD4 = evolusi 4): atlas 8 kolom, sel 140x92 jangkar kaki (70,84) untuk TRD; 115x86 jangkar (57,76) untuk TRD2. Baris: 0 diam(4), 1 jalan(4), 2 tebas(6), 3 skill kristal(8), 4 kena(4), 5 tumbang(6). Semua frame menghadap kanan/depan; gerak ke kiri memakai cermin. Baris kena/tumbang belum dipakai (pet tidak bisa tumbang). */
+/* Sprite pet bertekstur atlas di dungeon: Tarum evolusi 1-4, Silvara evolusi 1-4, Ratnaka evolusi 1-4, Nagi evolusi 1-4, Kerikil evolusi 2-4 (lihat TSET). Rincian Tarum (TRD = evolusi 1, TRD2 = evolusi 2, TRD3 = evolusi 3, TRD4 = evolusi 4): atlas 8 kolom, sel 140x92 jangkar kaki (70,84) untuk TRD; 115x86 jangkar (57,76) untuk TRD2. Baris: 0 diam(4), 1 jalan(4), 2 tebas(6), 3 skill kristal(8), 4 kena(4), 5 tumbang(6). Semua frame menghadap kanan/depan; gerak ke kiri memakai cermin. Baris kena/tumbang belum dipakai (pet tidak bisa tumbang). */
 const TRD={im:new Image(),cw:140,ch:92,ax:70,ay:84,g:.62,ti:[.2,.2,.2,.2],tw:[.1,.1,.1,.1],ta:[.08,.08,.09,.12,.12,.08],ts:[.09,.1,.1,.1,.1,.16,.1,.09],hit:.3,skfx:.5};TRD.im.src='images/tarum-dungeon-sprite.webp?v=1';
 TRD.la=TRD.ta.reduce((a,b)=>a+b,0);TRD.ls=TRD.ts.reduce((a,b)=>a+b,0);
 const TRD2=Object.assign({},TRD,{im:new Image(),cw:115,ch:86,ax:57,ay:76,g:.66});TRD2.im.src='images/tarum2-dungeon-sprite.webp?v=1';
@@ -2805,7 +2885,10 @@ const NGD1=Object.assign({},TRD,{im:new Image(),cw:107,ch:96,ax:53,ay:83,g:.66})
 const NGD2=Object.assign({},NGD1,{im:new Image(),cw:125,ch:102,ax:62,ay:85,g:.7});NGD2.im.src='images/nagi2-dungeon-sprite.webp?v=1';
 const NGD3=Object.assign({},NGD1,{im:new Image(),cw:136,ch:108,ax:68,ay:86,g:.72});NGD3.im.src='images/nagi3-dungeon-sprite.webp?v=1';
 const NGD4=Object.assign({},NGD1,{im:new Image(),cw:121,ch:99,ax:60,ay:88,g:.76});NGD4.im.src='images/nagi4-dungeon-sprite.webp?v=1';
-const TSET={tarum:[TRD,TRD2,TRD3,TRD4],silvara:[SVD1,SVD2,SVD3,SVD4],ratnaka:[RTD1,RTD2,RTD3,RTD4],nagi:[NGD1,NGD2,NGD3,NGD4]};/* atlas per spesies, indeks = tahap evolusi (0-3). Tahap tanpa atlas memakai gambar lama */
+const KRD2=Object.assign({},TRD,{im:new Image(),cw:103,ch:98,ax:51,ay:86,g:.62});KRD2.im.src='images/kerikil2-dungeon-sprite.webp?v=1';/* Kerikil evolusi 2 (tahap 1 tetap memakai KD lama) */
+const KRD3=Object.assign({},KRD2,{im:new Image(),cw:110,ch:96,ax:55,ay:87,g:.66});KRD3.im.src='images/kerikil3-dungeon-sprite.webp?v=1';
+const KRD4=Object.assign({},KRD2,{im:new Image(),cw:102,ch:100,ax:51,ay:92,g:.7});KRD4.im.src='images/kerikil4-dungeon-sprite.webp?v=1';
+const TSET={tarum:[TRD,TRD2,TRD3,TRD4],silvara:[SVD1,SVD2,SVD3,SVD4],ratnaka:[RTD1,RTD2,RTD3,RTD4],nagi:[NGD1,NGD2,NGD3,NGD4],kerikil:[null,KRD2,KRD3,KRD4]};/* atlas per spesies, indeks = tahap evolusi (0-3). Tahap tanpa atlas memakai gambar lama */
 const tSetOf=p=>{const a=p&&TSET[p.spc];return a&&a[Math.min(3,p.st|0)]};
 const tB=q=>tSetOf(q.src)||TRD;
 const tOK=q=>{const d=tB(q);return d.im.complete&&d.im.naturalWidth>0};
@@ -2833,12 +2916,41 @@ function drawTarum(q){
   else{r=0;c=Math.floor(tm/.2)%4}
   const g=TRD.g;cx.save();cx.translate(q.x,q.y+12-(TRD.fl||0));if(q.face<0)cx.scale(-1,1);
   cx.drawImage(TRD.im,c*TRD.cw,r*TRD.ch,TRD.cw,TRD.ch,-TRD.ax*g,-TRD.ay*g,TRD.cw*g,TRD.ch*g);cx.restore()}
+/* Sprite Kapas tahap Muda (Evolusi 1, Kapasu) di dungeon top-down: images/kapas2-dungeon-sprite.webp, atlas 4 kolom x 5 baris, sel 176x88.
+   Baris: 0 diam, 1 jalan, 2 lari (saat mengejar musuh), 3 tebas angin (frame 2 = saat kena), 4 skill lingkaran es (serangan area).
+   Semua frame menghadap kanan; gerak ke kiri memakai cermin. Atur skill di KP.sk (pengali damage, radius, jeda detik). */
+const KP={im:new Image(),cols:4,cw:176,ch:88,ax:88,ay:86,g:.46,idle:[0,1,2,3],walk:[4,5,6,7],run:[8,9,10,11],atk:[12,13,14,15],ta:[.07,.09,.09,.10],ts:[.09,.12,.14,.14],hit:.16,len:.35};
+KP.skF=[16,17,18,19];KP.sk={mul:1.6,rad:84,cd:9,hit:.3,len:.49};KP.im.src='images/kapas2-dungeon-sprite.webp?v=1';
+const kOK=q=>KP.im.complete&&KP.im.naturalWidth>0;
+function kapUpd(q,t,dt){
+  q.skcd-=dt;
+  if(q.atk>=0){q.atk+=dt;
+    if(q.pend&&q.atk>=KP.hit){const tg=q.pend.t;q.pend=null;if(tg&&tg.hp>0&&Math.hypot(tg.x-q.x,tg.y-q.y)<90)petHit(q,tg)}
+    if(q.skfx&&q.atk>=KP.sk.hit){q.skfx=0;const d0=q.dmg;q.dmg=Math.max(2,Math.round(d0*KP.sk.mul));foes.slice().forEach(f=>{if(f.hp>0&&!(f.boss&&f.st==='sleep')&&Math.hypot(f.x-q.x,f.y-q.y)<KP.sk.rad)petHit(q,f)});q.dmg=d0}
+    if(q.atk>=(q.akind==='s'?KP.sk.len:KP.len)){q.atk=-1;q.pend=null;q.skfx=0}}
+  const busy=q.atk>=0,tx=t?t.x:P.x-(P.hf||1)*18,ty=t?t.y:P.y+10,dx=tx-q.x,dy=ty-q.y,d=Math.hypot(dx,dy)||1,stop=t?q.r+(t.r||10)+16:14;
+  if(Math.abs(dx)>2&&!busy)q.face=dx<0?-1:1;
+  q.mvg=!busy&&d>stop;
+  if(q.mvg){const sp=t?Math.max(q.spd,P.spd*.95):Math.max(q.spd,P.spd*1.15),st=Math.min(d-stop,sp*dt);mv(q,dx/d*st,dy/d*st)}
+  if(Math.hypot(q.x-P.x,q.y-P.y)>T*7){q.x=P.x+14;q.y=P.y+8}
+  if(t&&!busy){
+    const near=foes.filter(f=>f.hp>0&&Math.hypot(f.x-q.x,f.y-q.y)<70).length;
+    if(q.skcd<=0&&near>=3){q.atk=0;q.akind='s';q.skfx=1;q.skcd=KP.sk.cd;q.cd=Math.max(q.cd,.8)}
+    else if(q.cd<=0&&d<=stop+8){q.cd=Math.max(q.rate,.5);q.akind=1;q.atk=0;q.pend={t};q.face=t.x<q.x?-1:1}}}
+function drawKap(q){
+  let idx,bob=0;
+  if(q.atk>=0)idx=q.akind==='s'?KP.skF[bFr(q.atk,KP.ts)]:KP.atk[bFr(q.atk,KP.ta)];
+  else if(q.mvg){idx=(q.chase?KP.run:KP.walk)[Math.floor(tm*(q.chase?12:9))%4];bob=q.chase?0:-Math.abs(Math.sin(tm*12))*1.5}
+  else idx=KP.idle[Math.floor(tm*4)%4];
+  cx.fillStyle='rgba(0,0,0,.2)';cx.beginPath();cx.ellipse(q.x,q.y+12,9,3.5,0,0,7);cx.fill();
+  cx.save();cx.translate(q.x,q.y+12+bob);if(q.face<0)cx.scale(-1,1);cx.drawImage(KP.im,(idx%KP.cols)*KP.cw,Math.floor(idx/KP.cols)*KP.ch,KP.cw,KP.ch,-KP.ax*KP.g,-KP.ay*KP.g,KP.cw*KP.g,KP.ch*KP.g);cx.restore()}
 function petUpd(dt){const q=P.pet;if(!q)return;
   q.cd-=dt;q.at-=dt;let t=null,bd=T*5;
   foes.forEach(f=>{if(f.boss&&f.st==='sleep')return;if(Math.hypot(f.x-P.x,f.y-P.y)>T*5)return;const d=Math.hypot(f.x-q.x,f.y-q.y);if(d<bd){bd=d;t=f}});
   q.chase=!!t;
   if(q.bara&&bOK(q)){baraUpd(q,t,dt);return}
   if(q.tar&&tOK(q)){tarUpd(q,t,dt);return}
+  if(q.kap&&kOK(q)){kapUpd(q,t,dt);return}
   if(q.atk>=0){q.atk+=dt;if(q.pend&&q.atk>=KD.HIT){const tg=q.pend.t;q.pend=null;if(tg&&tg.hp>0&&Math.hypot(tg.x-q.x,tg.y-q.y)<70)petHit(q,tg)}if(q.atk>=KD.T.reduce((a,b)=>a+b,0)){q.atk=-1;q.pend=null}}
   const busy=q.atk>=0,tx=t?t.x:P.x-(P.hf||1)*18,ty=t?t.y:P.y+10,stop=t?q.r+(t.r||10)+(q.ker?14:3):14,dx=tx-q.x,dy=ty-q.y,d=Math.hypot(dx,dy)||1;
   if(Math.abs(dx)>2&&!busy)q.face=dx<0?-1:1;
@@ -2851,6 +2963,7 @@ function petUpd(dt){const q=P.pet;if(!q)return;
 function drawPet0(){const q=P.pet;if(!q)return;
   if(q.bara&&bOK(q)){cx.save();cx.strokeStyle=ELC[q.el]||'#fff';cx.globalAlpha=.55;cx.lineWidth=2;cx.beginPath();cx.ellipse(q.x,q.y+12,11,4.5,0,0,7);cx.stroke();cx.restore();drawBara(q);return}
   if(q.tar&&tOK(q)){cx.save();cx.strokeStyle=ELC[q.el]||'#fff';cx.globalAlpha=.55;cx.lineWidth=2;cx.beginPath();cx.ellipse(q.x,q.y+12,11,4.5,0,0,7);cx.stroke();cx.restore();drawTarum(q);return}
+  if(q.kap&&kOK(q)){cx.save();cx.strokeStyle=ELC[q.el]||'#fff';cx.globalAlpha=.55;cx.lineWidth=2;cx.beginPath();cx.ellipse(q.x,q.y+12,11,4.5,0,0,7);cx.stroke();cx.restore();drawKap(q);return}
   const kd=q.ker&&KD.im.complete&&KD.im.naturalWidth;
   if(!kd){cx.fillStyle='rgba(0,0,0,.28)';cx.beginPath();cx.ellipse(q.x,q.y+12,9,3.5,0,0,7);cx.fill()}
   cx.save();cx.strokeStyle=ELC[q.el]||'#fff';cx.globalAlpha=.55;cx.lineWidth=2;cx.beginPath();cx.ellipse(q.x,q.y+12,11,4.5,0,0,7);cx.stroke();cx.restore();
@@ -2890,7 +3003,7 @@ function upd(dt){
   drops=drops.filter(o=>{if(Math.hypot(o.x-P.x,o.y-P.y)>18)return true;if(o.k==='c'){sfx('coin');coins+=o.v||1;pop(o.x,o.y,'+'+(o.v||1),'#f0c75e')}else if(o.k==='b'){pop(o.x,o.y,lootB(1,o.h),'#6ee7a0',hk(o.h))}else if(o.k==='e'){P.eggs.push({el:null,nm:'Telur Kristal',bonus:2});pop(o.x,o.y-10,'Telur Kristal!','#ffd76a','egg');jingle('rare');kBeep(2)}else{P.hp=Math.min(P.mhp,P.hp+1);pop(o.x,o.y,'❤️','#fff')}return false});
 
   P.lk=Math.max(0,(P.lk||0)-dt);
-  if(Math.hypot(ex.x-P.x,ex.y-P.y)<20){if(foes.some(f=>f.boss)){if(!P.lk){P.lk=2.5;pop(P.x,P.y-24,'🔒 Tangga disegel. Kalahkan Raja Garudanaga!','#ffb454')}}else{if(lvl>0)floorReward(lvl);petTire(bossOn()?10:4);lvl++;P.hp=Math.min(P.mhp,P.hp+1);loadLvl();pop(P.x,P.y-24,lvl===1?'Masuk Dungeon':'Dungeon B'+lvl,'#4fd1c5')}}
+  if(Math.hypot(ex.x-P.x,ex.y-P.y)<20){if(foes.some(f=>f.boss)){if(!P.lk){P.lk=2.5;pop(P.x,P.y-24,'🔒 Tangga disegel. Kalahkan '+(SD?'Leviathan Sedaya':'Raja Garudanaga')+'!','#ffb454')}}else{if(lvl>0)floorReward(lvl);petTire(bossOn()?10:4);lvl++;P.hp=Math.min(P.mhp,P.hp+1);loadLvl();pop(P.x,P.y-24,lvl===1?'Masuk Dungeon':'Dungeon B'+lvl,'#4fd1c5')}}
   fx=fx.filter(f=>{f.t-=dt;f.y-=22*dt;return f.t>0});if(kb)kb.t-=dt;
   if(P.hp<=0){sfx('lose');finish(true)}
 }
@@ -2961,7 +3074,7 @@ function draw(){
    if(bf&&bf.st!=='sleep'){const bw=Math.min(380,vw-24),bx=(vw-bw)/2,by=Math.max(132,Math.round(vh*.2)+48),pr=Math.max(0,bf.hp)/bf.mhp;
     cx.save();cx.textAlign='center';cx.textBaseline='middle';cx.fillStyle='rgba(8,6,24,.8)';cx.fillRect(bx-3,by-3,bw+6,20);cx.fillStyle='#2a1030';cx.fillRect(bx,by,bw,14);
     const g2=cx.createLinearGradient(bx,0,bx+bw,0);g2.addColorStop(0,'#2f6bff');g2.addColorStop(1,bf.en?'#ff5a3c':'#f0c75e');cx.fillStyle=g2;cx.fillRect(bx,by,bw*pr,14);
-    cx.strokeStyle='#f0c75e';cx.lineWidth=1.5;cx.strokeRect(bx-2,by-2,bw+4,18);cx.font='bold 12px system-ui,sans-serif';cx.fillStyle='#ffe9a8';cx.fillText('👑 Raja Garudanaga',vw/2,by-13);cx.restore()}}
+    cx.strokeStyle='#f0c75e';cx.lineWidth=1.5;cx.strokeRect(bx-2,by-2,bw+4,18);cx.font='bold 12px system-ui,sans-serif';cx.fillStyle='#ffe9a8';cx.fillText('👑 '+(SD?'Leviathan Sedaya':'Raja Garudanaga'),vw/2,by-13);cx.restore()}}
   const sc=Math.floor(132/Math.max(MW,MH));mx.clearRect(0,0,132,132);
   for(let j=0;j<MH;j++)for(let i=0;i<MW;i++)if(seen[j][i]&&map[j][i]===1){mx.fillStyle=F?'#5ca56a':'#5a6bb5';mx.fillRect(i*sc,j*sc,sc,sc)}
   const ei=Math.floor(ex.x/T),ej=Math.floor(ex.y/T);if(seen[ej][ei]){mx.fillStyle='#f0c75e';mx.fillRect(ei*sc-1,ej*sc-1,sc+2,sc+2)}
@@ -2984,20 +3097,18 @@ function loop(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;if(state==='play
 window.dgIntro=function(sd){const SDM=sd===1;
   modal(SDM?'Gua Sedaya':'Hutan dan Dungeon',{cls:'dgx',html:`<div class="dgx-g">
 <div class="dgx-l">
-${SDM?`<div class="dgx-r" style="--c:var(--acc)"><div class="dgx-h"><b class="dgx-e">🌊</b><strong>Gua Sedaya</strong></div><p>Gerbang sudah dibuka Tomo, jadi kamu langsung masuk ke lantai B1 tanpa hutan. Makin dalam makin berbahaya.</p></div>
-<div class="dgx-r" style="--c:#6ab7ff"><div class="dgx-h"><b class="dgx-e">🐚</b><strong>Item evolusi</strong></div><p>🐚 Kerang (evolusi ke Muda) dari B1, 🔮 Mutiara (ke Dewasa) dari B3, 💎 Permata (ke Legend) dari B5. Boss pasti menjatuhkan Mutiara dan sering Permata. Item tetap terbawa walau kamu tumbang.</p></div>`:`<div class="dgx-r" style="--c:#5fd48a"><div class="dgx-h"><b class="dgx-e">🌲</b><strong>Hutan</strong></div><p>Kalahkan Roh Daun, pecahkan jamur, dan cari peti di sudut tersembunyi.</p></div>
+${SDM?`<div class="dgx-r" style="--c:#4fd1c5"><div class="dgx-h"><b class="dgx-e">🦑</b><strong>Monster Sedaya</strong></div><p>Aquablim dan Kerangga dari B1, lalu Duri Laut, Oktavia, Luminara, dan Karangnaga makin dalam. Tiap 5 lantai bos <b>Leviathan Sedaya</b> menyegel tangga.</p></div><div class="dgx-r" style="--c:#6ab7ff"><div class="dgx-h"><b class="dgx-e">${EVI[1].e}</b><strong>Item evolusi</strong></div><p>${EVI[1].e} Kerang (evolusi ke Muda) dari B1, ${EVI[2].e} Mutiara (ke Dewasa) dari B3, ${EVI[3].e} Permata (ke Legend) dari B5. Boss pasti menjatuhkan Mutiara dan sering Permata. Item tetap terbawa walau kamu tumbang.</p></div>`:`<div class="dgx-r" style="--c:#5fd48a"><div class="dgx-h"><b class="dgx-e">🌲</b><strong>Hutan</strong></div><p>Kalahkan Roh Daun, pecahkan jamur, dan cari peti di sudut tersembunyi.</p></div>
 <div class="dgx-r" style="--c:#a58bff"><div class="dgx-h"><b class="dgx-e">🌑</b><strong>Dungeon</strong></div><p>Temukan gua di sisi seberang. Makin dalam makin berbahaya, tiap lantai muncul monster baru.</p></div>`}
-<div class="dgx-r dgx-bs" style="--c:var(--gold)"><div class="dgx-h"><b class="dgx-e">👑</b><strong>Boss tiap 5 lantai</strong></div><p>Raja Garudanaga menyegel tangga, kalahkan dia untuk turun. Peluang <strong>10%</strong> menjatuhkan <strong>Telur Kristal</strong> (min. Epik).</p></div>
+${SDM?'':`<div class="dgx-r dgx-bs" style="--c:var(--gold)"><div class="dgx-h"><b class="dgx-e">👑</b><strong>Boss tiap 5 lantai</strong></div><p>Raja Garudanaga menyegel tangga, kalahkan dia untuk turun. Peluang <strong>10%</strong> menjatuhkan <strong>Telur Kristal</strong> (min. Epik).</p></div>`}
 <div class="dgx-r" style="--c:#ff9f43"><div class="dgx-h"><b class="dgx-e">🎁</b><strong>Peti dan jarahan</strong></div><p>Serang peti saat dekat. Isinya koin, hati, bahan ramuan, atau item stat permanen. Bahan dibawa pulang dan dipakai gratis untuk ramuan.</p></div>
 <div class="dgx-r dgx-w" style="--c:#ff7b6b"><div class="dgx-h"><b class="dgx-e">💀</b><strong>Risiko</strong></div><p>Pulang atau tumbang memakan 1 hari. Kalau tumbang, koin yang terbawa tinggal separuh.</p></div>
 </div>
 <div class="dgx-side">
 <div class="dgx-ph">Persiapan</div>
-${S.pets&&S.pets.length?`<div class="dgx-pet"><label for="dgpet">🐾 <strong>Pet pendamping</strong></label><select id="dgpet"><option value="-1">Tanpa pet</option>${S.pets.map((q,i)=>`<option value="${i}"${q.fat>=90?' disabled':q.dg?' selected':''}>${EL[q.el][0]} ${gEsc(pName(q))} (Power ${q.pw}, Speed ${q.sp}${q.fat>=90?', terlalu lelah':q.fat>=50?', lelah '+q.fat+'%':''})</option>`).join('')}</select><div class="sub">Pet ikut menyerang musuh di dekatmu secara otomatis dan tidak bisa tumbang. Makin tinggi Power, makin kuat serangannya; makin tinggi Speed, makin cepat. Pet makin lelah tiap lantai, dan pet yang terlalu lelah (90%+) tidak bisa dibawa.</div></div>`:''}
+${S.pets&&S.pets.length?`<div class="dgx-pet"><label for="dgpet">🐾 <strong>Pet pendamping</strong></label><select id="dgpet"><option value="-1">Tanpa pet</option>${S.pets.map((q,i)=>`<option value="${i}"${q.fat>=90||(SDM&&q.el!=='air')?' disabled':q.dg?' selected':''}>${EL[q.el][0]} ${gEsc(pName(q))} (Power ${q.pw}, Speed ${q.sp}${SDM&&q.el!=='air'?', bukan elemen Air':q.fat>=90?', terlalu lelah':q.fat>=50?', lelah '+q.fat+'%':''})</option>`).join('')}</select><div class="sub">Pet ikut menyerang musuh di dekatmu secara otomatis dan tidak bisa tumbang. Makin tinggi Power, makin kuat serangannya; makin tinggi Speed, makin cepat. Pet makin lelah tiap lantai, dan pet yang terlalu lelah (90%+) tidak bisa dibawa.${SDM?' <b>Di Gua Sedaya hanya pet elemen Air '+elI('air')+' yang bisa ikut.</b>':''}</div></div>`:''}
 <div class="dgx-c"><span><small>🎒 Bekal</small><strong>${rp(FEE)}</strong></span><span><small>🪙 Koin dijual</small><strong>${rp(COIN)}<em>/keping</em></strong></span></div>
-<details class="dgx-d"><summary>Stat memengaruhi tarungan</summary><div class="dgx-s"><span><strong>HP</strong> nyawa</span><span><strong>STR</strong> serangan</span><span><strong>POWER</strong> kecepatan</span><span><strong>MP</strong> laju serang</span><span><strong>INT</strong> jangkauan</span></div></details>
 </div>
-</div>`,btns:[['Masuk ('+rp(FEE)+')',()=>{if(!spend(FEE,'Bekal dungeon'))return alert('Uang kurang untuk bekal.');{const sx=document.getElementById('dgpet');if(sx&&S.pets){S.pets.forEach(q=>{delete q.dg});const i=+sx.value;if(i>=0&&S.pets[i])S.pets[i].dg=1;save()}}close();SD=SDM?1:0;if(SD)closeVillage();open()},'p'],['Batal',close]]});
+</div>`,btns:[['Masuk ('+rp(FEE)+')',()=>{if(!spend(FEE,'Bekal dungeon'))return alert('Uang kurang untuk bekal.');{const sx=document.getElementById('dgpet');if(sx&&S.pets){S.pets.forEach(q=>{delete q.dg});const i=+sx.value;if(i>=0&&S.pets[i]&&!(SDM&&S.pets[i].el!=='air'))S.pets[i].dg=1;save()}}close();SD=SDM?1:0;if(SD)closeVillage();open()},'p'],['Batal',close]]});
 };
 
 addEventListener('keydown',e=>{if(state==='off')return;const k=e.key.toLowerCase();if(k===' '){atk=true;e.preventDefault()}else if(k==='escape')pause();else keys[k]=true});
@@ -3668,15 +3779,15 @@ const VNPC=[
  {a:'sedaya',x:250,n:'Kang Jarwo',r:'Juragan Perahu',sp:11,o:{sk:'#d9a574',hr:'#3a2a20',cl:'#6b7b3a',pn:'#4a3b2c',acc:'cap'},m:1,ln:['Pulau ini sepi, tapi anginnya enak.','Perahu siap kapan saja.'],
   d:()=>({t:'Dermaga pulau ini sudah tua, tapi masih kuat menahan perahuku. Mau pulang ke Kota Singgah? Perjalanan pulang menghabiskan sisa hari ini, jadi selesaikan dulu urusanmu di Pulau Sedaya.',c:[['Pulang naik perahu (1 hari berlalu)',()=>{vclose();sailHome()},'p'],['Masih mau lihat-lihat',vclose]]})},
 
- {a:'sedaya',x:1900,n:NPC[6][0],r:NPC[6][1],sp:22,o:{sk:'#d9a574',hr:'#2b2b3a',cl:'#3a6ea5',pn:'#3a3a52',acc:'scarf'},cond:()=>!!S.sdg||fr()[6].c>=SDG_C,ln:['Gerbang itu mengenalku sejak aku kecil.','Hati-hati di dalam, lorongnya licin.'],
+ {a:'sedaya',x:1900,n:NPC[6][0],r:NPC[6][1],sp:22,o:{sk:'#d9a574',hr:'#2b2b3a',cl:'#3a6ea5',pn:'#3a3a52',acc:'scarf'},cond:()=>!!S.sdg||!!S.sdgCut,ln:['Gerbang itu mengenalku sejak aku kecil.','Hati-hati di dalam, lorongnya licin.'],
   d:()=>({t:`${S.name}, dulu aku sering memandu wisatawan sampai ke gerbang itu. Ukirannya hafal di luar kepalaku. Mau berbincang dulu?`,c:[['Berbincang',()=>{vclose();fTalk(6)},'p'],['Sampai nanti',vclose]]})},
 
- {a:'sedaya',x:2201,n:'Gerbang Gua Sedaya',r:'Gerbang Gua',m:1,hh:()=>sdDoor(),pt:()=>'<div class="vgl" data-el="air"><span>🗿</span></div>',ln:['Ukiran di gerbang itu berpendar pelan.','Dari dalam gua terdengar gema ombak.'],
-  d:()=>{const gi=VNPC.findIndex(x=>x.n==='Gerbang Gua Sedaya'),c=fr()[6].c,E=eviS(),inv=[1,2,3].map(t=>`${EVI[t].e} ${EVI[t].n} ×${E[t]|0}`).join(' · ');
+ {a:'sedaya',x:2201,n:'Gerbang Gua Sedaya',r:'Gerbang Gua',m:1,hh:()=>sdDoor(),pt:()=>'',ln:['Ukiran di gerbang itu berpendar pelan.','Dari dalam gua terdengar gema ombak.'],
+  d:()=>{const gi=VNPC.findIndex(x=>x.n==='Gerbang Gua Sedaya'),c=fr()[6].c,E=eviS(),inv=[1,2,3].map(t=>`${String.fromCharCode(0xE000+t)} ${EVI[t].n} ×${E[t]|0}`).join(' · ');
    if(S.sdg)return{t:`Gerbang batu itu sudah terbuka, memperlihatkan lorong gelap yang berbau garam. Di dalam ada Kerang, Mutiara, dan Permata penyimpan kekuatan evolusi pet. Simpananmu: ${inv}.`,c:[['Masuk Gua Sedaya',()=>{vclose();window.dgIntro(1)},'p'],['Nanti dulu',vclose]]};
    if(c>=SDG_C)return{t:`Ukiran di gerbang berbunyi: "Hanya sahabat sang pemandu yang boleh lewat." Tomo menempelkan telapak tangannya ke batu itu dan berbisik, lalu ukiran-ukiran menyala hijau kebiruan. "Mundur sedikit, ${S.name}."`,c:[['Minta Tomo membuka gerbang',()=>{S.sdg=1;save();vfl('🔓 Gerbang terbuka');vsay(gi,'Batu raksasa itu bergeser pelan. Gua Sedaya terbuka, dan Tomo mengangguk puas. Gerbang ini akan mengenalmu mulai sekarang.',[['Masuk Gua Sedaya',()=>{vclose();window.dgIntro(1)},'p'],['Nanti dulu',vclose]])},'p'],['Nanti dulu',vclose]]};
    return{t:`Gerbang batu setinggi dua orang menutup gua. Ukirannya berbunyi: "Hanya sahabat sang pemandu yang boleh lewat." Pemandu itu Tomo dari Desa Bukit. Kedekatanmu dengan Tomo baru ${c}/${SDG_C}. Berbincanglah, beri hadiah, dan bantu permintaannya di Desa Bukit.`,c:[['Mengerti',vclose]]}}}];
-function sdDoor(){const op=!!S.sdg;return `<svg class="vsdg" viewBox="0 0 240 279" width="234" height="272" aria-hidden="true">${op?'<ellipse cx="120" cy="170" rx="78" ry="104" fill="rgba(110,240,230,.14)" class="rn"/><rect width="240" height="279" fill="transparent"/>':'<defs><linearGradient id="sdgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d8a94"/><stop offset="1" stop-color="#5d5a68"/></linearGradient></defs><path d="M10 279 V118 A110 110 0 0 1 230 118 V279Z" fill="url(#sdgg)" stroke="#3d3a48" stroke-width="5"/><path d="M26 279 V120 A94 94 0 0 1 214 120 V279Z" fill="none" stroke="#a9a6b2" stroke-width="2.5"/><path d="M120 26 V279" stroke="#3d3a48" stroke-width="4"/><g class="rn" fill="none" stroke="#7ff5e6" stroke-width="3.2" stroke-linecap="round"><circle cx="120" cy="125" r="32"/><circle cx="120" cy="125" r="11"/><path d="M120 82 V62 M120 168 V188 M77 125 H57 M163 125 H183 M90 95 L76 81 M150 95 L164 81 M90 155 L76 169 M150 155 L164 169"/><path d="M48 225 l13 -17 l13 17 M166 225 l13 -17 l13 17"/></g>'}</svg>`};
+function sdDoor(){const op=!!S.sdg;return `<svg class="vsdg" viewBox="0 0 240 279" preserveAspectRatio="none" width="234" height="345" aria-hidden="true">${op?'<ellipse cx="120" cy="170" rx="78" ry="104" fill="rgba(110,240,230,.14)" class="rn"/><rect width="240" height="279" fill="transparent"/>':'<defs><linearGradient id="sdgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d8a94"/><stop offset="1" stop-color="#5d5a68"/></linearGradient></defs><path d="M10 279 V118 A110 110 0 0 1 230 118 V279Z" fill="url(#sdgg)" stroke="#3d3a48" stroke-width="5"/><path d="M26 279 V120 A94 94 0 0 1 214 120 V279Z" fill="none" stroke="#a9a6b2" stroke-width="2.5"/><path d="M120 26 V279" stroke="#3d3a48" stroke-width="4"/><g class="rn" fill="none" stroke="#7ff5e6" stroke-width="3.2" stroke-linecap="round"><circle cx="120" cy="125" r="32"/><circle cx="120" cy="125" r="11"/><path d="M120 82 V62 M120 168 V188 M77 125 H57 M163 125 H183 M90 95 L76 81 M150 95 L164 81 M90 155 L76 169 M150 155 L164 169"/><path d="M48 225 l13 -17 l13 17 M166 225 l13 -17 l13 17"/></g>'}</svg>`};
 VNPC.forEach((n,i)=>{n.a=n.a||'old';if(n.wd){if(!n.ch)n.d=()=>({t:`Halo, ${S.name}! Aku ${n.n}, ${n.r.toLowerCase()} di desa ini. Mau berbincang dan lebih akrab?`,c:[['Berbincang',()=>{vclose();fTalk(NPC.findIndex(x=>x[0]===n.n))},'p'],['Sampai nanti',vclose]]});n.tu=null;n.wait=Math.random()*2;n.dir=1;n.mv=0}n.i=i});
 /* Dialog teman di peta: Berbincang, Hadiah, Bantu langsung di sini */
 function fvChoices(vi,i){const f=fr()[i];return [['Berbincang',()=>fvAct(vi,i,'b'),'p'],['Hadiah '+rp(3000),()=>fvAct(vi,i,'h')],['Bantu '+rp(5000),()=>fvAct(vi,i,'p')],...(rclList(i).length?[['Tanya ramuan',()=>rclAsk(vi,i)]]:[]),...(i===1?[['🛍️ Lihat dagangan',()=>{vclose();bsOpen({title:'Dagangan Bayu',back:()=>vsay(vi,'Terima kasih sudah mampir! Barang bagus, harga pas.',fvChoices(vi,1))})},'p']]:[]),...(f.in?[['Suruh pulang',()=>fvTeam(vi,i,'k')]]:f.c>=40?[['Ajak menumpang',()=>fvTeam(vi,i,'m'),'p']]:[]),['Sampai nanti',vclose]]}
@@ -3723,7 +3834,7 @@ function crClue(){const L=[],el=new Set(S.pets.map(p=>p.el)).size,egg=S.eggs.len
  if(!S.cert)L.push('Syarat Grand Master juga butuh satu sertifikat spell. Ikuti Tes Mantra Sihir di musim kemarau.');
  if(hasP&&S.pets.some(p=>p.fat>=50))L.push('Pet yang lelah bertarung lebih lemah. Istirahatkan atau beri makan mewah sebelum lomba.');
  if(hasP&&!S.rv&&S.s>=0)L.push('Pembuat jaring di Desa Sungai itu keras kepala. Dia baru mau berteman kalau kamu mengalahkan Kepiting Jaring-nya dalam duel pet.');
- L.push('Siklus elemen: Air mengalahkan Api, Api mengalahkan Udara, Udara mengalahkan Tanah, Tanah mengalahkan Air. Unggul +25%, lemah −20%.','Latih Tanding (Rp 2.000) menaikkan stat pet kalau menang, dan melatihmu memilih Serang, Jurus Elemen, atau Bertahan.','Pet yang sudah tua pensiun dan meninggalkan telur warisan, jadi petmu tidak benar-benar hilang.','Dua pet dengan elemen sama bisa difusi jadi versi Sejati. Elemen berbeda menghasilkan hibrida, asalkan keduanya minimal tahap Dewasa.','Lomba Lady of Water di musim kemarau memberi spell Water Cyclone, dua telur, dan perlengkapan. Siapkan pet elemen Air.','Hutan dan dungeon di ujung kanan peta: bekal Rp 5.000, koin dijual Rp 300 per keping. Hitung dulu untung-ruginya.','Teman yang kedekatannya 40 ke atas bisa jadi rekan tim untuk lomba Gold and Garbage.','Evolusi pet butuh stat, umur (atau juara), dan satu item evolusi: Kerang, Mutiara, atau Permata dari Gua di Pulau Sedaya. Naik perahu Kang Jarwo, lalu minta Tomo membuka gerbang gua (kedekatan 60).');
+ L.push('Siklus elemen: Air mengalahkan Api, Api mengalahkan Udara, Udara mengalahkan Tanah, Tanah mengalahkan Air. Unggul +25%, lemah −20%. Nagi adalah legenda semua elemen, jadi selalu unggul melawan elemen apa pun.','Latih Tanding (Rp 2.000) menaikkan stat pet kalau menang, dan melatihmu memilih Serang, Jurus Elemen, atau Bertahan.','Pet yang sudah tua pensiun dan meninggalkan telur warisan, jadi petmu tidak benar-benar hilang.','Dua pet dengan elemen sama bisa difusi jadi versi Sejati. Elemen berbeda menghasilkan hibrida, asalkan keduanya minimal tahap Dewasa.','Lomba Lady of Water di musim kemarau memberi spell Water Cyclone, dua telur, dan perlengkapan. Siapkan pet elemen Air.','Hutan dan dungeon di ujung kanan peta: bekal Rp 5.000, koin dijual Rp 300 per keping. Hitung dulu untung-ruginya.','Teman yang kedekatannya 40 ke atas bisa jadi rekan tim untuk lomba Gold and Garbage.','Evolusi pet butuh stat, umur (atau juara), dan satu item evolusi: Kerang, Mutiara, atau Permata dari Gua di Pulau Sedaya. Naik perahu Kang Jarwo, lalu minta Tomo membuka gerbang gua (kedekatan 60).');
  return L}
 function crPick(n){const bad=(S.log||[]).slice(0,3).some(l=>l[1]==='bad'),w=[['cerita',2],['gms',1.3],['gagal',bad?3.5:.8],['petunjuk',S.pets.length?1.6:3],['belajar',.35],['ortu',.3],['krama',.3],['kik',2]];
  let x=Math.random()*w.reduce((a,b)=>a+b[1],0),ty='cerita';for(const[k,v]of w){if((x-=v)<0){ty=k;break}}
@@ -3741,7 +3852,7 @@ function vscene(){const hills=(c,a,o,s)=>{let d='M0 320';for(let x=0;x<=3600;x+=
  const far=`<svg width="3600" height="320" viewBox="0 0 3600 320">${hills('#4a6fa8',46,150,1)}${[500,1400,2300,3200].map(x=>`<g fill="#3a5a8f"><rect x="${x}" y="70" width="30" height="110"/><path d="M${x-6} 72 L${x+15} 36 L${x+36} 72Z"/><rect x="${x+40}" y="100" width="22" height="80"/></g>`).join('')}${hills('#3b5d91',34,200,3)}</svg>`;
  let tr='';for(let x=30;x<2500;x+=130+(x*7%50)){const g=['#2f6b45','#3a8050','#2a5d3c'][x%3],h=120+(x*13%70);tr+=`<rect x="${x+44}" y="${230-h*.55}" width="14" height="${h*.55}" fill="#5a3d28"/><circle cx="${x+50}" cy="${230-h*.7}" r="${h*.42}" fill="${g}"/><circle cx="${x+22}" cy="${230-h*.5}" r="${h*.3}" fill="${g}"/><circle cx="${x+80}" cy="${230-h*.5}" r="${h*.3}" fill="${g}"/>`}
  return[`<svg width="3600" height="320" viewBox="0 0 3600 320">${far.slice(far.indexOf('>')+1,-6)}</svg>`,`<svg width="2600" height="240" viewBox="0 0 2600 240">${tr}</svg>`]}
-function openVillage(a,x0){if(!S||(S.over&&!S.fre))return;a=AREAS[a]?a:'old';const AR=AREAS[a];EDGE=1;VILF=1;V.a=a;V.W=AR.W;WD.keys.l=WD.keys.r=0;WD.goal=null;{const sx=x0||330,sc0=vcl(.45,innerHeight/VIEW,1.6),vw0=innerWidth/sc0;Object.assign(V,{x:sx,dir:sx>AR.W/2?-1:1,goal:null,gt:null,cam:vcl(0,sx-vw0/2,Math.max(0,AR.W-vw0)),dl:0,cur:-1,t:0})}V.k.l=V.k.r=0;
+function openVillage(a,x0){if(!S||(S.over&&!S.fre))return;a=AREAS[a]?a:'old';const AR=AREAS[a];EDGE=1;VILF=1;V.a=a;V.W=AR.W;WD.keys.l=WD.keys.r=0;WD.goal=null;{const sx=x0||330,sc0=vcl(.45,innerHeight/VIEW,1.6),vw0=innerWidth/sc0;Object.assign(V,{x:sx,dir:sx>AR.W/2?-1:1,goal:null,gt:null,cut:0,cin:null,zm:1,cam:vcl(0,sx-vw0/2,Math.max(0,AR.W-vw0)),dl:0,cur:-1,t:0})}V.k.l=V.k.r=0;
  const o=document.getElementById('vil'),hadOld=!!o;if(o)o.remove();const v=document.createElement('div');v.id='vil';v.dataset.a=a;if(hadOld)v.style.animation='none';
  let w=`<img class="vmap" src="${AR.m}" width="${AR.W}" height="${VH}" alt="" draggable="false">${AR.sea?`<div class="vsea" aria-hidden="true" style="left:${AR.sea[0]}px;top:${AR.sea[2]}px;width:${AR.sea[1]-AR.sea[0]}px;height:${AR.sea[3]-AR.sea[2]}px"></div>`:''}${[AR.nx,AR.nx2].filter(Boolean).map(e=>vgoM(e[3]==='r'?AR.W-130:130,e[3],e[2])).join('')}${a==='old'?vgoM(130,'l','Perkemahan'):''}${a==='bukit'?'<div class="vgo" style="left:1985px">⛵ Dermaga</div>':''}${a==='sungai'?'<div class="vgo" style="left:270px">⛵ Dermaga</div>':''}${a==='sedaya'?'<div class="vgo" style="left:250px">⛵ Dermaga</div>':''}`;VB.forEach(([x,fn])=>w+=`<div class="vbd" style="left:${x}px">${fn()}</div>`);VL.forEach(([x,fn])=>w+=`<div class="vbd" style="left:${x}px">${fn()}</div>`);
  VNPC.forEach(n=>w+=(n.a!==a||vnHome(n)||(n.cond&&!n.cond()))?'':`<div class="vn" data-i="${n.i}" style="left:${n.x}px"><div class="vsay"></div><b class="vtag">${n.m?'❗ ':''}${n.r}</b><div class="vf">${n.hh?n.hh():n.sp?SPR[n.sp].h:chibi(n.o)}</div></div>`);
@@ -3771,7 +3882,7 @@ function vBump(mv){const t=performance.now();if(V.bk!=null&&t-V.bk<2200)return;V
  sfx('hit')}
 function vedge(vw,mv){const v=document.getElementById('vil');if(!v)return;const l=v.querySelector('.scr.l'),r=v.querySelector('.scr.r');if(!l||!r)return;const q=!mv&&V.goal==null&&!V.dl;l.classList.toggle('on',q&&V.cam>8);r.classList.toggle('on',q&&V.cam<V.W-vw-8)}
 function vgo(a,x){if(document.getElementById('vcv'))return;const cv=document.createElement('div');cv.id='vcv';document.body.appendChild(cv);void cv.offsetWidth;cv.style.opacity=1;setTimeout(()=>{if(!VILF){cv.remove();return}openVillage(a,x);const im=document.querySelector('#vil .vmap');let done=0;const off=()=>{if(done)return;done=1;cv.style.opacity=0;setTimeout(()=>cv.remove(),300)};if(!im||(im.complete&&im.naturalWidth))requestAnimationFrame(off);else{im.addEventListener('load',off,{once:true});im.addEventListener('error',off,{once:true});setTimeout(off,2000)}},260)}
-function closeVillage(){VILF=0;V.dl=0;clearInterval(V.hi);clearInterval(V.ty);const v=document.getElementById('vil');if(v)v.remove();document.body.classList.remove('invil')}
+function closeVillage(){VILF=0;V.dl=0;V.cut=0;V.cin=null;V.zm=1;clearInterval(V.hi);clearInterval(V.ty);const v=document.getElementById('vil');if(v)v.remove();document.body.classList.remove('invil')}
 /* Deret ikon pojok kanan atas layar judul: kalau melewati tepi layar yang terlihat (takik, sudut membulat, zoom), geser ke dalam */
 function fitTn2(){const t=document.querySelector('.tn2');if(!t)return;t.style.transform='';const vv=window.visualViewport,lim=(vv?vv.offsetLeft+vv.width:innerWidth)-12,r=t.getBoundingClientRect().right;if(r>lim)t.style.transform=`translateX(${Math.round(lim-r)}px)`}
 addEventListener('resize',fitTn2);addEventListener('orientationchange',()=>setTimeout(fitTn2,250));if(window.visualViewport)visualViewport.addEventListener('resize',fitTn2);
@@ -3785,7 +3896,9 @@ function vfl(t){const v=document.getElementById('vil');if(!v)return;const e=docu
 function vclose(){try{if(V.el)VNPC.forEach((n,i)=>{const o=V.el[i];if(o&&vnHome(n))o.e.style.display='none'})}catch(e){}V.dl=0;V.cur=-1;clearInterval(V.ty);const d=document.getElementById('vdl');if(d){d.className='';d.innerHTML=''}}
 function vdlg(i){const n=VNPC[i],o=n.d();vsay(i,o.t,o.c)}
 function vstep(i){const n=VNPC[i];if(!n)return;const d=V.x-n.x;if(Math.abs(d)>=90)return;let sd=d?Math.sign(d):-(V.dir||1),tx=n.x+sd*100;if(tx<70||tx>V.W-70){sd=-sd;tx=n.x+sd*100}V.stp=vcl(70,tx,V.W-70);V.sn=i}
-function vset(tx,t,k){tx.textContent='';const a=document.createElement('span'),g=document.createElement('span');g.style.visibility='hidden';a.textContent=t.slice(0,k);g.textContent=t.slice(k);tx.append(a,g)}
+/* Karakter U+E001..E003 di teks dialog diganti gambar item evolusi (Kerang, Mutiara, Permata) */
+function vfill(el,t){t.split(/([\uE001-\uE003])/).forEach(p=>{if(!p)return;const n=p.charCodeAt(0)-0xE000;if(p.length===1&&n>=1&&n<=3&&EVI[n]){const im=document.createElement('img');im.className='evi-ic';im.alt='';im.draggable=false;im.style.cssText='height:1.3em;width:auto;vertical-align:-.3em';im.onerror=()=>im.replaceWith(document.createTextNode(EVI[n].em));im.src='images/'+EVI[n].f;el.append(im)}else el.append(document.createTextNode(p))})}
+function vset(tx,t,k){tx.textContent='';const a=document.createElement('span'),g=document.createElement('span');g.style.visibility='hidden';vfill(a,t.slice(0,k));vfill(g,t.slice(k));tx.append(a,g)}
 /* Mode potret besar ala VN: aktif otomatis bila seni potret cukup tajam (gambar vn_* atau potret lama). Chibi vektor tetap ringkas. */
 const VN_BESAR_MIN=320;
 const vnNama=s=>String(s).replace(/^(Bu|Pak|Kang|Mbak|Mas)\s+/i,'');
@@ -3802,7 +3915,7 @@ function vsay(i,t,c){const n=typeof i==='object'?i:VNPC[i],d=document.getElement
  if(!(c||[]).some(a=>a[1]===vclose)){const bx=d.querySelector('.vbx'),x=document.createElement('button');x.type='button';x.className='xclose';x.setAttribute('aria-label','Tutup');x.textContent='\u00d7';x.onclick=vclose;bx.append(x)}
  vBig(d,first);vKdk(d,n);const tx=d.querySelector('.vtx'),ch=d.querySelector('.vch');(c||[]).forEach(([l,f,k])=>{const b=document.createElement('button');b.textContent=l;if(k)b.className=k;b.onclick=f;ch.append(b)});
  const pg=vPages(t),bx2=d.querySelector('.vbx');let pi=0;const nx=document.createElement('button');nx.type='button';nx.className='vnext p';bx2.insertBefore(nx,ch);
- const fin=()=>{clearInterval(V.ty);V.ty=0;tx.textContent=pg[pi];if(pi<pg.length-1){tx.dataset.more='1';nx.style.display='';nx.textContent='Lanjut \u25BE  '+(pi+1)+'/'+pg.length;ch.style.display='none';nx.focus({preventScroll:true})}else{delete tx.dataset.more;nx.style.display='none';ch.style.display='';ch.style.visibility='visible';const b=ch.querySelector('.p')||ch.querySelector('button');b&&b.focus({preventScroll:true})}};
+ const fin=()=>{clearInterval(V.ty);V.ty=0;tx.textContent='';vfill(tx,pg[pi]);if(pi<pg.length-1){tx.dataset.more='1';nx.style.display='';nx.textContent='Lanjut \u25BE  '+(pi+1)+'/'+pg.length;ch.style.display='none';nx.focus({preventScroll:true})}else{delete tx.dataset.more;nx.style.display='none';ch.style.display='';ch.style.visibility='visible';const b=ch.querySelector('.p')||ch.querySelector('button');b&&b.focus({preventScroll:true})}};
  const show=()=>{clearInterval(V.ty);V.ty=0;const s=pg[pi];nx.style.display='none';if(pg.length>1)ch.style.display='none';if(rm){fin();return}let k=0;vset(tx,s,0);V.ty=setInterval(()=>{k+=2;vset(tx,s,k);if(k>=s.length)fin()},20)};
  const adv=()=>{if(V.ty)fin();else if(pi<pg.length-1){pi++;show()}};
  nx.onclick=e=>{e.stopPropagation();adv()};tx.onclick=adv;show()}
@@ -3812,6 +3925,7 @@ function vPages(t){const max=innerWidth<=700?150:230;if(t.length<=max*1.25)retur
 function vgy(x){return V.a==='bukit'?(793-(495+0.05*Math.min(x,1900))).toFixed(1)+'px':''}
 function vtick(t){if(!VILF)return;V.raf=requestAnimationFrame(vtick);const dt=Math.min(.05,(t-V.t)/1000)||0;V.t=t;
  const lock=V.dl||document.querySelector('#ov.on,#nite.on,#vn.on,#scr.on'),sc=V.sc=vcl(.45,innerHeight/VIEW,1.6),vw=innerWidth/sc;
+ if(!lock&&!V.cut&&V.a==='sedaya'&&!S.sdg&&!S.sdgCut&&V.x>=2000&&fr()[6].c>=SDG_C){sdCine();return}
  let mv=lock?0:(V.k.r?1:0)-(V.k.l?1:0);if(mv)V.goal=null;
  if(!lock&&!mv&&V.goal!=null){const d=V.goal-V.x;if(Math.abs(d)<8){V.goal=null;const g=V.gt;V.gt=null;if(g!=null){V.dir=Math.sign(VNPC[g].x-V.x)||V.dir;vdlg(g)}}else mv=Math.sign(d)}
  if(mv){V.dir=mv;const x0=V.x;V.x=vcl(70,V.x+mv*270*dt,V.W-70);if(V.x===x0&&vDead(mv)){vBump(mv);mv=0}else sfx('step')}
@@ -3821,14 +3935,87 @@ function vtick(t){if(!VILF)return;V.raf=requestAnimationFrame(vtick);const dt=Ma
  let near=null,nd=1e9;
  VNPC.forEach((n,i)=>{const o=V.el[i];if(!o)return;if(n.wd){if(V.cur===i)n.mv=0;else if(n.tu==null){n.wait-=dt;n.mv=0;if(n.wait<=0)n.tu=n.wd[0]+Math.random()*(n.wd[1]-n.wd[0])}else{const d=n.tu-n.x;if(Math.abs(d)<4){n.tu=null;n.wait=2+Math.random()*4;n.mv=0}else{n.mv=1;n.dir=Math.sign(d);n.x+=n.dir*70*dt}}}
   else n.dir=Math.sign(V.x-n.x)||n.dir||1;
+  if(V.cin&&V.cin.ti===i&&V.cin.fd)n.dir=V.cin.fd;
   const ad=Math.abs(n.x-V.x);if(n.wd&&V.cur!==i&&ad<150&&!n.mv)n.dir=Math.sign(V.x-n.x)||n.dir;
   o.e.style.left=n.x+'px';o.e.style.bottom=vgy(n.x);o.e.classList.toggle('mv',!!n.mv);o.f.style.transform=`scaleX(${(n.dir<0?-1:1)*(n.fl?-1:1)})`;
   if(ad<120&&ad<nd){nd=ad;near=i}});
  V.near=near;const tk=document.getElementById('vtk');if(tk){const show=near!=null&&!V.dl&&!lock;tk.hidden=!show;if(show){const o=V.el[near];if(o&&tk.parentNode!==o.e)o.e.appendChild(tk);if(!tk.dataset.b){tk.dataset.b=1;tk.innerHTML='<kbd><span class=kE>E</span><span class=kH>👆</span></kbd><i>💬</i><span>Bicara</span>';tk.setAttribute('aria-label','Bicara dengan warga terdekat (ketuk atau tombol E)')}}}
  V.p.e.style.left=V.x+'px';V.p.e.style.bottom=vgy(V.x);V.p.e.classList.toggle('mv',!!mv);V.p.spr.dataset.r=mv?1:0;V.p.f.style.transform=`scaleX(${V.dir*FACE*HFACE()})`;
- if(window.klFollowVil)klFollowVil(dt,t,mv);const tg=vcl(0,V.x-vw/2,Math.max(0,V.W-vw));V.cam+=(tg-V.cam)*Math.min(1,dt*5);
- V.w.style.transform=`scale(${sc}) translate(${-V.cam}px,${-(VH-VIEW)}px)`;V.ls.forEach(l=>{l.style.transform=`translateX(${-V.cam*sc*l.dataset.k}px) scale(${sc})`});vedge(vw,mv)}
+ if(window.klFollowVil)klFollowVil(dt,t,mv);const zt=V.cin?V.cin.z:1;V.zm=(V.zm||1)+(zt-(V.zm||1))*Math.min(1,dt*(V.cin?V.cin.zs||3:4));const z=V.zm,sc2=sc*z,vw2=innerWidth/sc2,fx=V.cin?V.cin.fx():V.x,tg=vcl(0,fx-vw2/2,Math.max(0,V.W-vw2));V.cam+=(tg-V.cam)*Math.min(1,dt*(V.cin?V.cin.sp||3:5));
+ V.w.style.transform=`scale(${sc2}) translate(${-V.cam}px,${-(VH-VIEW/z)}px)`;V.ls.forEach(l=>{l.style.transform=`translateX(${-V.cam*sc*l.dataset.k}px) scale(${sc})`});vedge(vw,mv)}
+/* ===== CUTSCENE: Tomo berlari dari dermaga & membuka gerbang Gua Sedaya =====
+   Terpicu SEKALI saat pemain pertama mendekati gerbang (x >= 2000) dengan kedekatan Tomo >= SDG_C.
+   Tombol "Lewati" / Esc melompat ke akhir (gerbang langsung terbuka). Ubah teks & durasi langsung di sdCine(). */
+const SD_GX=2201,SD_TX=2120;
+function sdRe(e,c){e.classList.remove(c);void e.offsetWidth;e.classList.add(c)}
+function sdCap(t){const e=document.getElementById('vcc');if(!e)return;e.style.opacity=0;setTimeout(()=>{if(e.isConnected){e.textContent=t||'';e.style.opacity=t?1:0}},t?240:0)}
+function sdFl(){const f=document.querySelector('#vcn .fl');if(f)sdRe(f,'go')}
+function sdTitle(a,b){const o=document.getElementById('vcn');if(!o)return;const e=document.createElement('div');e.id='vct';e.innerHTML=`<b>${a}</b><small>${b}</small>`;o.appendChild(e);setTimeout(()=>e.remove(),3600)}
+function sdSnap(fx,z){const vw2=innerWidth/((V.sc||1)*z);V.zm=z;V.cam=vcl(0,fx-vw2/2,Math.max(0,V.W-vw2))}
+function sdMk(ti){const n=VNPC[ti],d=document.createElement('div');d.className='vn';d.dataset.i=ti;d.style.left=n.x+'px';d.innerHTML=`<div class="vsay"></div><b class="vtag">${n.r}</b><div class="vf">${n.sp?SPR[n.sp].h:chibi(n.o)}</div>`;V.w.appendChild(d);return V.el[ti]={e:d,f:d.querySelector('.vf'),s:d.querySelector('.vsay')}}
+function sdW(c,ms){return new Promise(ok=>{c.res=ok;c.t=setTimeout(ok,ms)}).then(()=>{if(c.skip||V.cut!==c)throw c})}
+function sdAsk(c,ti,t,ch){return new Promise(ok=>{c.res=ok;vsay(ti,t,ch.map(([l,v,k])=>[l,()=>ok(v),k]));const x=document.querySelector('#vdl .xclose');if(x)x.remove()}).then(v=>{if(c.skip||V.cut!==c)throw c;return v})}
+function sdWalk(c,n,to,sp){return new Promise(ok=>{c.res=ok;n.mv=1;let l=performance.now();const f=t=>{if(c.skip||V.cut!==c){n.mv=0;return ok()}const dt=Math.min(.05,(t-l)/1000);l=t;const d=to-n.x;if(Math.abs(d)<=4){n.x=to;n.mv=0;return ok()}n.x+=Math.sign(d)*Math.min(Math.abs(d),sp*dt);requestAnimationFrame(f)};requestAnimationFrame(f)}).then(()=>{if(c.skip||V.cut!==c)throw c})}
+function sdSkip(){const c=V.cut;if(!c||c.skip)return;c.skip=1;clearTimeout(c.t);if(c.res)c.res()}
+function sdEnd(c){if(V.cut!==c)return;vclose();V.cin=null;V.cut=0;V.dl=0;V.stp=null;const v=document.getElementById('vil');if(v)v.classList.remove('cin');if(V.w)V.w.classList.remove('vshk');
+ try{V.p.s.classList.remove('on','big');const ti=VNPC.findIndex(n=>n.a==='sedaya'&&n.n===NPC[6][0]);if(V.el[ti]){V.el[ti].s.classList.remove('on');V.el[ti].e.style.visibility='';V.el[ti].e.style.zIndex=''}}catch(e){}
+ const b=document.getElementById('vcn');if(b){b.classList.remove('on');setTimeout(()=>b.remove(),1000)}}
+function sdInstant(c){if(V.cut!==c)return;try{const gi=VNPC.findIndex(n=>n.n==='Gerbang Gua Sedaya'),ti=VNPC.findIndex(n=>n.a==='sedaya'&&n.n===NPC[6][0]);S.sdg=1;S.sdgCut=1;save();if(V.el[gi])V.el[gi].f.innerHTML=sdDoor();const tn=VNPC[ti];if(tn){tn.x=SD_TX;tn.mv=0;if(!V.el[ti])sdMk(ti)}vfl('🔓 Gerbang terbuka')}catch(e){console.error(e)}sdEnd(c)}
+async function sdCine(){
+ const ti=VNPC.findIndex(n=>n.a==='sedaya'&&n.n===NPC[6][0]),gi=VNPC.findIndex(n=>n.n==='Gerbang Gua Sedaya');
+ if(ti<0||gi<0||!V.el[gi])return;
+ const c=V.cut={skip:0},tn=VNPC[ti],nm=gEsc(S.name),v=document.getElementById('vil'),G=V.el[gi],H=V.p,T=V.el[ti]||sdMk(ti);
+ S.sdgCut=1;save();
+ V.dl=1;V.k.l=V.k.r=0;V.goal=null;V.gt=null;V.stp=null;V.dir=1;clearInterval(V.ty);
+ v.classList.add('cin');
+ const bars=document.createElement('div');bars.id='vcn';bars.innerHTML='<div class="vig"></div><i class="t"></i><i class="b"><span id="vcc"></span></i><div class="fl"></div><button type="button" id="vcs">Lewati ⏭</button>';v.appendChild(bars);
+ bars.querySelector('#vcs').onclick=e=>{e.stopPropagation();sdSkip()};void bars.offsetWidth;bars.classList.add('on');
+ T.e.style.visibility='hidden';T.e.style.zIndex=8;tn.x=300;tn.mv=0;
+ try{
+  /* 1. Ukiran gerbang berpendar */
+  V.cin={fx:()=>V.x+150,z:1.4,sp:2,zs:2,ti};const gs=G.f.querySelector('.vsdg');if(gs)gs.classList.add('sdon');
+  sdCap('Ukiran di gerbang batu itu berpendar pelan, seakan mengenali sesuatu...');await sdW(c,2800);
+  /* 2. Langkah kaki */
+  H.s.textContent='…?';H.s.classList.add('on');sfx('step');sdCap('Lalu terdengar langkah kaki berlari dari arah dermaga...');await sdW(c,2000);
+  /* 3. Hero kaget */
+  V.dir=-1;H.s.textContent='❗';H.s.classList.add('big');sdRe(H.e,'vsurp');sfx('hit');V.cin={fx:()=>V.x,z:1.85,sp:8,zs:8,ti};sdCap('');await sdW(c,1500);
+  H.s.classList.remove('on','big');
+  /* 4. Potong ke dermaga: Tomo melambai lalu berlari */
+  sdSnap(tn.x+300,1);V.cin={fx:()=>tn.x+300,z:1,sp:3.4,zs:5,ti};T.e.style.visibility='visible';
+  T.s.textContent=`Tunggu, ${S.name}!`;T.s.classList.add('on');sdCap('Dari dermaga, Tomo melambai sambil berlari ke arah sang petualang.');await sdW(c,1400);
+  const P=sdWalk(c,tn,V.x-115,370);setTimeout(()=>T.s.classList.remove('on'),900);await sdW(c,2300);
+  /* 5. Bidikan lebar: hero menoleh */
+  sdSnap((V.x+tn.x)/2,1);V.cin={fx:()=>(V.x+tn.x)/2,z:1,sp:4,zs:4,ti};sdCap(`${nm} menoleh. Siapa yang berlari secepat itu?`);await P;
+  /* 6. Tiba, terengah-engah */
+  V.cin={fx:()=>(V.x+tn.x)/2,z:1.6,sp:4,zs:3.5,ti};T.s.textContent='Hah... hah...';T.s.classList.add('on');sdCap('');await sdW(c,1200);T.s.classList.remove('on');
+  /* 7. Dialog */
+  await sdAsk(c,ti,`${nm}! Maaf mengagetkanmu. Dari dermaga aku melihat ukiran gerbang itu menyala. Puluhan tahun ia diam, dan sekarang berpendar hanya karena kamu mendekat.`,[['Lanjut','a','p']]);
+  await sdAsk(c,ti,`Kedekatan kita sudah cukup, ${nm}. Itu syarat gerbang ini: hanya sahabat sang pemandu yang boleh lewat. Mundur sedikit ya. Biar kubukakan.`,[['Silakan, Tomo','b','p']]);
+  vclose();V.dl=1;
+  /* 8. Tomo melangkah ke gerbang */
+  V.dir=1;V.cin={fx:()=>tn.x+130,z:1.25,sp:3,zs:3,ti};sdCap('Tomo melangkah ke depan gerbang batu itu.');await sdWalk(c,tn,SD_TX,230);
+  V.cin={fx:()=>SD_GX-40,z:1.5,sp:3,zs:3,ti,fd:1};await sdW(c,800);
+  T.s.textContent='Wahai penjaga Sedaya, dia sahabatku. Bukalah.';T.s.classList.add('on');sdCap('Tomo menempelkan telapak tangannya ke ukiran gerbang...');sfx('swing');await sdW(c,2600);T.s.classList.remove('on');
+  /* 9. Ukiran menyala, tanah bergetar */
+  V.w.classList.add('vshk');sfx('hit');sdCap('Ukiran menyala terang. Tanah bergetar pelan...');await sdW(c,2300);
+  /* 10. Gerbang terbelah */
+  const cl=sdDoor();G.f.innerHTML=`<span class="sdh">${cl}<b class="L">${cl}</b><b class="R">${cl}</b></span>`;sdFl();void G.f.offsetWidth;G.f.querySelector('.sdh').classList.add('open');
+  V.cin={fx:()=>SD_GX-20,z:1.65,sp:2.5,zs:2,ti,fd:1};sdCap('Batu raksasa itu bergeser perlahan, membuka jalan...');await sdW(c,3000);
+  S.sdg=1;S.sdgCut=1;save();G.f.innerHTML=sdDoor();V.w.classList.remove('vshk');sdFl();vfl('🔓 Gerbang terbuka');sfx('click');
+  /* 11. Judul lokasi */
+  V.cin={fx:()=>(V.x+SD_GX)/2,z:1.15,sp:2,zs:2,ti,fd:1};sdCap('');sdTitle('GUA SEDAYA','Tempat benda evolusi pet bersemayam');await sdW(c,3400);
+  /* 12. Penutup */
+  V.cin={fx:()=>(V.x+tn.x)/2,z:1.5,sp:3,zs:3,ti};
+  const r=await sdAsk(c,ti,`Selesai. Gerbang ini akan mengenalmu mulai sekarang, ${nm}. Di dalam ada Kerang, Mutiara, dan Permata penyimpan kekuatan evolusi pet. Hati-hati, lorongnya licin.`,[['Masuk Gua Sedaya','in','p'],['Nanti dulu','no']]);
+  vclose();V.dl=1;
+  /* 13. Tomo pamit pulang ke dermaga */
+  V.dir=-1;V.cin={fx:()=>tn.x-60,z:1.2,sp:3,zs:3,ti};T.s.textContent=`Aku pulang ke dermaga dulu ya. Sampai nanti, ${S.name}!`;T.s.classList.add('on');sdCap('Tomo pamit dan berjalan kembali ke dermaga.');await sdW(c,2200);T.s.classList.remove('on');
+  await sdWalk(c,tn,tn.x-420,190);
+  sdEnd(c);if(r==='in')window.dgIntro(1);
+ }catch(x){if(x!==c)console.error(x);sdInstant(c)}
+}
 addEventListener('keydown',e=>{if(!VILF||document.querySelector('#ov.on,#nite.on,#vn.on,#scr.on'))return;const k=e.key.toLowerCase();
+ if(k==='escape'&&V.cut){sdSkip();e.stopImmediatePropagation();return}
  if(k==='escape'&&V.dl){vclose();e.stopImmediatePropagation();return}
  if(V.dl){if((k==='enter'||k===' ')&&(V.ty||document.querySelector('#vdl .vtx[data-more]'))){document.querySelector('#vdl .vtx')?.click();e.preventDefault();e.stopImmediatePropagation()}return}
  if(k==='arrowleft'||k==='a'){V.k.l=1}else if(k==='arrowright'||k==='d'){V.k.r=1}else if(k==='e'&&V.near!=null){vdlg(V.near)}else return;e.preventDefault();e.stopImmediatePropagation()},true);
@@ -4193,7 +4380,7 @@ const KB=[
 {k:['telur','beli telur','menetas','kualitas telur','rare','epic','common','slot','penuh'],a:()=>B('<b>Telur</b> dibeli lewat menu <b>kandang</b> (beli dulu di tab <b>Usaha</b>, lalu ketuk kandang di peta) seharga '+R(30000)+'. Peluangnya: Biasa 65%, Langka 28%, Epik 7%.','Total telur + pet maksimal <b>5</b>. Telur juga bisa didapat dari lomba.','Telur baru menetas lewat <b>ritual summon</b> di Altar Kristal.')},
 {k:['summon','memanggil','altar','ritual','children of dragon','penjaga altar','syarat summon','panggil pet'],a:()=>B('<b>Syarat summon:</b> telur, kandang ('+R(KANDANG)+'), aksesoris ('+R(3000)+'), kartu SWOT musim ini, suara elemen yang mau membantu, dan slot pet kosong.','Setelah lengkap, pergi ke <b>Altar Kristal</b>, bicara dengan <b>Children of Dragon</b>, lalu mulai summon.','Ritual berjalan <b>1 sampai 3 hari</b> dan jasa pengiat '+R(5000)+' per hari. Satu aksesoris terpakai tiap summon.')},
 {k:['elemen','suara elemen','naia','auri','terra','pyra','air','api','udara','tanah','kelemahan elemen','siklus'],a:()=>B('Ada 4 elemen: 💧 Air, 🔥 Api, 🌬️ Udara, 🌍 Tanah.','Siklus: <b>Air > Api > Udara > Tanah > Air</b>. Yang unggul mendapat <b>+25%</b>, yang lemah <b>−20%</b> saat bertanding.','Untuk summon, tiap elemen punya <b>suara</b> yang meminta sesuatu:','• Naia (Air): pasokan 5 botol bahan ramuan.','• Auri (Udara): jawab soal pemasaran (4P atau 7P) dengan tepat.','• Terra (Tanah): kandang layak dan perbaikan lahan '+R(8000)+'.','• Pyra (Api): jawab dilema etika usaha, lalu buat produk dari limbah (kewirausahaan hijau).','Bicara dengan Children of Dragon di Altar untuk memulainya.')},
-{k:['latih tanding','tanding','duel','sparring','pertarungan','bertarung','battle','guts','skill elemen','jurus elemen','jurus','bertahan','menyerah','arena','lawan pet','cara bertarung'],a:()=>B('<b>Pertarungan pet</b> berjalan bergiliran. Tiap babak kamu memilih:','• <b>Serang</b>: kerusakan biasa, Guts +10.','• <b>Jurus Elemen</b>: kerusakan besar, butuh <b>Guts 30</b>. Elemen unggul +25%, lemah −20%, dan spell yang cocok menambah kerusakan.','• <b>Bertahan</b>: kerusakan yang diterima separuh, Guts +25.','<b>Speed</b> menentukan siapa jalan duluan dan seberapa sering menghindar. <b>Defense</b> meredam kerusakan. <b>Life</b> dan stat <b>HP</b> karakter menambah nyawa. Pet yang lelah bertarung lebih lemah.','<b>Dua tempat bertarung:</b>','• <b>Turnamen</b> (Dragon Keeper, Lady of Water): tiap babak adalah satu pertarungan. Lolos babak menambah stat karakter.','• <b>Latih Tanding</b> (menu Rawat pet atau aksi Latih): lawan monster liar, '+R(2000)+' dan 1 hari. Tingkat Mudah, Sepadan, atau Sulit. Menang menaikkan stat pet, pet jadi lelah +20%.','Tes Kecerdasan Pet tetap adu INT, bukan pertarungan.')},
+{k:['latih tanding','tanding','duel','sparring','pertarungan','bertarung','battle','guts','skill elemen','jurus elemen','jurus','bertahan','menyerah','arena','lawan pet','cara bertarung'],a:()=>B('<b>Pertarungan pet</b> berjalan bergiliran. Tiap babak kamu memilih:','• <b>Serang</b>: kerusakan biasa, Guts +10.','• <b>Jurus Elemen</b>: kerusakan besar, butuh <b>Guts 30</b>. Elemen unggul +25%, lemah −20% (Nagi selalu unggul), dan spell yang cocok menambah kerusakan.','• <b>Bertahan</b>: kerusakan yang diterima separuh, Guts +25.','<b>Speed</b> menentukan siapa jalan duluan dan seberapa sering menghindar. <b>Defense</b> meredam kerusakan. <b>Life</b> dan stat <b>HP</b> karakter menambah nyawa. Pet yang lelah bertarung lebih lemah.','<b>Dua tempat bertarung:</b>','• <b>Turnamen</b> (Dragon Keeper, Lady of Water): tiap babak adalah satu pertarungan. Lolos babak menambah stat karakter.','• <b>Latih Tanding</b> (menu Rawat pet atau aksi Latih): lawan monster liar, '+R(2000)+' dan 1 hari. Tingkat Mudah, Sepadan, atau Sulit. Menang menaikkan stat pet, pet jadi lelah +20%.','Tes Kecerdasan Pet tetap adu INT, bukan pertarungan.')},
 {k:['rawat','latih pet','melatih','stat pet','life','power','speed','defense','lelah','istirahat','fusi','pensiun','umur pet','telur warisan','makan mewah'],a:()=>B('Tab <b>Pet</b>: rawat dan latih pet-mu.','• Latih (<b>Life, Power, Speed, Defense, INT</b>): '+R(3000)+' menambah sekitar 3 poin, dan memakai 1 slot waktu.','• <b>Makan mewah</b> '+R(5000)+', <b>Istirahat</b> mengurangi lelah.','• <b>Latih tanding</b> '+R(2000)+': duel bergiliran melawan monster liar, menang menaikkan stat pet.','• <b>Fusi</b> menggabungkan 2 telur atau pet.','Pet yang <b>lelah</b> bertarung lebih lemah di turnamen dan latih tanding. Pet punya umur: saat pensiun ia meninggalkan <b>telur warisan</b>.')},
 {k:['stat karakter','int','str','mp','hp ','pow','latihan diri','statistik','atribut','kecerdasan','kekuatan'],a:()=>B('Lima stat karakter:','• <b>INT</b>: kecerdasan pet dan jangkauan serangan','• <b>STR</b>: kekuatan serangan di dungeon','• <b>POWER</b>: kecepatan gerak dan stamina','• <b>MP</b>: spell aktif dan laju serang','• <b>HP</b>: nyawa di dungeon','<b>Latihan diri</b> (tab Pet) '+R(2000)+' berpeluang +1 stat.')},
 {k:['lomba','turnamen','kompetisi','event','hadiah lomba','tes kecerdasan','dragon keeper','gold and garbage','lady of water','daftar lomba'],a:()=>{const nx=nextEv();return B('Tab <b>Lomba</b> menampilkan lomba yang sedang dibuka. Tiap lomba punya <b>tanggal</b> dan <b>biaya daftar</b>.','• Kemarau: Tes Kecerdasan Pet (hari 12), Lady of Water (hari 20), Tes Mantra Sihir (hari 23).','• Hujan: Tes Lanjutan (hari 14), Dragon Keeper (hari 22).','• Kedua musim: Gold and Garbage (hari 25 sampai 30, butuh rekan tim).','Lomba Dragon Keeper dan Lady of Water dimainkan sebagai <b>pertarungan bergiliran</b> per babak. Hasilnya bergantung pada stat, elemen, spell, kondisi pet, dan pilihan jurusmu. Jangan sampai pet lelah! Latih dulu lewat <b>Latih Tanding</b>.'+(nx?`<br><br>Terdekat: <b>${nx.n}</b> (hari ${nx.d[0]}).`:''))}},
