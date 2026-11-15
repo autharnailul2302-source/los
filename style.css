@@ -3603,3 +3603,22 @@ main.app{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px
 .gpend ul{margin:6px 0 2px;padding-left:18px;font-size:13px;columns:2}
 .gpend li small{color:var(--mute)}
 @media(max-width:560px){.gpend ul{columns:1}}
+.grs-l{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 14px;margin:6px 0;font-size:13px}
+.grs-l label{display:flex;gap:6px;align-items:baseline;cursor:pointer}.grs-l small{color:var(--mute)}
+@media(max-width:560px){.grs-l{grid-template-columns:1fr}}
+.grs-b{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+
+/* ===== Dialog VN dengan banyak pilihan: grid 2 kolom di layar lebar, dipaging di layar kecil ===== */
+.vch:has(>button:nth-child(3)){display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:8px}
+.vch:has(>button:nth-child(3)) button{text-align:left;line-height:1.3}
+.vch{max-height:calc(100vh - 230px);max-height:calc(100dvh - 230px);overflow:auto;scrollbar-width:thin}
+.vback{display:block;margin:2px 0 6px;padding:2px 4px;background:none;border:0;color:#9fd3ff;font-size:13px;text-decoration:underline;cursor:pointer}
+.vrc{margin:0 0 8px;font-size:12.5px;line-height:1.4;color:#cfd8ff;cursor:pointer;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.vrc.open{-webkit-line-clamp:unset;display:block}
+#vdl.cv .vtx{display:none}
+@media(max-width:700px),(max-height:560px){
+ .vch:has(>button:nth-child(3)){grid-template-columns:1fr;gap:5px}
+ .vch:has(>button:nth-child(3)) button{padding:6px 10px;font-size:13px}
+ .vch{max-height:calc(100vh - 190px);max-height:calc(100dvh - 190px)}
+ .vpick{padding:6px 14px}
+}
