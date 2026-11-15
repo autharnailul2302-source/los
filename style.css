@@ -3544,3 +3544,62 @@ main.app{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px
  .ggr-tip{display:none}
  #md.ggr-m #mb{margin-top:6px}
 }
+
+/* ===== Tutorial kontrol: tombol keyboard, petunjuk perangkat, panduan dungeon ===== */
+.klk,.dgk{display:inline-block;min-width:26px;padding:1px 7px;margin:0 1px;border-radius:6px;border:1px solid rgba(255,255,255,.55);border-bottom-width:3px;background:rgba(255,255,255,.14);color:#fff;font:700 13px/1.4 system-ui,sans-serif;text-align:center;vertical-align:baseline}
+#kltour .ktdv{margin:-2px 0 8px;font-size:12px;color:#aebbe8;line-height:1.4}
+#kltour .ktdv b{color:#ffe9a0;font-weight:600}
+#kltour .ktdv button{margin:0;padding:0;border:0;background:none;color:#9fd3ff;font-size:12px;text-decoration:underline;cursor:pointer}
+#kltour .ktpulse{animation:ktpl 1s ease-in-out infinite}
+@keyframes ktpl{0%,100%{box-shadow:0 0 0 0 rgba(255,226,122,.7)}50%{box-shadow:0 0 0 9px rgba(255,226,122,0)}}
+.klgh{position:fixed;inset:0;z-index:12;pointer-events:none}
+.klgt{position:fixed;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:3px solid #ffe27a;background:rgba(255,226,122,.18);animation:klgp 1.3s ease-out infinite}
+.klgt b{position:absolute;left:30px;top:26px;font-size:30px;animation:klgf 1.3s ease-in-out infinite}
+@keyframes klgp{0%{box-shadow:0 0 0 0 rgba(255,226,122,.7)}100%{box-shadow:0 0 0 26px rgba(255,226,122,0)}}
+@keyframes klgf{0%,100%{transform:translateY(8px)}50%{transform:translateY(0)}}
+.klgk{position:fixed;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:14px;background:rgba(10,18,48,.82);border:2px solid #ffe27a;color:#cfd8ff;font-size:13px}
+.klgk .klk{animation:dgkp 1.3s ease-in-out infinite}
+@keyframes dgkp{0%,100%{transform:translateY(0)}50%{transform:translateY(3px);background:rgba(255,226,122,.35)}}
+
+#dgc2bd{position:absolute;inset:0;z-index:30;background:rgba(5,8,25,.58)}
+#dgc2{position:absolute;inset:0;z-index:40;pointer-events:none}
+.dgc-gh{position:absolute;inset:0}
+.dgc-cd{position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(480px,calc(100vw - 250px));min-width:270px;padding:10px 14px 10px;border-radius:16px;border:2px solid var(--gold);background:linear-gradient(180deg,#1b2766,#0f1740);box-shadow:0 10px 30px rgba(0,0,0,.55);color:var(--ink);pointer-events:auto}
+#dgc2.play .dgc-cd{pointer-events:none;opacity:.94}#dgc2.play .dgc-cd button{pointer-events:auto}
+.dgc-n{font:700 14px Cinzel,Georgia,serif;color:#ffe27a}
+.dgc-cd p{margin:3px 0 6px;font-size:14px;line-height:1.5}.dgc-cd p b{color:#ffe9a0}
+.dgc-dv{margin:0 0 6px;font-size:11.5px;color:#aebbe8}.dgc-dv b{color:#ffe9a0;font-weight:600}
+.dgc-dv button{margin:0;padding:0;border:0;background:none;color:#9fd3ff;font-size:11.5px;text-decoration:underline;cursor:pointer}
+.dgc-r{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dgc-d{font-size:12px;color:#aebbe8}
+.dgc-cd button.dgc-sk,.dgc-cd button.dgc-nx{margin:0 0 0 6px;padding:6px 14px;font-size:14px;min-height:36px}
+.dgc-cd button.dgc-sk{border-color:rgba(255,255,255,.3);color:#cfd8ff}
+.dgc-cd .dgk{animation:dgkp 1.4s ease-in-out infinite}
+.dgc-joy{position:absolute;left:16%;bottom:30%;width:110px;height:110px;margin-left:-55px;border-radius:50%;border:2px solid var(--gold);background:var(--glass);box-shadow:0 0 22px rgba(240,199,94,.45)}
+.dgc-joy i{position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:var(--acc);opacity:.9;animation:dgjoy 2.6s ease-in-out infinite}
+.dgc-joy b{position:absolute;left:46px;top:58px;font-size:30px;animation:dgjoy 2.6s ease-in-out infinite}
+@keyframes dgjoy{0%,100%{transform:translate(0,0)}25%{transform:translate(34px,0)}50%{transform:translate(0,-34px)}75%{transform:translate(-34px,12px)}}
+.dghl{z-index:35!important;outline:3px solid var(--gold);outline-offset:4px;border-radius:12px;pointer-events:none!important;animation:klring 1.4s ease-in-out infinite}
+@media(max-height:430px){.dgc-cd{padding:6px 10px}.dgc-cd p{font-size:12.5px;margin:2px 0 4px}.dgc-dv{display:none}.dgc-cd button.dgc-sk,.dgc-cd button.dgc-nx{padding:4px 12px;min-height:32px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.klgt,.klgt b,.klgk .klk,.dgc-cd .dgk,.dgc-joy i,.dgc-joy b,.dghl,#kltour .ktpulse{animation:none!important}}
+
+/* ===== Panduan lomba pemula + tombol di jawaban Kilau ===== */
+#md.evg{max-width:min(640px,96vw);overflow:hidden auto;scrollbar-width:none}
+.evg-s{margin:0 0 10px;text-align:center;color:var(--ink);font-size:14px;line-height:1.45}
+.evg-l{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.evg-l li{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(240,199,94,.35);animation:ggrin .35s both;animation-delay:calc(var(--i)*90ms)}
+.evg-l li>span{font-size:26px;line-height:1}
+.evg-l li>div>b{display:block;font-size:14px;color:var(--gold)}
+.evg-l small b{color:#ffe9a0;font-weight:700}
+.evg-l small{display:block;margin-top:2px;font-size:12.5px;line-height:1.4;color:var(--ink);opacity:.92}
+@media(max-width:560px){.evg-l{grid-template-columns:1fr}}
+@media(max-height:430px){#md.evg{padding-top:8px;padding-bottom:8px}#md.evg h2{font-size:15px;margin-bottom:4px}#md.evg #mb{margin-top:6px}.evg-s{font-size:12px;margin-bottom:5px}.evg-l{gap:5px}.evg-l li{padding:5px 8px}.evg-l li>span{font-size:20px}.evg-l li>div>b{font-size:12.5px}.evg-l small{font-size:11.5px;line-height:1.3}}
+@media(prefers-reduced-motion:reduce){.evg-l li{animation:none}}
+.klgo{display:inline-block;margin-top:6px;padding:7px 14px;border-radius:10px;border:1px solid var(--gold);background:linear-gradient(180deg,#ffe486,#e9a92f);color:#2b1a00;font-weight:700;font-size:13px;cursor:pointer}
+
+/* ===== Dasbor guru: daftar siswa belum tes akhir ===== */
+.gpend{margin:6px 0;border:1px solid var(--bd);border-radius:10px;padding:6px 10px;background:rgba(255,255,255,.04)}
+.gpend summary{cursor:pointer;font-size:14px}
+.gpend ul{margin:6px 0 2px;padding-left:18px;font-size:13px;columns:2}
+.gpend li small{color:var(--mute)}
+@media(max-width:560px){.gpend ul{columns:1}}
