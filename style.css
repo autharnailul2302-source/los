@@ -1566,7 +1566,9 @@ body.invil .top{z-index:25}
 #dgK{position:absolute;left:35px;top:35px;width:40px;height:40px;border-radius:50%;background:var(--acc);opacity:.85}
 #dgO{position:absolute;inset:0;display:grid;place-items:center;background:rgba(5,8,20,.88);padding:20px;text-align:center}
 #dgO[hidden]{display:none}
-#dgO>div{max-width:420px}
+#dgO>div{max-width:420px;max-height:calc(100vh - 40px);max-height:calc(100dvh - 40px);overflow-y:auto;overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+#dgOb{position:sticky;bottom:0;padding-top:8px;background:linear-gradient(rgba(5,8,20,0),rgba(5,8,20,.96) 35%)}
+@media(max-height:480px){#dgO{padding:10px 14px}#dgO>div{max-width:min(760px,94vw);max-height:calc(100vh - 20px);max-height:calc(100dvh - 20px)}.dgT{font-size:22px;margin-bottom:6px}#dgO p{font-size:13px;line-height:1.4;margin-bottom:8px}#dgOb button{padding:8px 18px;font-size:14px}}
 .dgT{font:800 clamp(26px,6vw,40px)/1.1 Cinzel,Georgia,serif;margin:0 0 10px}
 #dgO p{color:var(--mute);margin:0 0 16px}
 #dgOb button{margin:4px;padding:12px 22px;font-weight:700;font-size:16px}
