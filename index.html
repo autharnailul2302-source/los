@@ -275,7 +275,24 @@ let gRows=[],gSort={k:'nilai',d:-1},gSel='',gTok='',gRole='',gName='';
 const gEsc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const gRp=n=>(n<0?'-':'')+'Rp '+Math.abs(Math.round(n||0)).toLocaleString('id-ID');
 const GRB=LB_R,GRB_OLD=LB_R_OLD;
-async function gCall(b){const r=await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(b)});const j=await r.json();if(!j.ok){const e=new Error(j.error||'Gagal memuat');e.expired=!!j.expired;throw e}return j}
+async function gCall(b){let r,t;
+ try{r=await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(b)})}
+ catch(x){const e=new Error(navigator.onLine===false?'Perangkat sedang offline. Sambungkan internet lalu coba lagi.':'Tidak bisa terhubung ke server Google Sheets. Kemungkinan: Web App Apps Script belum diatur "Siapa yang punya akses: Siapa saja", alamat /exec di index.html sudah lama atau salah, atau koneksi/pemblokir iklan menghalangi script.google.com. Ketuk "Tes koneksi" untuk detailnya.');e.net=1;throw e}
+ try{t=await r.text()}catch(x){throw new Error('Jawaban server terputus. Coba lagi.')}
+ let j;try{j=JSON.parse(t)}catch(x){const e=new Error(/^\s*</.test(t)?'Server mengirim halaman Google, bukan data. Biasanya Web App belum di-deploy ke "Siapa saja", atau deployment barunya belum dibuat (pakai Deploy, Manage deployments, New version). Ketuk "Tes koneksi" untuk detailnya.':'Jawaban server tidak dikenali (HTTP '+r.status+'). Ketuk "Tes koneksi" untuk detailnya.');e.net=1;throw e}
+ if(!j.ok){const e=new Error(j.error||'Gagal memuat');e.expired=!!j.expired;throw e}return j}
+/* Tes koneksi ke Apps Script: menampilkan penyebab kegagalan dalam bahasa sederhana (dipakai di form masuk guru/admin). */
+async function gDiag(out){const L=[],say=x=>{L.push(x);out.textContent=L.join('\n')};
+ out.style.whiteSpace='pre-wrap';say('Halaman: '+location.origin+' ('+(location.protocol==='https:'?'aman':'TIDAK https')+')');
+ say('Internet perangkat: '+(navigator.onLine===false?'OFFLINE':'online'));
+ const m=String(SHEETS_URL).match(/\/s\/([^/]+)\/(exec|dev)$/);say('Alamat server: '+(m?('.../'+m[1].slice(0,6)+'...'+m[1].slice(-4)+'/'+m[2]):'FORMAT TIDAK DIKENAL')+(m&&m[2]==='dev'?' (alamat /dev hanya untuk pemilik, ganti ke /exec)':''));
+ try{const t0=Date.now(),r=await fetch(SHEETS_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'sekolah'})});const t=await r.text();say('Server menjawab dalam '+(Date.now()-t0)+' ms, HTTP '+r.status+(r.redirected?' (dialihkan)':''));
+  let j=null;try{j=JSON.parse(t)}catch(x){}
+  if(j&&j.ok)say('HASIL: SERVER OK. Koneksi benar.'+(j.sekolah?' Sekolah terdaftar: '+j.sekolah.length+'.':'')+'\nJika masuk tetap gagal, periksa ID dan PIN (admin: ID "admin" dan sandi TEACHER_PASSWORD di Script properties).');
+  else if(j)say('HASIL: server menjawab tetapi menolak: '+(j.error||'tanpa pesan')+'\nKemungkinan Code.gs yang terpasang belum versi terbaru.');
+  else if(/^\s*</.test(t))say('HASIL: server mengirim halaman HTML, bukan data.\nPerbaiki: Apps Script, Deploy, Manage deployments, Edit (ikon pensil): "Jalankan sebagai: Saya" dan "Siapa yang punya akses: Siapa saja", lalu Version: New version. Salin alamat /exec yang tampil ke SHEETS_URL.');
+  else say('HASIL: jawaban tidak dikenali: '+t.slice(0,80))
+ }catch(x){say('HASIL: permintaan diblokir sebelum sampai ke server ('+(x&&x.message||x)+').\nPenyebab umum: akses Web App bukan "Siapa saja" (Google meminta login), alamat /exec salah, atau pemblokir iklan/VPN/jaringan sekolah memblokir script.google.com. Coba buka alamat server langsung di tab baru: kalau muncul halaman login Google, aksesnya belum "Siapa saja".')}}
 async function gFetch(){const j=await gCall({action:'list',token:gTok});gRows=j.rows||[];gRows.forEach(r=>{const t=gTs(r);r.tsd=t.d==null?-99:t.d})}
 /* Ingat saya: nomor WhatsApp dan sesi (6 jam) disimpan di perangkat hanya kalau kotaknya dicentang. PIN tidak pernah disimpan oleh gim;
    penyimpanan PIN diserahkan ke pengelola sandi browser lewat form dan Credential Management API. */
@@ -289,8 +306,8 @@ function guruLogin(){
   guruForm()}
 function guruForm(){
   let wa='',keep=false;try{wa=localStorage.getItem('tl_gid')||'';keep=localStorage.getItem('tl_gkeep')==='1'}catch(e){}
-  modal('Masuk guru',{cls:'grg',html:`<form id="gfm" autocomplete="on" novalidate><p class="gsd">Masuk dengan nomor WhatsApp dan PIN 6 angka yang kamu daftarkan.</p><div class="gss on"><label><span>Nomor WhatsApp</span><input id="gid" name="username" inputmode="tel" maxlength="20" autocomplete="username" placeholder="08xxxxxxxxxx" value="${gEsc(wa)}"></label><label><span>PIN</span><div class="gpw"><input id="gpw" name="password" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="6 angka"><button type="button" id="gt2" aria-pressed="false">Tampilkan</button></div></label><label class="gkeep"><input type="checkbox" id="gkeep"${keep?' checked':''}><span>Ingat saya di perangkat ini (tetap masuk 6 jam)</span></label></div><p id="gerr" class="sub" role="alert" style="min-height:1.3em;margin:8px 0 0;font-size:13px"></p><div class="gft"><button type="button" id="gdf">Daftar guru</button><button type="submit" id="gok" class="p">Masuk</button></div></form>`,btns:[['Tutup',close]]});
-  $('#gfm').onsubmit=e=>{e.preventDefault();guruGo()};$('#gdf').onclick=guruReg;
+  modal('Masuk guru',{cls:'grg',html:`<form id="gfm" autocomplete="on" novalidate><p class="gsd">Masuk dengan nomor WhatsApp dan PIN 6 angka yang kamu daftarkan.</p><div class="gss on"><label><span>Nomor WhatsApp</span><input id="gid" name="username" inputmode="tel" maxlength="20" autocomplete="username" placeholder="08xxxxxxxxxx" value="${gEsc(wa)}"></label><label><span>PIN</span><div class="gpw"><input id="gpw" name="password" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="6 angka"><button type="button" id="gt2" aria-pressed="false">Tampilkan</button></div></label><label class="gkeep"><input type="checkbox" id="gkeep"${keep?' checked':''}><span>Ingat saya di perangkat ini (tetap masuk 6 jam)</span></label></div><p id="gerr" class="sub" role="alert" style="min-height:1.3em;margin:8px 0 0;font-size:13px"></p><div class="gft"><button type="button" id="gdf">Daftar guru</button><button type="button" id="gdg">Tes koneksi</button><button type="submit" id="gok" class="p">Masuk</button></div></form>`,btns:[['Tutup',close]]});
+  $('#gfm').onsubmit=e=>{e.preventDefault();guruGo()};$('#gdf').onclick=guruReg;$('#gdg').onclick=()=>{const e=$('#gerr');e.className='sub';e.textContent='Memeriksa koneksi...';gDiag(e)};
   $('#gt2').onclick=e=>{const t=e.currentTarget,o=t.getAttribute('aria-pressed')!=='true';t.setAttribute('aria-pressed',o);t.textContent=o?'Sembunyikan':'Tampilkan';$('#gpw').type=o?'text':'password'};
   $('#gpw').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'')});
   ['#gid','#gpw'].forEach(x=>$(x).addEventListener('keydown',e=>e.stopPropagation()));
@@ -1869,6 +1886,46 @@ function pmDoneFx(){try{jingle('quest')}catch(e){}save();msBadge();charModal('mi
 window.pmClaim=id=>{const x=PEM().find(y=>y.id===id),c=pmCl();if(!x||!x.ok||c[id])return;c[id]=1;earn(x.rw,'Hadiah misi');log(`Misi pemula selesai: ${x.t}. +${rp(x.rw)}.`,'good');pmDoneFx()};
 window.pmAll=()=>{const c=pmCl();let g=0,n=0;PEM().forEach(x=>{if(x.ok&&!c[x.id]){c[x.id]=1;g+=x.rw;n++}});if(!g)return;earn(g,'Hadiah misi');log(`${n} hadiah misi pemula diambil: +${rp(g)}.`,'good');pmDoneFx()};
 window.pmBonus=()=>{if(S.pmb||pemLeft())return;S.pmb=1;earn(PMB.rw,'Hadiah misi');S.acc=(S.acc|0)+PMB.acc;log(`Panduan pemula tamat! +${rp(PMB.rw)} dan ${PMB.acc} aksesoris.`,'good');pmDoneFx()};
+/* ===== Tujuan sekarang: SATU langkah pemula selalu terlihat di layar (bukan daftar yang harus dicari) ===== */
+const QH={p1:{s:'#stage'},p2:{t:'kik'},p3:{t:'usaha'},p4:{t:'usaha'},p5:{t:'kik'},p6:{t:'usaha'},p7:{s:'#stage'},p8:{t:'usaha'},p9:{t:'teman'},p10:{t:'kik'},p11:{t:'kik'},p12:{t:'lomba'}};
+let qtEl=null,qtOpen=false,qtKey='',qtFlash='',qtIdle=Date.now(),qtNudge=0,qtAuto=0,qtHl=[];
+function qtState(){const L=PEM(),cl=pmCl(),pend=L.find(x=>x.ok&&!cl[x.id]);
+ if(pend)return{k:'c'+pend.id,m:'claim',x:pend};
+ const cur=L.find(x=>!x.ok);if(cur)return{k:'s'+cur.id,m:'step',x:cur,n:L.indexOf(cur)+1,T:L.length};
+ if(!S.pmb)return{k:'bonus',m:'bonus'};return null}
+function qtBlocked(){const q=z=>document.querySelector(z),h=z=>{const e=q(z);return e&&!e.hidden};
+ return !!(q('#ov.on')||q('#scr.on')||q('#vn.on')||q('#nite.on')||q('#mk')||(q('#dg')&&!q('#dg').hidden)||h('#kltour')||h('#klp')||q('#rot.on')||getComputedStyle(document.getElementById('rot')||document.body).display==='flex')}
+function qtClear(){qtHl.forEach(e=>e.classList.remove('qthl'));qtHl=[]}
+function qtShow(id){qtClear();const h=QH[id]||{};const add=e=>{if(e){e.classList.add('qthl');qtHl.push(e)}};
+ if(h.t){try{if(CAT!==h.t){CAT=h.t;render()}}catch(e){}add(document.querySelector('#ct [data-c="'+h.t+'"]'))}
+ if(h.s)add(document.querySelector(h.s));
+ setTimeout(qtClear,7000)}
+function qtClaim(id){const x=PEM().find(y=>y.id===id),c=pmCl();if(!x||!x.ok||c[id])return;c[id]=1;earn(x.rw,'Hadiah misi');log('Misi pemula selesai: '+x.t+'. +'+rp(x.rw)+'.','good');try{jingle('quest')}catch(e){}
+ try{fillHud()}catch(e){}save();msBadge();const nx=PEM().find(y=>!y.ok);qtFlash='✅ +'+rp(x.rw)+'!'+(nx?' Berikutnya: '+nx.t:'');qtOpen=false;qtKey='';qtRender();setTimeout(()=>{qtFlash='';qtKey='';qtRender()},2800)}
+function qtBuild(){qtEl=document.createElement('div');qtEl.id='qt';qtEl.hidden=true;document.body.append(qtEl);
+ qtEl.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,st=qtState();e.stopPropagation();
+  if(a==='tog'){qtOpen=!qtOpen;qtKey='';qtRender()}
+  else if(a==='claim'&&st&&st.x)qtClaim(st.x.id);
+  else if(a==='bonus'){pmBonus();qtKey=''}
+  else if(a==='go'&&st&&st.x&&st.x.go){qtOpen=false;qtKey='';qtRender();pmGo(st.x.go[1])}
+  else if(a==='show'&&st&&st.x){qtOpen=false;qtKey='';qtRender();qtShow(st.x.id)}
+  else if(a==='all'){qtOpen=false;qtKey='';qtRender();charModal('misi','pemula')}
+  else if(a==='hide'){window.__qtHide=1;qtOpen=false;qtKey='';qtRender()}});
+ ['pointerdown','keydown'].forEach(n=>addEventListener(n,()=>{qtIdle=Date.now()},true));
+ addEventListener('resize',()=>{qtKey='';qtRender()})}
+function qtRender(){try{if(!S||!S.pro)return;if(!qtEl)qtBuild();const st=qtState(),hid=document.querySelector('header.top');
+  const show=!!st&&!window.__qtHide&&!qtBlocked();if(!show){if(!qtEl.hidden)qtEl.hidden=true;qtKey='';return}
+  qtEl.style.top=((hid?hid.getBoundingClientRect().bottom:56)+8)+'px';
+  if(st.m==='step'&&!S.qtSeen&&!qtAuto){qtAuto=1;S.qtSeen=1;qtOpen=true;setTimeout(()=>{if(qtOpen&&!window.__qtTouched){qtOpen=false;qtKey='';qtRender()}},11000)}
+  const key=st.k+(qtOpen?'o':'')+qtFlash;if(key===qtKey&&!qtEl.hidden)return;qtKey=key;qtEl.hidden=false;
+  let h;
+  if(qtFlash)h='<div class="qkc ok" role="status"><span class="qki">🎉</span><span class="qkt"><b>'+gEsc(qtFlash)+'</b></span></div>';
+  else if(st.m==='claim')h='<button type="button" class="qkc gf" data-a="claim"><span class="qki">🎁</span><span class="qkt"><small>Langkah selesai</small><b>'+st.x.i+' '+gEsc(st.x.t)+'</b></span><span class="qkr">Ambil +'+rp(st.x.rw)+'</span></button>';
+  else if(st.m==='bonus')h='<button type="button" class="qkc gf" data-a="bonus"><span class="qki">🏆</span><span class="qkt"><small>Panduan pemula tamat!</small><b>Ambil hadiah tamat</b></span><span class="qkr">+'+rp(PMB.rw)+'</span></button>';
+  else{const x=st.x;h='<button type="button" class="qkc" data-a="tog" aria-expanded="'+qtOpen+'"><span class="qki">🎯</span><span class="qkt"><small>Tujuan sekarang · '+st.n+'/'+st.T+'</small><b>'+x.i+' '+gEsc(x.t)+'</b></span><span class="qkr">+'+rp(x.rw)+'</span><span class="qkv">'+(qtOpen?'▴':'▾')+'</span></button>'
+   +(qtOpen?'<div class="qkx"><p>'+x.d+'</p><div class="qkb">'+(x.go?'<button type="button" class="p" data-a="go">'+gEsc(x.go[0])+'</button>':'<button type="button" class="p" data-a="show">Tunjukkan di mana</button>')+'<button type="button" data-a="all">Semua langkah</button><button type="button" data-a="hide">Sembunyikan</button></div></div>':'')}
+  qtEl.innerHTML=h;qtEl.classList.toggle('nudge',false)}catch(e){}}
+setInterval(()=>{try{qtRender();if(qtEl&&!qtEl.hidden&&!qtOpen&&!qtFlash&&Date.now()-qtIdle>25000&&Date.now()-qtNudge>45000){qtNudge=Date.now();qtEl.classList.add('nudge');setTimeout(()=>qtEl&&qtEl.classList.remove('nudge'),2200)}}catch(e){}},1000);
 function pemulaBody(){const L=PEM(),T=L.length,cl=pmCl(),n=L.filter(x=>x.ok).length,c=L.findIndex(x=>!x.ok),X=L[c],fill=c<0?100:Math.round(c/(T-1)*100),
  pend=L.filter(x=>x.ok&&!cl[x.id]),pendRp=pend.reduce((a,x)=>a+x.rw,0),
  nd=(x,k)=>`<span class="qnd${x.ok?(cl[x.id]?' ok':' gf'):k===c?' cu':''}" title="${x.t}">${x.ok?(cl[x.id]?'✓':'🎁'):k+1}</span>`,
@@ -4464,7 +4521,7 @@ const KB=[
 {k:['gold and garbage','gold garbage','sampah jadi emas','lomba sampah','juri lomba','skor gold','menang gold','tas plastik','lampu botol','pot ban'],a:()=>B('<b>Gold and Garbage</b> (hari 25 sampai 30, daftar '+R(10000)+', butuh rekan tim dengan kedekatan 40+).','• Pilih ide (tas plastik, lampu botol, atau pot ban), lalu atur <b>harga jual</b>. Perhatikan HPP-nya.','• <b>Meteran untung</b> menunjukkan zonamu: hijau = untung 40 sampai 150 persen dari HPP (poin harga penuh), kuning = terlalu tipis, merah = rugi atau kemahalan.','• Skor maksimal 100 = harga + kreativitas + INT + presentasi + 6 poin per rekan tim.','• <b>70 ke atas juara</b>: PSW +1, Secret Egg, '+R(30000)+', aksesoris +1, dan satu mantra sihir. <b>50 sampai 69</b>: INT +1 dan '+R(10000)+'. Di bawah itu belum layak.','• Juri (Bu Maya, Pak Raka, Pak Gondo, Bu Laras, Pak Seno) memberi komentar yang menunjuk kekuranganmu.')},
 {k:['gua sedaya','sedaya','gerbang batu','kerang sedaya','mutiara sedaya','permata samudra','evolusi pet','item evolusi','kerang','mutiara','permata','tomo gerbang'],a:()=>B('<b>Gua Sedaya</b> adalah dungeon khusus air, tempat mencari item evolusi pet.','• Gerbang batunya hanya terbuka untuk sahabat <b>Tomo</b> (Desa Bukit). Naikkan kedekatan dengan Tomo sampai <b>60</b>: berbincang, beri hadiah, dan bantu permintaannya.','• Di dalam ada monster laut dan bos <b>Leviathan Sedaya</b> tiap 5 lantai. Pet pendamping harus berelemen <b>air</b>.','• Hasil jarahan: <b>Kerang Sedaya, Mutiara Sedaya, dan Permata Samudra</b>, penyimpan kekuatan evolusi pet.')},
 {k:['pak gondo','mandor','kerja harian','ambil kerja','cari kerja','kerja serabutan'],a:()=>B('<b>Pak Gondo</b> si mandor ada di <b>Kota Singgah</b> (ujung kiri peta).','Ketuk dia lalu ambil kerja untuk dapat uang cepat. Kerja memakai sisa hari, jadi pakai saat modal masih tipis. Ini langkah pertama di <b>Panduan Pemula</b>.')},
-{k:['tutorial','ulang tutorial','ulangi tutorial','panduan pemula','pemandu','tutorial dungeon','tutorial gerak','petunjuk','cara ulang'],a:()=>B('<b>Tutorial bisa diulang kapan saja:</b>','• <b>Tur dunia</b> (papan status, cara jalan, perintah): ketuk tombol di bawah.','• <b>Dungeon</b>: buka <b>Jeda</b> di dalam dungeon, lalu pilih <b>❓ Kontrol</b>.','• <b>Lomba</b>: tanya aku "cara ikut lomba".','• <b>Panduan Pemula</b> (12 langkah dengan hadiah): potretmu, tab <b>Misi</b>.','<button type="button" class="klgo" onclick="klStartTour()">Mulai tur lagi</button>')},
+{k:['tutorial','ulang tutorial','ulangi tutorial','panduan pemula','pemandu','tutorial dungeon','tutorial gerak','petunjuk','cara ulang','tujuan sekarang','bingung','ngapain','harus ngapain'],a:()=>B('<b>Tutorial bisa diulang kapan saja:</b>','• <b>Tur dunia</b> (papan status, cara jalan, perintah): ketuk tombol di bawah.','• <b>Dungeon</b>: buka <b>Jeda</b> di dalam dungeon, lalu pilih <b>❓ Kontrol</b>.','• <b>Lomba</b>: tanya aku "cara ikut lomba".','• <b>Tujuan sekarang</b>: kotak di kiri atas layar menampilkan satu langkah pemula berikutnya. Ketuk untuk melihat caranya, tekan tombolnya untuk langsung mengerjakan, dan ambil hadiahnya dari situ. Kalau kamu sembunyikan, ia muncul lagi saat gim dimuat ulang.','• <b>Panduan Pemula</b> (12 langkah dengan hadiah): potretmu, tab <b>Misi</b>.','<button type="button" class="klgo" onclick="klStartTour()">Mulai tur lagi</button>')},
 {k:['lomba','turnamen','kompetisi','event','tes kecerdasan','dragon keeper','lady of water','daftar lomba'],a:()=>{const nx=nextEv();return B('Tab <b>Lomba</b> menampilkan lomba yang sedang dibuka. Tiap lomba punya <b>tanggal</b> dan <b>biaya daftar</b>.','• Kemarau: Tes Kecerdasan Pet (hari 12), Lady of Water (hari 20), Tes Mantra Sihir (hari 23).','• Hujan: Tes Lanjutan (hari 14), Dragon Keeper (hari 22).','• Kedua musim: Gold and Garbage (hari 25 sampai 30, butuh rekan tim). Tanya aku soal <b>Gold and Garbage</b> untuk cara menangnya.','Lomba Dragon Keeper dan Lady of Water dimainkan sebagai <b>pertarungan bergiliran</b> per babak. Hasilnya bergantung pada stat, elemen, spell, kondisi pet, dan pilihan jurusmu. Jangan sampai pet lelah! Latih dulu lewat <b>Latih Tanding</b>.'+(nx?`<br><br>Terdekat: <b>${nx.n}</b> (hari ${nx.d[0]}).`:''))}},
 {k:['psw','poin prestasi'],a:()=>B('<b>PSW</b> adalah penanda prestasi yang dibutuhkan untuk gelar Grand Master (minimal <b>2</b>).','Kamu mendapatkannya dengan memenangkan lomba tertentu, misalnya Tes Kecerdasan Pet dan Gold and Garbage.')},
 {k:['spell','mantra','mantra sihir','sertifikat','magic spell','tornado','lizard fire','cyclone','water cyclone'],a:()=>B('<b>Spell</b> menambah kerusakan <b>Jurus Elemen</b> pet <b>jika elemennya sama</b> dengan pet.','Banyaknya spell aktif dibatasi MP-mu: <b>1 + MP ÷ 4</b>.','<b>Sertifikat spell</b> (syarat Grand Master) didapat dari <b>Tes Mantra Sihir</b>, sekitar hari 23 musim kemarau.')},
