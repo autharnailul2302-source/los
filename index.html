@@ -765,7 +765,7 @@ function gearPick(sl){if(!S)return;gearInit();const d=gSlot(sl),cur=gOf(sl),L=S.
 /* Fase B: teman, penghuni, tim */
 let FV=0;const NPC=[['Dina','Pengrajin','STR',0],['Bayu','Pedagang','INT',0],['Sari','Peracik ramuan','MP',0],['Rani','Nelayan','HP',1],['Joko','Pembuat jaring','STR',1],['Lina','Herbalis','MP',2],['Tomo','Pemandu','POWER',2]],HOUSE=150000,MEAL=1500;
 /* ===== Tempat tinggal 3 level (Tenda -> Rumah -> Rumah Besar). Ubah cost/days/cap di sini ===== */
-const KBL=[null,{n:'Tenda',cap:1},{n:'Rumah',cap:3,cost:HOUSE,days:3},{n:'Rumah Besar',cap:5,cost:400000,days:5}],kbLv=()=>S.hl||(S.hs?2:1);
+const KBL=[null,{n:'Tenda',cap:1},{n:'Rumah',cap:3,cost:HOUSE,days:3},{n:'Rumah Besar',cap:5,cost:400000,days:5}],kbLv=()=>(+S.hl>=1&&+S.hl<=3?+S.hl:0)||(S.hs?2:1);
 const CAP=()=>KBL[kbLv()].cap,fr=()=>{S.fr=S.fr||[];while(S.fr.length<NPC.length)S.fr.push({c:0,in:0,m:0});S.fr.forEach(f=>{if(f.m===undefined)f.m=(f.c>0||f.in)?1:0});return S.fr},res=()=>fr().map((f,i)=>f.in?i:-1).filter(i=>i>=0),teamOf=()=>fr().map((f,i)=>f.c>=40?i:-1).filter(i=>i>=0).slice(0,3);
 function friendDay(){const R=res();if(!R.length)return;let ok=0;
  R.forEach(i=>{if(spend(MEAL,'Makan teman'))ok++;else{const f=fr()[i];f.c=Math.max(0,f.c-10);log(`${NPC[i][0]} tidak kebagian makan, kedekatan turun.`,'bad');if(f.c<20){f.in=0;log(`${NPC[i][0]} pindah karena tidak terurus.`,'bad')}}});
@@ -2051,7 +2051,7 @@ function hmLines(i){const n=NPC[i][0],P=[...(HMLN[n]||["Terima kasih sudah membe
  const o=res().filter(x=>x!==i);if(o.length)P.push(`${NPC[o[r(0,o.length-1)]][0]} dan aku sering bergantian membereskan perkemahan. Rasanya seperti punya keluarga baru.`);
  if(S.lapak&&keeper()===i)P.push("Lapakmu kujaga dari pagi. Komisinya kecil, tapi melihat ramuan laku itu menyenangkan.");
  return P}
-function hmPick(i){const P=hmLines(i);S.hl=S.hl||{};const last=S.hl[i];let f=P.filter(t=>t.slice(0,30)!==last);if(!f.length)f=P;const t=f[r(0,f.length-1)];S.hl[i]=t.slice(0,30);return t}
+function hmPick(i){const P=hmLines(i);S.hml=S.hml||{};const last=S.hml[i];let f=P.filter(t=>t.slice(0,30)!==last);if(!f.length)f=P;const t=f[r(0,f.length-1)];S.hml[i]=t.slice(0,30);return t}
 function talkGreet(i){const f=fr()[i],c=f.c;return f.in?`Terima kasih sudah mengizinkanku menumpang, ${S.name}. ${hmDay(i)}`.trim():c>=40?`${S.name}! Kita sudah akrab sekarang. Ada yang bisa kubantu hari ini?`:c>=25?`Kamu sering mampir ya. Aku jadi betah berbincang denganmu.`:c>=10?`Senang bertemu lagi, ${S.name}!`:`Oh, halo ${S.name}. Ada yang bisa kubantu?`}
 function tkType(tx,t){clearInterval(window.TKTY);tx.onclick=()=>{clearInterval(window.TKTY);tx.textContent=t};if(rm){tx.textContent=t;return}let k=0;vset(tx,t,0);window.TKTY=setInterval(()=>{if(!tx.isConnected){clearInterval(window.TKTY);return}k+=2;vset(tx,t,k);if(k>=t.length){clearInterval(window.TKTY);tx.textContent=t}},20)}
 function talkView(i){
