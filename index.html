@@ -23,6 +23,13 @@ document.documentElement.classList.toggle('perf',window.klPerf());})();</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap">
 <link rel="stylesheet" href="style.css">
 
+<style id="vdl-btn-fix">/* Tombol dialog desa: garis fokus di dalam tombol (tidak terpotong), tombol utama emas rapi */
+#vdl button{outline:none!important;-webkit-tap-highlight-color:transparent}
+#vdl button:focus-visible{box-shadow:inset 0 0 0 2px rgba(255,236,170,.95)!important}
+#vdl button.p,#vdl .p button,#vdl button[class~="p"]{border:1px solid #ffe7a3!important;border-radius:12px!important;background:linear-gradient(#ffd966,#e6a422)!important;color:#3a2504!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -2px 0 rgba(150,90,0,.25),0 2px 6px rgba(0,0,0,.35)!important}
+#vdl button.p:focus-visible,#vdl button[class~="p"]:focus-visible{box-shadow:inset 0 0 0 2px #fff,inset 0 1px 0 rgba(255,255,255,.65),0 2px 6px rgba(0,0,0,.35)!important}
+#vdl button.p:active{transform:translateY(1px)}
+</style>
 </head>
 <body>
 <main class="app">
@@ -1678,7 +1685,7 @@ const FSP={'Kerikil':{src:'images/kerikil-tarung-sprite.webp?v=2',c:9,r:5,w:403,
 Object.values(FSP).forEach(d=>{const i=new Image();i.src=d.src});
 function fsPic(nm,ally,gl,lbl){const d=FSP[nm];return d?`<div class="fsp${ally?' fsa':''}" data-fn="${nm}" data-s=idle role=img aria-label="${lbl||nm}" style="--fz:${d.z||1};background-image:url(${d.src});aspect-ratio:${d.w}/${d.h};background-size:${d.c*100}% ${d.r*100}%;${gl||''}"></div>`:''}
 function fSpr(f,st,ms){const k=f&&f.querySelector('.fsp');if(!k)return;k.dataset.s=st;k._t0=performance.now();clearTimeout(k._rt);if(st==='ko')return;k._rt=setTimeout(()=>{if(!f.classList.contains('ko')){k.dataset.s='idle';k._t0=performance.now()}},ms)}
-setInterval(()=>{const t=performance.now(),rm=matchMedia('(prefers-reduced-motion:reduce)').matches;document.querySelectorAll('.fsp').forEach(e=>{const d=FSP[e.dataset.fn];if(!d)return;const s=d.s[e.dataset.s]||d.s.idle,fr=s[1];let i=rm?0:Math.floor((t-(e._t0||0))/(s[2]*(e.dataset.s==='idle'?IDLE_SLOW:1)));i=s[3]?i%fr.length:Math.min(i,fr.length-1);const c=fr[i],key=s[0]*16+c;if(e._k!==key){e._k=key;e.style.backgroundPosition=`${c/(d.c-1)*100}% ${s[0]/(d.r-1)*100}%`}})},60);
+setInterval(()=>{if(document.hidden)return;const t=performance.now(),rm=matchMedia('(prefers-reduced-motion:reduce)').matches;document.querySelectorAll('.fsp').forEach(e=>{const d=FSP[e.dataset.fn];if(!d)return;const s=d.s[e.dataset.s]||d.s.idle,fr=s[1];let i=rm?0:Math.floor((t-(e._t0||0))/(s[2]*(e.dataset.s==='idle'?IDLE_SLOW:1)));i=s[3]?i%fr.length:Math.min(i,fr.length-1);const c=fr[i],key=s[0]*16+c;if(e._k!==key){e._k=key;e.style.backgroundPosition=`${c/(d.c-1)*100}% ${s[0]/(d.r-1)*100}%`}})},60);
 const BFOE={'Golem Batu':'🗿','Elf Hutan':'🧝','Ksatria Awan':'🛡️','Naga Muda':'🐉','Penyihir Rawa':'🧙','Serigala Kabut':'🐺','Kepiting Jaring':'🦀','Kelinci Pocong':'🐰','Peri Bunga':'🧚','Garuda':'🦅','Murid Arena':'🥋','Petarung Desa':'🤺','Penjaga Gerbang':'💂'};
 function bMount(){const B=BT.b,{A,F}=B,pet=B.o.pet,
  picA=typeof kerOn==='function'&&kerOn(pet)&&FSP.Kerikil?fsPic('Kerikil',1,glow(pet),A.nm):typeof kerOn==='function'&&kerOn(pet)?`<div class=rpk data-s=idle role=img aria-label="${A.nm}" style="background-image:url(${KERSPR});${glow(pet)}"></div>`:A.im?`<img class=ltp src="${A.im}" alt="${A.nm}" style="${glow(pet)}" onerror="this.outerHTML='<span class=lte>${EL[A.el][0]}</span>'">`:`<span class=lte>${EL[A.el][0]}</span>`,
@@ -1829,8 +1836,10 @@ function csUpd(){const c=$('#co'),l=$('#csl'),r=$('#csr');if(!c||!l||!r)return;c
 const MAPW=2056,MAPH=765,FACE=1/* 1 = sprite aslinya menghadap kanan; ubah ke -1 bila menghadap kiri */;window.HFACE=()=>typeof S!=='undefined'&&S&&S.gender==='cewek'?-1:1/* sprite hero-girl aslinya menghadap kiri, hero-boy menghadap kanan */;
 let G={W:900,H:500,sw:900,sh:500},WD={pu:.46,y:.75,dir:1,keys:{l:0,r:0},goal:null,cam:0,pets:[],near:null},E={},lastT=0,rz;
 function talk(i){const p=S.pets[i],q=WD.pets[i];if(!p||!q)return;S.sel=i;const L=p.fat>70?['...zzz','Ingin istirahat','Lelah...']:['Kyuu!','Ayo latihan!','Aku siap!','Aku lapar~'];q.line=L[r(0,L.length-1)];q.hold=performance.now()+4200;render();petModal(i)}
+/* Hemat tenaga: dunia kemah (tick) dan kanvas cuacanya tidak perlu jalan 60x/detik saat desa/dungeon menutupi layar atau tab tersembunyi */
+function campCovered(){if(document.hidden||(typeof VILF!=='undefined'&&VILF))return true;const d=document.getElementById('dg');return !!(d&&!d.hidden)}
 function tick(t){requestAnimationFrame(tick);const dt=Math.min(.05,(t-lastT)/1000)||0;lastT=t;
- if(!S||!E.p||!E.p.e.isConnected||document.querySelector('#ov.on,#scr.on,#vn.on'))return;
+ if(!S||!E.p||!E.p.e.isConnected||campCovered()||document.querySelector('#ov.on,#scr.on,#vn.on'))return;
  const {W,H,sw}=G,P=WD;let mv=(P.keys.r?1:0)-(P.keys.l?1:0);
  if(mv)P.goal=null;else if(P.goal){const d=P.goal.u-P.pu;if(Math.abs(d)*W<6){const g=P.goal;P.goal=null;if(g.talk!=null&&P.pets[g.talk]){P.dir=Math.sign(P.pets[g.talk].u-P.pu)||P.dir;talk(g.talk);return}if(g.talkF!=null&&P.fr&&P.fr[g.talkF]){P.dir=Math.sign(P.fr[g.talkF].u-P.pu)||P.dir;fTalk(g.talkF);return}}else mv=Math.sign(d)}
  if(mv){P.dir=mv;P.pu=cl(P.pu+mv*.45*H/W*dt,.03,.97)}
@@ -2254,7 +2263,7 @@ addEventListener('pointermove',e=>{fxm=[(e.clientX/innerWidth-.5)*2,(e.clientY/i
 const SP={cowok:{s:'images/hero-boy.webp?v=2',w:204,h:232,n:[6,8,6]},cewek:{s:'images/hero-girl.webp?v=2',w:261,h:232,n:[6,8,6]},cewekdg:{s:'images/sprite-girl-dungeon.webp',w:354,h:242,n:[9,8,7,8,6]},mcowok:{s:'images/sprite-mboy.webp',w:107,h:150,n:[6, 5]},mcewek:{s:'images/sprite-mgirl.webp',w:103,h:150,n:[6, 5]},telur:{s:'images/sprite-egg.webp',w:126,h:142,n:[5, 5]}};let sf=0,srow=0,wt;
 function walkFx(){sfx('step');setTimeout(()=>sfx('step'),240);setTimeout(()=>sfx('step'),480);srow=1;clearTimeout(wt);wt=setTimeout(()=>{srow=0},1500)}
 function sprTick(){document.querySelectorAll('.spr').forEach(e=>{const g=SP[e.dataset.g]||SP.cowok,rw=e.dataset.r!==undefined?+e.dataset.r:srow,k=(+e.dataset.h||150)/g.h,cols=Math.max(...g.n),fr=rm?0:Math.floor(sf/((e.dataset.g==='cewek'||e.dataset.g==='cowok')&&rw===0?3:1))%g.n[rw];e.style.width=g.w*k+'px';e.style.height=g.h*k+'px';e.style.backgroundImage=`url(${g.s})`;e.style.backgroundSize=`${g.w*cols*k}px ${g.h*g.n.length*k}px`;e.style.backgroundPosition=`${-fr*g.w*k}px ${-rw*g.h*k}px`})}
-setInterval(()=>{sf++;sprTick()},170);
+setInterval(()=>{if(document.hidden)return;sf++;sprTick()},170);
 
 /* Prolog visual novel */
 const PRO=[
@@ -3480,7 +3489,7 @@ let wxT=0;
 /* Cuaca kanvas dipakai di perkemahan (#wx) dan di Kota Singgah (#vwx): tetesan, percikan, kilat, daun, kelopak */
 const VWX={k:'',p:[],fl:0};
 function wxLoop(t){requestAnimationFrame(wxLoop);if(document.hidden)return;if(klPerf()&&t-(window._wxl||0)<45)return;window._wxl=t;const dt=Math.min(.05,(t-wxT)/1000)||0;wxT=t;if(!S)return;
- if(!VILF)wxPaint(document.getElementById('wx'),WX,t,dt,0);
+ if(!campCovered())wxPaint(document.getElementById('wx'),WX,t,dt,0);
  const v=document.getElementById('vwx');if(v&&VILF){const k=wxOf();if(VWX.k!==k){VWX.k=k;VWX.p=[]}wxPaint(v,VWX,t,dt,1)}}
 function wxPaint(c,W,t,dt,vil){if(!c)return;const w=c.clientWidth,h=c.clientHeight;if(!w||!h)return;
  if(c.width!==w||c.height!==h){c.width=w;c.height=h}
@@ -3538,7 +3547,7 @@ var KDS=[null,{f:'kandang-lv1.png',n:8,r:516/422},{f:'kandang-lv2.png',n:8,r:538
 const kdLv=()=>S&&S.kandang?((S.kup|0)>=1?2:1):0;
 function kdHouse(Ww,Hh){try{const L=kdLv();if(!L)return'';const sl=KDS[L],h=Math.round(Hh*KDP.h[L]),w=Math.round(h*sl.r);
  return `<div class="ent" id="e_kd" style="transform:translate(${KDP.u*Ww}px,${KDP.y*Hh}px);z-index:${Math.round((KDP.y-.01)*1000)}"><div class="eb"><div class="kdh" id="kdh" data-l="${L}" role="button" tabindex="0" data-bld="kd" aria-label="Kandang level ${L}, ketuk untuk membuka menu" style="width:${w}px;height:${h}px;background-image:url(images/${sl.f});background-size:${sl.n*100}% 100%;background-position:0 0"></div>${S.eggs&&S.eggs.length?`<span class="bdg">${assetImg('images/telur.png','','Telur','🥚')} ${S.eggs.length}</span>`:''}</div></div>`}catch(e){return''}}
-function kdFrame(){const e=document.getElementById('kdh');if(!e||!S)return;const L=kdLv();if(!L)return;const n=KDS[L].n,f=Math.floor(performance.now()/220)%n;if(e._f!==f){e._f=f;e.style.backgroundPosition=(f/(n-1)*100)+'% 0'}}
+function kdFrame(){if(document.hidden)return;const e=document.getElementById('kdh');if(!e||!S)return;const L=kdLv();if(!L)return;const n=KDS[L].n,f=Math.floor(performance.now()/220)%n;if(e._f!==f){e._f=f;e.style.backgroundPosition=(f/(n-1)*100)+'% 0'}}
 setInterval(kdFrame,140);
 /* ===== Kandang dan rumah bisa diklik: buka menu bangunan ===== */
 function bmPrev(f,n,r){return `<div class="bmp" style="aspect-ratio:${r};background:url(images/${f}) 0 0/${n*100}% 100% no-repeat" role="img" aria-label="Pratinjau bangunan"></div>`}
@@ -3578,7 +3587,7 @@ function kbHouse0(Ww,Hh){if(!S||!KBP)return'';const L=kbLv(),u=S.hu,ct=u?KBC[u.t
  const fx=u&&!ok?`<span class="kbfx">🔨</span><span class="kbdu" style="left:18%;animation-delay:0s">💨</span><span class="kbdu" style="left:68%;animation-delay:.8s">💨</span>`:'';
  const url='images/'+(ok?ct.f:KBS[L].f);
  return `<div class="ent" id="e_kb" style="transform:translate(${KBP.u*Ww}px,${KBP.y*Hh}px);z-index:${Math.round(KBP.y*1000)}"><div class="eb"><div class="kbw${u?' wip':''}" style="width:${w}px;height:${h}px;--kf:${kf}px">${tag}<div class="kbh${u&&!ok?' fb':''}" id="kbh" role="button" tabindex="0" data-bld="kb" aria-label="${KBL[L].n}, ketuk untuk membuka menu" data-l="${L}" data-w="${ok?1:0}" style="width:${w}px;height:${h}px;background-image:url(${url});background-size:${sl.n*100}% 100%;background-position:0 0"></div>${fx}${L===1?'<i class="kbfire"></i>':''}${L>=2&&!u?`<span class="kbsm" style="--cx:${KBSM[L][0]}%;--cy:${KBSM[L][1]}%;--sz:${Math.round(h*.09)}px"><i></i><i></i><i></i></span>`:''}</div></div></div>`}
-function kbFrame(){const e=document.getElementById('kbh');if(!e||!S)return;const u=S.hu,t=performance.now();let n,f;
+function kbFrame(){if(document.hidden)return;const e=document.getElementById('kbh');if(!e||!S)return;const u=S.hu,t=performance.now();let n,f;
  if(u&&e.dataset.w==='1'){const c=KBC[u.to];n=c.n;f=Math.floor(t/(1000/c.fps))%n}
  else{const L=kbLv(),night=(WX.ph||phOf())==='malam',i=Math.floor(t/1600)%2;n=KBS[L].n;
   f=L===1?0:L===2?(night?1:0):(night?0:1)}
@@ -3682,7 +3691,7 @@ var KF={
 function kerOn(q){return !!q&&q.spc==='kerikil'&&!((q.st|0)>0)}
 /* evolusi 1 = tinggi frame Kilau; evolusi berikutnya makin besar (STSC) */
 function kerEl(q,k,Hh){const h=PHT(Hh,q.st),w=Math.round(h*KERC.w/KERC.h);return `<div class="pim kerp" data-pet=${k} data-r=0 role=img aria-label="${pName(q)}" style="height:${h}px;width:${w}px;background-image:url(${KERSPR});background-position:${8/7*100}% 0;${glow(q)}"></div>`}
-function kerTick(){
+function kerTick(){if(document.hidden)return;
  if(typeof S==='undefined'||!S||typeof WD==='undefined')return;
  const t=performance.now(),rmq=matchMedia('(prefers-reduced-motion:reduce)').matches;
  document.querySelectorAll('.kerp').forEach(e=>{
@@ -3706,7 +3715,7 @@ function kerTick(){
 }
 setInterval(kerTick,70);
 /* Animasi Kerikil di layar Rawat Pet: diam/senyum/tertawa (atau tidur kalau lelah), tanpa naik-turun */
-setInterval(()=>{const t=performance.now(),rm=matchMedia('(prefers-reduced-motion:reduce)').matches;document.querySelectorAll('.rpk').forEach(e=>{const seq=KF[e.dataset.s]||KF.idle,tot=seq.reduce((a,x)=>a+x[1],0);let p=(t/(e.dataset.s==='idle'||!e.dataset.s?IDLE_SLOW:1))%tot,f=seq[0][0];if(!rm){let a=0;for(const x of seq){a+=x[1];if(p<a){f=x[0];break}}}if(e._f!==f){e._f=f;e.style.backgroundPosition=`${(f%8)/7*100}% ${((f/8)|0)/2*100}%`}})},70);
+setInterval(()=>{if(document.hidden)return;const t=performance.now(),rm=matchMedia('(prefers-reduced-motion:reduce)').matches;document.querySelectorAll('.rpk').forEach(e=>{const seq=KF[e.dataset.s]||KF.idle,tot=seq.reduce((a,x)=>a+x[1],0);let p=(t/(e.dataset.s==='idle'||!e.dataset.s?IDLE_SLOW:1))%tot,f=seq[0][0];if(!rm){let a=0;for(const x of seq){a+=x[1];if(p<a){f=x[0];break}}}if(e._f!==f){e._f=f;e.style.backgroundPosition=`${(f%8)/7*100}% ${((f/8)|0)/2*100}%`}})},70);
 /* ===== Toko: aksesoris (jumlah bebas) dan bahan loot dengan harga lebih mahal dari pasar ===== */
 const BSH={q:{},only:null,back:null,title:'Dagangan',mode:''};
 function bsItems(){
@@ -3906,15 +3915,15 @@ const vtx=(x,y,t,s=18)=>`<text x="${x}" y="${y}" font-family="Cinzel,Georgia,ser
 const VB=[],VL=[];
 const AREAS={old:{m:'images/peta-old-village.webp',W:1983,t:'KOTA SINGGAH',s:'Persinggahan menuju Old Village',nx:['kuil',130,'Kuil Azure ➜','r']},kuil:{m:'images/peta-kuil-azure.webp',W:2379,t:'KUIL AZURE',s:'Promenade tepi laut',nx:['old',1853,'⟵ Kota Singgah','l'],nx2:['altar',130,'Altar Kristal ➜','r']},altar:{m:'images/peta-altar.webp',W:2379,t:'ALTAR KRISTAL',s:'Tempat kristal penjaga desa',bt:'Pagar batu dan laut menghalangi jalan.',nx:['kuil',2249,'⟵ Kuil Azure','l']},sungai:{m:'images/peta-desa-sungai.webp',W:2379,t:'DESA SUNGAI',s:'Desa tepi sungai yang rusak dan sederhana'},sedaya:{m:'images/peta-pulau-sedaya.webp',W:2379,sea:[0,1850,347,425],t:'PULAU SEDAYA',s:'Pulau di tengah laut, gerbang gua di ujung jalan'},bukit:{m:'images/peta-desa-bukit.webp',W:2379,t:'DESA BUKIT',s:'Desa tebing di seberang laut'}};
 const VNPC=[
- {x:250,n:'Penjaga Gerbang',r:'Gerbang',sp:1,o:{sk:'#e9bf95',hr:'#4a3626',cl:'#4b5d8a',pn:'#3a4256',acc:'helm'},m:1,ln:['Jaga gerbang itu berat, lho.','Selamat datang!'],
+ {x:250,n:'Penjaga Gerbang',r:'Gerbang',sp:1,o:{sk:'#e9bf95',hr:'#4a3626',cl:'#4b5d8a',pn:'#3a4256',acc:'helm'},m:1,ln:['Jaga gerbang itu berat, lho.','Selamat datang!','Ada hutan rahasia di timur, dijaga seorang peri.'],
   d:()=>({t:`Selamat datang di Kota Singgah, ${S.name}. Kemahmu ada di balik gerbang ini. Ingat: hitung untung-rugi dulu sebelum belanja.`,c:[['Pulang ke perkemahan',vexit,'p'],['Ada kabar desa?',()=>vsay(VNPC.findIndex(x=>x.n==='Penjaga Gerbang'),V_TIPS[r(0,V_TIPS.length-1)],[['Terima kasih',vclose]])],['Tutup',vclose]]})},
  {x:520,n:'Pak Gondo',r:'Mandor',sp:2,o:{sk:'#d9a574',hr:'#3a2a20',cl:'#b5653a',pn:'#4a3b2c',acc:'straw'},m:1,ln:['Karung-karung ini tidak akan pindah sendiri!','Butuh tenaga tambahan.'],
   d:()=>{const wk=3000+S.st.STR*400;return{t:`Nah, ${S.name}! Ada karung yang harus diangkat ke gudang. Upahnya ${rp(wk)} sampai ${rp(wk+2000)}, tergantung kuat-lemahnya badan. Habis sehari penuh, ya.${wxNote('work')}`,c:[['Ambil kerja',()=>{vclose();work(g=>{if(g>0)vfl('+'+rp(g))})},'p'],['Nanti dulu',vclose]]}}},
  {x:740,n:'Pak Raka',r:'Juru Catat',sp:19,o:{sk:'#f0cfa8',hr:'#8a8a94',cl:'#3f7a6a',pn:'#35405a',acc:'scroll'},m:1,ln:['Permintaan desa berubah tiap musim.','Periksa papan sebelum membuat barang.'],
   d:()=>({t:'Di papan ini tercatat barang yang belum ada di desa musim ini, jadi pembeli mau bayar lebih. Hitung dulu HPP-nya sebelum kamu membuat dan menjual.',c:[['Lihat peta permintaan desa',()=>{vclose();peta(0)},'p'],['Berbincang: kabar dari Cermin',()=>dgt(0)],['Sampai nanti',vclose]]})},
  {a:'altar',x:700,n:NPC[0][0],r:NPC[0][1],sp:7,o:{sk:'#f3cfa6',hr:'#7a3a2a',cl:'#c5587a',pn:'#4a4a66',acc:'bun'},wd:[350,1050],ln:['Hari yang indah!','Besi itu harus dipukul selagi panas.']},
- {a:'bukit',x:380,n:NPC[1][0],r:NPC[1][1],sp:6,o:{sk:'#e0b088',hr:'#2b2b3a',cl:'#4c7ab5',pn:'#3a3a52',acc:'scarf'},wd:[260,470],ln:['Barang murah, kualitas juara!','Harga itu soal waktu dan tempat.']},
- {a:'kuil',x:1500,n:NPC[2][0],r:NPC[2][1],sp:5,o:{sk:'#f6d8b8',hr:'#4f7a4a',cl:'#8a5fc4',pn:'#4a3a62',acc:'bun'},wd:[1250,2050],ln:['Ramuan hangat itu rahasiaku.','Hmm, kurang sedikit daun mint...']},
+ {a:'bukit',x:380,n:NPC[1][0],r:NPC[1][1],sp:6,o:{sk:'#e0b088',hr:'#2b2b3a',cl:'#4c7ab5',pn:'#3a3a52',acc:'scarf'},wd:[260,470],ln:['Barang murah, kualitas juara!','Harga itu soal waktu dan tempat.','Perkamen teleport? Konon dijual peri di hutan rahasia.']},
+ {a:'kuil',x:1500,n:NPC[2][0],r:NPC[2][1],sp:5,o:{sk:'#f6d8b8',hr:'#4f7a4a',cl:'#8a5fc4',pn:'#4a3a62',acc:'bun'},wd:[1250,2050],ln:['Ramuan hangat itu rahasiaku.','Hmm, kurang sedikit daun mint...','Katanya Peri Penjaga menjual perkamen pelipat jarak.']},
  {x:980,n:'Bu Maya',r:'Penjual Lapak',sp:20,o:{sk:'#e9bf95',hr:'#5a3a2a',cl:'#d9453f',pn:'#4a3b2c',acc:'apron'},m:1,ln:['Ramuan segar, ramuan segar!','Jangan sampai basi, ya!'],
   d:()=>{const mi=VNPC.findIndex(n=>n.n==='Bu Maya');return S.lapak?{t:`Lapakmu sudah berdiri di perkemahanmu, sewanya tinggal ${lapakLeft()} hari. Ketuk lapaknya di sana kapan saja, jual sendiri atau titip jual.`,c:[['🛍️ Lihat dagangan',mayaShop,'p'],['Cara titip jual',()=>vsay(mi,'Teman yang menumpang di perkemahanmu menjaga lapak dan menjual otomatis tiap hari. Komisinya sekitar 10%, tergantung keahlian temannya.',[['Lalu soal basi?',()=>vsay(mi,'Tiap ramuan punya harga dan permintaan sendiri. Yang paling lama dijual laku lebih dulu, jadi jangan biarkan basi.',[['Mengerti',vclose]])],['Tutup',vclose]])],['Sampai nanti',vclose]]}:{t:`Lapak ini bisa kamu sewa ${rp(LAPAK)} sampai akhir musim, dan akan berdiri di perkemahanmu. Dengan lapak, bantuan harian teman naik dari ${rp(500)} jadi ${rp(1200)}.`,c:[[`Sewa lapak (${rp(LAPAK)})`,lapakRent,'p'],['Kapan balik modal?',()=>{const pr=S.lastP||6000,m=pr-vc(),bep=m>0?Math.ceil(LAPAK/m):0;vsay(mi,(bep?`Contoh: bahan ${rp(vc())}, dijual ${rp(pr)}, untung ${rp(m)} per botol. Sewa balik setelah sekitar ${bep} botol laku. `:'')+'Ingat, uang sewa tetap dibayar walau ramuanmu tidak laku.',[[`Sewa lapak (${rp(LAPAK)})`,lapakRent,'p'],['Nanti dulu',vclose]])}],['🛍️ Lihat dagangan',mayaShop],['Nanti dulu',vclose]]}}},
  {x:1210,n:'Kang Jarwo',r:'Juragan Perahu',sp:11,o:{sk:'#d9a574',hr:'#3a2a20',cl:'#6b7b3a',pn:'#4a3b2c',acc:'cap'},m:1,ln:['Mau ke desa sebelah? Naik perahu!','Laut hari ini tenang.'],
@@ -4106,7 +4115,7 @@ VNPC.forEach((n,vi)=>{if(!n.d||n.n==='Children of Dragon')return;const od=n.d;n.
 (function(){const _b=TKR.b;TKR.b=function(i){const t=_b(i);if(Math.random()<.65){const vi=VNPC.findIndex(x=>x.n===NPC[i][0]);if(vi>=0){const o=crPick(VNPC[vi]);return o.ic+' '+o.t+' (Kedekatan +5)'}}return t}})();
 /* Penghuni: obrolan khusus kehidupan serumah (HMLN), bukan daftar ln atau cerita umum */
 (function(){const _b=TKR.b;TKR.b=function(i){const f=fr()[i];if(f&&f.in)return hmPick(i)+' (Kedekatan +5)';return _b(i)}})();
-const V_TIPS=['Hujan deras membuat kerja kasar sepi, tapi ramuan penghangat justru laris.','Ramuan punya masa simpan sendiri. Jangan menumpuk stok terlalu lama.','Harga terlalu tinggi membuat pembeli kabur. Cari titik tengahnya.','Kereta desa memakan sehari. Pastikan selisih harganya menutup biaya.'];
+const V_TIPS=['Hujan deras membuat kerja kasar sepi, tapi ramuan penghangat justru laris.','Ramuan punya masa simpan sendiri. Jangan menumpuk stok terlalu lama.','Harga terlalu tinggi membuat pembeli kabur. Cari titik tengahnya.','Kereta desa memakan sehari. Pastikan selisih harganya menutup biaya.','Katanya ada hutan rahasia di timur. Peri di sana menjual perkamen yang bisa melipat jarak.','Perkamen Teleport tidak memakan hari, jadi cocok untuk menghemat waktu bolak-balik.'];
 const vcl=(a,b,c)=>Math.max(a,Math.min(c,b));
 function vscene(){const hills=(c,a,o,s)=>{let d='M0 320';for(let x=0;x<=3600;x+=60)d+=` L${x} ${o-a*(Math.sin(x/260+s)+.6*Math.sin(x/97+s*2))}`;return`<path d="${d} L3600 320Z" fill="${c}"/>`};
  const far=`<svg width="3600" height="320" viewBox="0 0 3600 320">${hills('#4a6fa8',46,150,1)}${[500,1400,2300,3200].map(x=>`<g fill="#3a5a8f"><rect x="${x}" y="70" width="30" height="110"/><path d="M${x-6} 72 L${x+15} 36 L${x+36} 72Z"/><rect x="${x+40}" y="100" width="22" height="80"/></g>`).join('')}${hills('#3b5d91',34,200,3)}</svg>`;
@@ -4690,9 +4699,10 @@ function htTick(dt,t,mv){if(!HT.on||V.a!=='hutan'||!VILF)return;const lock=htLoc
    if(m.wind>0){m.wind-=dt;m.lunge=Math.sin((1-m.wind/.5)*Math.PI)*22;if(m.wind<=0){m.lunge=0;if(Math.abs(V.x-m.x)<HT.melee+34)htHurt(m)}}
    else if(ad>HT.melee){m.x+=m.dir*T.sp*dt;m.walk=1}
    else if(m.cd<=0){m.wind=.5;m.cd=1.9}}
-  m.e.style.left=m.x+'px';htSprite(m);
-  if(m.cw){const fr=m.walk||m.wind>0?Math.floor(sec*T.fps+m.ph)%T.nc:Math.floor(sec*2.2+m.ph)%T.nc,ch=m.ch;m.b.style.backgroundPosition=`${-fr*m.cw}px ${-2*ch}px`}
-  m.b.style.transform=`translate(${m.lunge*-m.dir*-1}px,${m.walk?-Math.abs(Math.sin(sec*9+m.ph))*5:0}px) scaleX(${m.dir<0?-1:1})`})}
+  if(ad>1000)return; /* di luar layar: tidak perlu digambar ulang */
+  const lf=Math.round(m.x)+'px';if(m._l!==lf){m._l=lf;m.e.style.left=lf}htSprite(m);
+  if(m.cw){const fr=m.walk||m.wind>0?Math.floor(sec*T.fps+m.ph)%T.nc:Math.floor(sec*2.2+m.ph)%T.nc,bp=`${-fr*m.cw}px ${-2*m.ch}px`;if(m._bp!==bp){m._bp=bp;m.b.style.backgroundPosition=bp}}
+  const tf=`translate(${Math.round(m.lunge*m.dir)}px,${m.walk?-Math.round(Math.abs(Math.sin(sec*9+m.ph))*5):0}px) scaleX(${m.dir<0?-1:1})`;if(m._tf!==tf){m._tf=tf;m.b.style.transform=tf}})}
 (function(){const _o=openVillage;openVillage=function(){const r=_o.apply(this,arguments);try{htOpen()}catch(e){console.error(e)}return r};
  addEventListener('keydown',e=>{if(!HT.on||!VILF||V.a!=='hutan'||e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;if(/INPUT|SELECT|TEXTAREA/.test((e.target&&e.target.tagName)||''))return;
   const k=e.key.toLowerCase();if(k===' '||k==='j'||k==='k'||k==='z'){e.preventDefault();htAtk()}})})();
@@ -4789,7 +4799,7 @@ const KB=[
 {k:['rumah','kemah','tenda','bangun rumah','penghuni'],a:()=>B('Tempat tinggalmu bisa di-<b>upgrade</b> lewat tab Usaha: Tenda, lalu Rumah ('+R(KBL[2].cost)+', '+KBL[2].days+' hari, muat '+KBL[2].cap+' teman), lalu Rumah Besar ('+R(KBL[3].cost)+', '+KBL[3].days+' hari, muat '+KBL[3].cap+' teman). Selama dibangun, kapasitas belum bertambah.','Penghuni ikut makan, jadi biaya harianmu naik.')},
 {k:['teman','dina','bayu','sari','rani','joko','lina','tomo','rekan tim','kedekatan','tim'],a:()=>B('Warga seperti Dina, Bayu, Sari, Rani, Joko, Lina, dan Tomo bisa jadi <b>teman</b>.','⚔️ <b>Joko</b> (pembuat jaring) menolak berteman sebelum kamu <b>mengalahkan Kepiting Jaring-nya</b> dalam duel pet. Temui dia di <b>Desa Sungai</b> (naik perahu Kang Jarwo), pilih <b>Terima duel pet</b>, lalu bertarunglah. Bisa juga lewat tab Teman, tombol Bicara. Duelnya gratis, tetapi pet jadi lelah +20%.','Ajak bicara secara rutin. Kalau <b>kedekatan mencapai 40+</b>, mereka jadi rekan tim, yang dibutuhkan untuk lomba Gold and Garbage.','Lihat daftar teman di panel karakter (ketuk potretmu di kiri atas).')},
 {k:['kontrol','cara main','cara bermain','jalan','gerak','tombol','kontrolnya','controls','dock','menu','bantuan','joystick','keyboard','wasd','ipad','tablet','hp','pc','laptop','serang','spasi'],a:()=>(DEV.m==='pc'?B('<b>Kontrol di komputer:</b>','• Dunia: ← → atau A D untuk jalan, E untuk bicara, atau klik peta untuk melangkah.','• Dungeon: W A S D atau panah untuk jalan, Spasi (tahan) untuk menyerang, Esc untuk pulang.','• Perintah ada di <b>dock bawah</b>: Pet, Usaha, Belajar, Lomba, Summon.','• Kanan atas: <b>Tas</b>, <b>Jurnal</b>, <b>Menu</b>. Klik <b>potretmu</b> untuk karakter, monster, misi, dan teman.','• Pakai HP atau iPad? Cukup sentuh layarnya, petunjuk menyesuaikan sendiri.'):B('<b>Kontrol di '+DEV.label()+':</b>','• Dunia: <b>ketuk peta</b> untuk berjalan ke sana. Ketuk orang, pet, kandang, atau rumah untuk bicara atau membuka menu.','• Dungeon: <b>sentuh dan geser</b> di kiri layar (joystick muncul), ketuk tombol <b>⚔️</b> kanan bawah untuk menyerang (tahan untuk menyerang terus), ketuk <b>Pulang</b> untuk kembali.','• Perintah ada di <b>dock bawah</b>: Pet, Usaha, Belajar, Lomba, Summon.','• Ketuk <b>potretmu</b> untuk karakter, monster, misi, dan teman.','• Pakai keyboard (mis. iPad dengan keyboard)? Tekan tombolnya, petunjuk ikut menyesuaikan.'))},
-{k:['teleport','perkamen','gerbang perkamen','hutan tak bernama','peri penjaga','pindah cepat','capek jalan','jalan terus','kuda','pak darmo'],a:()=>B('<b>Perkamen Teleport</b> dibeli dari <b>Peri Penjaga</b> di <b>Hutan Tak Bernama</b>. Setelah punya pet pertama, tanya <b>Pak Darmo</b> (kusir, Kota Singgah) soal hutan itu, lalu naik kuda ke sana (1 hari).','Harga: Perkamen Darat Rp 5.000, Perkamen Laut Rp 10.000 (sekali pakai), Gerbang Perkamen Rp 1.000.000 (permanen, darat dan laut).','Setelah hutan ditemukan, tombol 🌀 muncul di pojok kanan atas. Teleport tidak memakan hari.')},
+{k:['teleport','perkamen','gerbang perkamen','hutan tak bernama','peri penjaga','pindah cepat','capek jalan','jalan terus','kuda','pak darmo','monster hutan','penghadang','ikon portal'],a:()=>B('<b>Perkamen Teleport</b> dibeli dari <b>Peri Penjaga</b> di <b>Hutan Tak Bernama</b>. Setelah punya pet pertama, tanya <b>Pak Darmo</b> (kusir, Kota Singgah) soal hutan itu, lalu naik kuda ke sana (1 hari).','Harga: Perkamen Darat Rp 5.000, Perkamen Laut Rp 10.000 (sekali pakai), Gerbang Perkamen Rp 1.000.000 (permanen, darat dan laut).','Setelah hutan ditemukan, <b>ikon portal ungu-emas</b> muncul di pojok kanan atas, di sebelah Tas. Ketuk untuk teleport, dan teleport tidak memakan hari.','Hati-hati: di jalan Hutan Tak Bernama menuju Desa Peri ada <b>monster penghadang</b> (Daun Hutan, Slime, Golem). Serang dengan <b>Spasi</b> atau tombol <b>⚔️</b>. Kalau nyawamu habis, kamu hanya terdorong mundur, uang tidak hilang. Teleport langsung ke Desa Peri tidak melewati mereka.')},
 {k:['perlengkapan','equip','equipment','lepas','melepas','memasang','pasang','ganti equip','super langka','equip langka','drop equip','stat acak','pedang karat','sepatu angin','hati naga','cincin kilat','jimat'],a:()=>B('<b>Perlengkapan</b> ada di potretmu (kiri atas), tab <b>Karakter</b>. Ada 5 slot: Senjata (STR), Sepatu (POWER), Hati (HP), Cincin (MP), dan Jimat (INT).','Ketuk satu slot untuk <b>Pasang</b>, <b>Lepas</b>, atau mengganti. Barang yang belum terpasang menampilkan selisih statnya (hijau naik, merah turun), jadi bandingkan dulu.','✨ <b>Super Langka</b> bisa jatuh dari peti <b>Dungeon B4 ke atas</b>. Statnya <b>diacak tiap drop</b>: stat utama +2 sampai +5, kadang ada bonus +1 di stat lain. Dua barang bernama sama bisa beda kekuatan.','Barang yang tidak terpasang tetap tersimpan, dan bisa dilihat di <b>Tas</b> kategori Perlengkapan.')},
 {k:['misi','misi harian','misi mingguan','misi kik','tugas harian','hadiah misi','daftar misi','quest','ambil hadiah','pemula','misi pemula'],a:()=>B('<b>Misi</b> ada di potretmu (kiri atas), tab <b>Misi</b>. Ada 5 jenis:','• <b>Pemula</b>: '+PEM().length+' langkah awal (kerja, ramuan, lapak, kandang, telur, summon, lomba, dan lainnya). Tiap langkah ada hadiah uang, plus <b>hadiah tamat</b> yang lebih besar.','• <b>Utama</b>: 5 syarat Grand Master of Summoner.','• <b>KIK</b>: misi dari materi (soal HPP/BEP, SWOT, Kartu Risiko, Rencana Usaha, Visi dan Misi). Dikerjakan sekali, hadiah diambil sekali.','• <b>Mingguan</b>: berganti tiap 7 hari di dalam gim.','• <b>Harian</b>: berganti tiap hari di dalam gim.','Setelah selesai, tekan <b>Ambil</b> untuk hadiah uang. Angka merah di tab menandakan hadiah yang belum diambil.')},
 {k:['tas','item','barang','inventori'],a:()=>'<b>Tas</b> (ikon kanan atas) berisi barang, perlengkapan, dan bahan ramuan yang kamu bawa.'},
@@ -4857,6 +4867,7 @@ const STEPS=[
  {s:'#stage',dev:1,t:()=>DEV.m==='touch'?'Ini <b>duniamu</b>. Cara jalannya gampang: <b>ketuk peta</b> dan karaktermu berjalan ke titik itu. Ketuk <b>orang, pet, kandang, atau rumah</b> untuk bicara atau membuka menunya. Ujung <b>kanan</b> = hutan dan dungeon, ujung <b>kiri</b> = Kota Singgah.':'Ini <b>duniamu</b>. Jalan dengan '+kbd('←','→')+' atau '+kbd('A','D')+'. Dekati orang lalu tekan '+kbd('E')+' untuk bicara. Mouse juga bisa: <b>klik peta</b> untuk melangkah, klik rumah atau kandang untuk membuka menu. Ujung <b>kanan</b> = hutan dan dungeon, ujung <b>kiri</b> = Kota Singgah.'},
  {s:'#stage',dev:1,prac:1,t:()=>DEV.m==='touch'?'Coba sekarang! <b>Ketuk peta</b> di titik yang berdenyut itu.':'Coba sekarang! Tekan '+kbd('→')+' atau '+kbd('D')+' dan lihat karaktermu berjalan.',ok:()=>DEV.m==='touch'?'Mantap! ✅ Karaktermu berjalan ke titik yang kamu ketuk.':'Mantap! ✅ Karaktermu berjalan sesuai tombol yang kamu tekan.'},
  {dev:1,t:()=>DEV.m==='touch'?'Nanti di <b>dungeon</b>, kamu pakai <b>joystick</b>: sentuh dan geser jari di kiri layar, lalu ketuk tombol <b>⚔️</b> di kanan bawah untuk menyerang. Aku akan memandu lagi saat kamu masuk pertama kali.':'Nanti di <b>dungeon</b>: '+kbd('W','A','S','D')+' atau panah untuk jalan, '+kbd('Spasi')+' untuk menyerang, '+kbd('Esc')+' untuk pulang. Aku akan memandu lagi saat kamu masuk pertama kali.'},
+ {t:'Satu rahasia kecil: ujung kanan peta menyimpan <b>Hutan Tak Bernama</b>. Setelah punya pet pertama, tanya <b>Pak Darmo</b> di Kota Singgah. Di sana <b>Peri Penjaga</b> menjual <b>Perkamen Teleport</b>, dan sebuah <b>ikon portal</b> muncul di pojok atas untuk pindah tempat tanpa menghabiskan hari. Waspada, ada monster yang menghadang di jalan menuju Desa Peri!'},
  {s:'#ct',t:'Ini <b>kategori perintah</b>: Pet, <b>Usaha</b>, <b>Belajar</b>, Lomba, dan Summon. Pilihan aksinya muncul di bawahnya. Ingat: <b>satu hari punya 3 slot waktu (pagi, siang, malam)</b>: aksi ringan memakai 1 slot, jual dan perjalanan menghabiskan sisa hari. Tiap hari berganti kamu bayar makan <b>Rp 2.000</b>. Jangan buang-buang hari!'},
  {s:'#kl',t:'Dan ini aku! Ketuk aku kapan saja untuk <b>bertanya apa pun</b>: syarat Grand Master, isi Tas, Jurnal, atau cara cari uang. Kalau menghalangi, geser saja ke tempat lain.'},
  {s:'#ct',t:'Soal <b>lomba</b>: buka tab <b>Lomba</b> untuk melihat jadwal. Daftar dengan biaya kecil, mainkan, dan <b>hadiahnya masuk otomatis</b> (uang, PSW, telur, spell). Lomba itu jalan cepat menuju Grand Master. Mau lihat panduannya?',act:['Buka panduan lomba',()=>{try{evGuide()}catch(e){}}]},
@@ -4947,6 +4958,8 @@ function tick(){const w=q('#kl');if(!w)return;const on=has();w.hidden=!on;if(!on
  if(tourOn||open||TAK.on)return;
  try{if(!TAK.res&&S&&S.pro&&!S.kt&&!S.tad&&(S.ta|0)>0){TAK.res=1;taStart(0);return}}catch(e){}
  try{if(S.pro&&!S.kt&&!hint0){hint0=1;bubble('Mau tutorial singkat? Ketuk aku!',9000);return}}catch(e){}
+ try{if(S.hutan&&!S.klHt){S.klHt=1;bubble('Hutan Tak Bernama ditemukan! Peri Penjaga di sana menjual Perkamen Teleport. Hati-hati, ada monster menghadang di jalan ke desa peri.',10000);return}}catch(e){}
+ try{if((S.pkd|0)+(S.pkl|0)>0||S.gbp){if(!S.klPk){S.klPk=1;bubble('Perkamen siap! Ketuk ikon portal di pojok kanan atas untuk teleport. Tidak memakan hari, lho.',9000);return}}}catch(e){}
  const a=adv();if(lastId===null){lastId=a.id;return}
  if(a.id!==lastId){lastId=a.id;bubble(a.short,8000)}}
 /* ===== Tutorial Aksi: belajar dengan melakukan, bukan membaca kartu =====
