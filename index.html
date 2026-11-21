@@ -3495,9 +3495,9 @@ function wxPaint(c,W,t,dt,vil){if(!c)return;const w=c.clientWidth,h=c.clientHeig
  if(c.width!==w||c.height!==h){c.width=w;c.height=h}
  const x=c.getContext('2d'),k=W.k;{const anim={deras:1,gerimis:1,daun:1,bunga:1}[k],ck=k+'|'+WX.ph+'|'+w+'x'+h+'|'+vil;if(!anim&&c._ck===ck)return;c._ck=anim?null:ck}
  x.clearRect(0,0,w,h);
- const tint={deras:'rgba(15,30,80,.36)',gerimis:'rgba(20,40,90,.2)',bunga:'rgba(255,200,220,.05)',daun:'rgba(255,170,60,.08)',cerah:'rgba(255,200,90,.07)'}[k];
+ const tint={deras:'rgba(15,30,80,.36)',gerimis:'rgba(20,40,90,.2)',bunga:'rgba(40,45,80,.13)',daun:'rgba(35,45,75,.15)',cerah:'rgba(30,42,78,.15)'}[k];
  if(tint){x.fillStyle=tint;x.fillRect(0,0,w,h)}
- const pt={pagi:'rgba(255,200,120,.10)',malam:'rgba(8,16,64,.42)'}[WX.ph];if(pt&&!vil){x.fillStyle=pt;x.fillRect(0,0,w,h)}
+ const pt={pagi:'rgba(255,190,130,.05)',malam:'rgba(8,16,64,.42)'}[WX.ph];if(pt&&!vil){x.fillStyle=pt;x.fillRect(0,0,w,h)}
  if(rm)return;
  const cf={deras:['rain',130],gerimis:['rain',50],daun:['leaf',14],bunga:['petal',22]}[k];
  if(!cf){W.p=[];return}
