@@ -3660,3 +3660,23 @@ button.p:active:not(:disabled){background:linear-gradient(180deg,#c98615,#e9a92f
 .vch button.p:active:not(:disabled){background:linear-gradient(180deg,#c98615,#e9a92f 40%,#f2b83c)}
 .vback:active{box-shadow:none;filter:none;transform:translateY(1px)}
 @media(prefers-reduced-motion:reduce){button:active:not(:disabled){transform:none}}
+
+/* Panel Summon: ringkas di HP landscape pendek (judul dan syarat satu alur, font 12px seperti kartu aksi) */
+@media (orientation:landscape) and (max-height:430px){
+#co .sq{flex-direction:row;flex-wrap:wrap;align-items:center;align-content:center;gap:3px 8px;font-size:12px;line-height:1.2}
+#co .sq b{font-size:12px;letter-spacing:.3px;margin-right:2px}
+#co .sq div{display:contents}
+#co .sq .n{padding:2px 9px;font-size:12px}
+#co .sq .y,#co .sq .g{font-size:12px;white-space:nowrap}}
+
+/* Dialog di HP landscape pendek: kotak ringkas, potret pembicara berdiri di atas kotak (tidak tertimbun) */
+@media (orientation:landscape) and (max-height:430px){
+#vdl{bottom:max(4px,env(safe-area-inset-bottom,0px))}
+#vdl.big .vbx,.tkv.big .vbx{padding:8px 12px 9px;border-radius:12px}
+#vdl.big .vnm,.tkv.big .vnm{font-size:13px;padding:3px 14px;top:-15px}
+#vdl.big .vtx,.tkv.big .vtx{font-size:13px;line-height:1.4;margin:4px 0 7px;max-width:none}
+#vdl.big .vnext,#vdl.big .vch button,.tkv.big .vnext,.tkv.big .vch button{padding:5px 12px;font-size:13px}
+#vdl.big .vpt,.tkv.big .vpt{bottom:calc(100% - 8px);height:min(54vh,200px,calc(100vh - 195px));height:min(54dvh,200px,calc(100dvh - 195px));max-height:none}
+#vdl.big .vpt .vpp,.tkv.big .vpt .vpp{max-width:min(30vw,260px)}
+#vdl.big[data-who=children_of_dragon] .vpt{bottom:calc(100% - 8px);max-height:none}
+#vdl.big::before{height:34dvh}}
