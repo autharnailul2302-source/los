@@ -1605,7 +1605,7 @@ async function tesCek(){if(!SHEETS_URL||!S||!S.sid||!S.sid.u)return;/* tetap per
  {const tk=window.__tesTk=(window.__tesTk||0)+1;if(S.post&&S.post.a&&S.pre&&S.pre.a&&tk>1&&tk%5!==1)return}
  try{const j=await gCall({action:'statusTes',uid:S.sid.u}),was=!!S.tesBuka,wasPre=!!S.tesBukaPre;S.tesBuka=!!j.buka;S.tesBukaPre=!!j.bukaPre;
   {let ul=0,msg=[];if(+j.ulangPre>(S.ulPre||0)){S.ulPre=+j.ulangPre;if(S.pre){S.preLama=S.pre;S.pre=null}window.__tesRemPre=0;ul=1;msg.push('Tes Awal')}
-   if(+j.ulangPost>(S.ulPost||0)){S.ulPost=+j.ulangPost;if(S.post){S.postLama=S.post;S.post=null}window.__tesRem=0;ul=1;msg.push('Tes Akhir')}
+   if(+j.ulangPost>(S.ulPost||0)){S.ulPost=+j.ulangPost;if(S.post){S.postLama=S.post;S.post=null}try{const a=arS();S.arBase=(a.w|0)+(a.l|0)}catch(e){}window.__tesRem=0;ul=1;msg.push('Tes Akhir')}
    if(ul){log('Gurumu mengulang '+msg.join(' dan ')+'-mu. Kerjakan lagi lewat menu Belajar saat tesnya dibuka.','good');persist()}}
   const needPost=!(S.post&&S.post.a),needPre=!(S.pre&&S.pre.a);
   if(needPre&&S.tesBukaPre&&!wasPre){log('Gurumu membuka Tes Awal! Buka menu Belajar, lalu pilih Tes Awal.','good');persist()}else if(S.tesBukaPre!==wasPre)persist();
@@ -1613,11 +1613,11 @@ async function tesCek(){if(!SHEETS_URL||!S||!S.sid||!S.sid.u)return;/* tetap per
   if(!needPost)return;
   if(S.tesBuka&&!was){log('Gurumu membuka Tes Akhir! Buka menu Belajar, lalu pilih Tes Akhir.','good');persist()}else if(S.tesBuka!==was)persist();
   if(S.tesBuka&&!(S.post&&S.post.a)&&!window.__tesRem){window.__tesRem=1;let n=0;const tr=()=>{if(!S||(S.post&&S.post.a)||!S.tesBuka)return;const ov=document.getElementById('ov');if((ov&&ov.classList.contains('on')||document.getElementById('nite')||window.CINE)&&n++<40)return setTimeout(tr,3000);if(n>=40)return;if(!tesSyaratArena())return tesSyaratModal();modal('Tes Akhir sudah dibuka',{cls:'nox',html:'<p>Gurumu membuka <b>Tes Akhir</b>'+(S.post&&S.post.sk?', dan kamu sebelumnya melewatinya':'')+'. Ada 12 soal dengan topik yang sama seperti tes awal. Kerjakan sekarang supaya nilaimu tercatat.</p>',btns:[['Kerjakan sekarang',()=>tesRun('post',()=>close()),'p'],['Nanti',close,'g']]})};setTimeout(tr,1500)}}catch(e){}}
-function tesWatch(){if(window.__tesW||!SHEETS_URL)return;window.__tesW=setInterval(tesCek,60000);setTimeout(tesCek,4000)}
+function tesWatch(){if(window.__tesW||!SHEETS_URL)return;window.__tesW=setInterval(tesCek,60000);setTimeout(tesCek,4000);/* HP menghentikan timer saat layar mati atau tab di latar: periksa ulang begitu gim kembali tampil */document.addEventListener('visibilitychange',()=>{if(!document.hidden){window.__tesTk=0;tesCek()}})}
 /* Periksa status tes ke guru dengan data terbaru: kirim laporan dulu supaya baris siswa ada di sheet (tanpa itu server menjawab "belum dibuka"), lalu tanya statusnya. */
 /* Prasyarat Tes Akhir: sudah menyelesaikan minimal 1 laga di Arena Desa Peri (menang atau kalah). Tes Awal tidak digating. */
-function tesSyaratArena(){try{const a=arS();return ((a.w|0)+(a.l|0))>=1}catch(e){return false}}
-function tesSyaratModal(){modal('Prasyarat Tes Akhir',{cls:'nox',html:'<p>Gurumu sudah membuka <b>Tes Akhir</b>, tetapi ada <b>prasyarat</b> dulu: selesaikan <b>1 laga di Arena Desa Peri</b> (menang atau kalah).</p><p class="sub">Cara ke sana: tanya <b>Pak Darmo</b> di Kuil Azure soal Hutan Tak Bernama, kalahkan monster di jalan, lalu bicara dengan <b>Peri Penjaga</b> di Desa Peri dan pilih <b>Masuk Arena</b>.</p><p class="bad">Status: arena belum diselesaikan.</p>',btns:[['Mengerti',close,'p']]})}
+function tesSyaratArena(){try{const a=arS();return ((a.w|0)+(a.l|0))-(S.arBase|0)>=1}catch(e){return false}}
+function tesSyaratModal(){modal('Prasyarat Tes Akhir',{cls:'nox',html:'<p>Gurumu sudah membuka <b>Tes Akhir</b>, tetapi ada <b>prasyarat</b> dulu: selesaikan <b>1 laga di Arena Desa Peri</b> (menang atau kalah). Arena baru terbuka setelah minimal 1 monstermu berevolusi'+(S.arBase?'. Laga lama tidak dihitung karena gurumu mengulang tesmu, jadi bertandinglah sekali lagi':'')+'.</p><p class="sub">Cara ke sana: tanya <b>Pak Darmo</b> di Kuil Azure soal Hutan Tak Bernama, kalahkan monster di jalan, lalu bicara dengan <b>Peri Penjaga</b> di Desa Peri dan pilih <b>Masuk Arena</b>.</p><p class="bad">Status: arena belum diselesaikan.</p>',btns:[['Mengerti',close,'p']]})}
 async function tesSegar(){let r='ok';try{r=await pushReport(true)}catch(e){r=String(e&&e.message||e)}try{await tesCek()}catch(e){}return r}
 function tesPreBuka(f){if(S.pre&&S.pre.a)return close();
  if(f!==1&&!S.tesBukaPre&&S.sid&&S.sid.u){modal('Tes Awal',{html:'<p>Memeriksa ke guru...</p>',btns:[]});tesSegar().then(()=>tesPreBuka(1));return}
@@ -4342,7 +4342,11 @@ const arPow2=p=>(p.h+p.p+p.sp+p.d)/4;
 const arRw=(l,n)=>{const base=Math.max(1,AR.rw[l.tier]+(l.tag===2?1:l.tag===0?-1:0));return n>=3?Math.max(1,Math.round(base/2)):base};
 function arConsent(){modal('Bayangan siswa',{html:'<p>Petmu boleh muncul sebagai lawan <b>bayangan</b> bagi teman <b>sesekolahmu</b>. Yang terlihat hanya <b>nama karakter</b>, elemen, dan stat pet. Nama asli, kelas, dan sekolahmu tidak ditampilkan.</p><p class="sub">Kamu juga bisa melawan bayangan teman. Pilihan ini bisa diubah kapan saja di layar arena.</p>',btns:[['Izinkan',()=>{arS().gh=1;save();arenaOpen()},'p'],['Tidak, pakai trainer saja',()=>{arS().gh=0;save();arenaOpen()}]]})}
 function arTog(){const a=arS();a.gh=a.gh===1?0:1;save();if(a.gh===1){AR_G={k:'',st:0,list:[]};arGhostPush(1,1)}else arGhostPush(0);arenaOpen()}
-function arenaOpen(){if(!S)return;const a=arS();
+/* Arena baru terbuka kalau sudah ada minimal 1 monster yang berevolusi (S.evoDone dipasang saat evolusi; stage pet > 0). */
+function arTerbuka(){try{return !!S.evoDone||S.pets.some(q=>(q.st|0)>0)}catch(e){return false}}
+function arenaOpen(){if(!S)return;
+ if(!arTerbuka()){modal('Arena Desa Peri',{html:'<p>Panggung arena masih <b>tertutup</b>. Arena baru terbuka kalau kamu sudah punya <b>minimal 1 monster yang berevolusi</b>.</p><p class="sub">Evolusi butuh total stat, umur, dan satu item evolusi (Kerang, Mutiara, atau Permata) dari Gua Sedaya. Pantau syaratnya di menu Rawat pet, kotak Evolusi.</p>',btns:[['Mengerti',close,'p']]});return}
+ const a=arS();
  if(a.gh===undefined&&arHasAcc()){arConsent();return}
  const q=sel();
  if(!q){modal('Arena Desa Peri',{html:'<p>Kamu belum punya pet untuk diadu. Tetaskan telur dulu, lalu kembali ke sini.</p>',btns:[['Tutup',close,'p']]});return}
