@@ -952,7 +952,7 @@ const save=()=>{try{stNorm()}catch(e){}persist();queueSend()};
 const load=()=>{try{const a=localStorage.getItem(PACT);let x=a?pfRead(a):null;if(!x)x=JSON.parse(localStorage.getItem('tls'));return x}catch(e){return null}};
 const rain=()=>S.fre?true:S.s%2===1,yr=()=>Math.min(3,Math.floor(S.s/2)+1),sname=()=>S.fre?'Main bebas':`Tahun ${yr()} ${rain()?'Hujan':'Kemarau'}`;
 const vc=()=>rain()?3900:3000;
-const led=()=>S.fre?(S.fled=S.fled||{inc:0,exp:0,d:{}}):S.led[S.s];
+const led=()=>S.fre?(S.fled=S.fled||{inc:0,exp:0,d:{}}):(S.led[S.s]||S.led[S.led.length-1]);
 function log(t,c){S.log.unshift([t,c||'']);S.log=S.log.slice(0,60)}
 function earn(n,k){if(k==='Penjualan ramuan'&&n>0)n=Math.round(n*(1+gKerja()));S.money+=n;led().inc+=n;led().d[k]=(led().d[k]||0)+n;mcnt('e:'+k)}
 function spend(n,k){if(S.money<n)return false;S.money-=n;led().exp+=n;led().d[k]=(led().d[k]||0)-n;mcnt('s:'+k);return true}
@@ -1948,7 +1948,7 @@ function fillHud(){if(!S)return;
  $('#bar').innerHTML=[['uang','Uang',rpC(S.money)],['hari','Hari',`${S.day} dari 30`],['musim','Musim',sname()],['psw','PSW',S.psw]].map(([k,l,v])=>`<div class="hp clk" data-k=${k} tabindex=0 role=button title="${k==='uang'?'Saldo '+rp(S.money)+' (ketuk untuk rincian)':'Lihat penjelasan'}" aria-label="Lihat penjelasan ${l}${k==='uang'?': '+rp(S.money):''}" style="--ar:${PL[k].ar}"><img src="images/ui-hud-${k}.png" alt=""><span class=hl style="${PL[k].l}">${l}</span><b class=hv style="${PL[k].v}">${v}</b>${k==='hari'?`<i class=hb style="${PL.hari.b}"><u style="width:${S.day/30*100}%"></u></i>`:''}</div>`).join('');
  $('#bpt').innerHTML=`<i class="pav" role="img" aria-label="${S.name}" style="background-image:url(images/vn-${S.gender==='cewek'?'girl':'boy'}.webp)"></i><span><b>${S.name}</b><small>Calon GMS · ${rep().ok.filter(Boolean).length}/5</small></span>`;msBadge();
 }
-function render(){if(!S){return}applyItems();gearInit();
+function render(){if(!S){return}if(S.s>5&&!S.over&&!S.fre&&!window.__resEnd){/* pulihkan akhir gim yang terputus (musim ke-6 selesai tapi refleksi/tes akhir belum tuntas) */window.__resEnd=1;setTimeout(()=>{try{if(S&&S.s>5&&!S.over&&!S.fre)refleksi(5,()=>tesPost(()=>finish()))}catch(e){}},400)}applyItems();gearInit();
  const mg=S.gender==='cewek'?'mcewek':'mcowok',p=sel(),idx=S.pets[S.sel]?S.sel:0,H=Math.round(cl(innerHeight*.3,120,280)),daily=dayCost().total;
  fillHud();
  const nx=EVS.filter(e=>(e.t===2||e.t===(rain()?1:0))&&e.d[1]>=S.day&&!S.done[S.s+e.id]).sort((a,b)=>a.d[0]-b.d[0])[0];
