@@ -22,6 +22,14 @@ window.klPerfSet=function(v){try{localStorage.setItem(K,v?'on':'off')}catch(e){}
 document.documentElement.classList.toggle('perf',window.klPerf());})();</script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap">
 <link rel="stylesheet" href="style.css">
+<style id="btlap">/* Layar pendek (laptop): jendela duel boleh digulir dan tombol aksi selalu menempel di bawah, jadi tidak tertutup sprite besar (mis. Nagi evolusi tinggi) */
+@media (max-height:860px){
+#md.btx{max-height:calc(100vh - 12px);max-height:calc(100dvh - 12px);overflow-y:auto;overscroll-behavior:contain}
+#md.btx .btw{display:flex;flex-direction:column}
+#md.btx .bts{max-height:34vh;max-height:34dvh}
+#md.btx .bts img.ltp{max-height:100%;width:auto;object-fit:contain}
+#md.btx .btab{position:sticky;bottom:0;z-index:5;padding-top:6px;background:linear-gradient(to top,rgba(14,16,34,.97) 70%,rgba(14,16,34,0))}
+}</style>
 
 <style id="vdl-btn-fix">/* Tombol dialog desa: garis fokus di dalam tombol (tidak terpotong), tombol utama emas rapi */
 #vdl button{outline:none!important;-webkit-tap-highlight-color:transparent}
