@@ -681,6 +681,7 @@ function gTCss(){if(document.getElementById('gtcss'))return;const s=document.cre
 .gt-sw.wait{opacity:.6;pointer-events:none}
 .gt-kpi{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mu);padding:8px 0 4px;border-top:1px solid var(--ln)}
 .gt-kpi b{color:var(--tx)}
+.gt-mv{margin-left:auto;background:transparent;color:var(--gd);border:1px solid rgba(240,199,94,.5);border-radius:8px;padding:4px 10px;font-size:12px}.gt-mv:hover{background:rgba(240,199,94,.12)}
 .gt-up{color:var(--ok)}.gt-dn{color:var(--bd)}
 .gt-st{margin-top:6px;border-top:1px solid var(--ln);padding-top:8px}
 .gt-st summary{cursor:pointer;font-weight:600;list-style:none;font-size:14px}
@@ -743,7 +744,7 @@ function gTDraw(){const g=$('#gtg');if(!g)return;const all=gTGroups(),V=gTVis(),
   rows=x.rows.slice().sort((a,b)=>String(a.nama).localeCompare(String(b.nama),'id')).map(r=>{const t=gTs(r);return `<li><label><input type=checkbox class=gt-ck value="${gEsc(r.uid)}"${gTX.has(r.uid)?' checked':''}><span class=gt-nm>${gEsc(r.nama)}</span></label><span class=gt-chips>${chip('Awal',t.a,r.pre,t.pa)}${chip('Akhir',t.b,r.post,t.pb)}${t.d==null?'':`<b class="${t.d>0?'gt-up':t.d<0?'gt-dn':''}">${gSg(t.d)}</b>`}</span></li>`}).join('');
   return `<article class="gt-c${F.o?' live':''}" data-g="${gEsc(x.id)}"><div class=gt-h><div><b>${gEsc(x.kelas)}</b><small>${gEsc(x.sekolah)}${x.vs.size>1?' · disatukan dari '+x.vs.size+' penulisan':''}</small></div><span class=gt-n>${s.n} siswa</span></div>
   ${sw(x,'post',!!F.o,'Tes akhir',s.dn,s.n)}${sw(x,'pre',F.op,'Tes awal',s.dp,s.n)}
-  <div class=gt-kpi><span>Rata awal <b>${gF1(s.ra)}</b></span><span>Rata akhir <b>${gF1(s.rb)}</b></span><span>Kenaikan <b class="${s.d==null?'':s.d>0?'gt-up':s.d<0?'gt-dn':''}">${s.d==null?'-':gSg(+s.d.toFixed(1))}</b></span></div>
+  <div class=gt-kpi><span>Rata awal <b>${gF1(s.ra)}</b></span><span>Rata akhir <b>${gF1(s.rb)}</b></span><span>Kenaikan <b class="${s.d==null?'':s.d>0?'gt-up':s.d<0?'gt-dn':''}">${s.d==null?'-':gSg(+s.d.toFixed(1))}</b></span>${gAdmin()?`<button type=button class=gt-mv data-g="${gEsc(x.id)}">Pindah / gabung kelas</button>`:''}</div>
   <details class=gt-st data-g="${gEsc(x.id)}"${gTO.has(x.id)?' open':''}><summary>Siswa dan ulangi tes <em>${miss?miss+' belum tes akhir':'semua sudah tes akhir'}</em></summary>
   <div class=gt-sa><label><input type=checkbox class=gt-all> Pilih semua</label><span class=gt-cnt>${ns} dipilih</span><div class=gt-ra><button type=button data-rj=pre${ns?'':' disabled'}>Ulangi tes awal</button><button type=button data-rj=post${ns?'':' disabled'}>Ulangi tes akhir</button><button type=button data-rj=dua${ns?'':' disabled'}>Ulangi keduanya</button></div></div>
   <ul class=gt-ul>${rows}</ul></details></article>`}).join('');
@@ -762,6 +763,7 @@ function gTBind(box){
    try{await gCall(Object.assign({action:'bukaTes',token:gTok,sekolah:x.sekolah,kelas:x.kelas,buka:!now},j==='pre'?{jenis:'pre'}:{}));F[key]=!now;gToast((j==='pre'?'Tes awal ':'Tes akhir ')+x.kelas+(now?' ditutup.':' dibuka.'))}
    catch(err){if(err.expired){$('#gout').click();return}gToast(err.message==='Failed to fetch'?'Tidak bisa terhubung. Periksa internet.':err.message,1)}
    gTDraw();return}
+  const mv=e.target.closest('.gt-mv');if(mv){gTMove(mv.dataset.g);return}
   const rj=e.target.closest('[data-rj]');
   if(rj&&!rj.disabled){const c=rj.closest('.gt-c'),ids=[...c.querySelectorAll('.gt-ck:checked')].map(x=>x.value);if(!ids.length){gToast('Pilih siswa dulu.');return}
    const j=rj.dataset.rj,nm={pre:'tes awal',post:'tes akhir',dua:'tes awal dan tes akhir'}[j];
@@ -773,6 +775,13 @@ function gTBind(box){
     for(const x of todo){const m=document.getElementById('gdm');if(m)m.textContent='Memproses '+(ok+bad+1)+' dari '+todo.length+'...';
      try{await gCall(Object.assign({action:'bukaTes',token:gTok,sekolah:x.sekolah,kelas:x.kelas,buka},pre?{jenis:'pre'}:{}));gTF[x.id][key]=buka;ok++}catch(err){if(err.expired)throw err;bad++;msg=err.message}}
     gTDraw();gToast(ok+' kelas diperbarui'+(bad?', '+bad+' gagal ('+msg+')':'.'),!!bad)}})}})}
+function gTMove(id){const x=gTGroups().find(g=>g.id===id);if(!x)return;const sel=x.rows.filter(r=>gTX.has(r.uid)),rs=sel.length?sel:x.rows,others=gTGroups().filter(g=>g.id!==id),schools=[...new Set(gRows.map(r=>r.sekolah).filter(Boolean))].sort();
+ gDlg({t:'Pindah / gabung kelas',ok:'Pindahkan',
+  h:`<p>${sel.length?`<b>${rs.length} siswa terpilih`:`Semua <b>${rs.length} siswa`}</b> dari <b>${gEsc(x.kelas)}</b> (${gEsc(x.sekolah)}) akan dipindahkan. Akun login dan data di HP siswa ikut menyesuaikan otomatis, paling lambat sekitar 1 menit setelah gim siswa terbuka.</p><label for=gm_t>Gabungkan ke kelas yang sudah ada</label><select id=gm_t><option value="">Atau ketik sendiri di bawah</option>${others.map((g,i)=>`<option value="${i}">${gEsc(g.kelas)} · ${gEsc(g.sekolah)} (${g.rows.length} siswa)</option>`).join('')}</select><label for=gm_k>Nama kelas tujuan</label><input id=gm_k maxlength=16 value="${gEsc(x.kelas)}"><label for=gm_s>Nama sekolah tujuan</label><input id=gm_s maxlength=60 list=gsl2 autocomplete=off value="${gEsc(x.sekolah)}"><datalist id=gsl2>${schools.map(v=>`<option value="${gEsc(v)}">`).join('')}</datalist><p class=gs style="margin-top:10px">Data yang dipindah dikunci: tidak ditimpa laporan siswa berikutnya. Status buka/tutup tes mengikuti kelas tujuan.</p>`,
+  on:async()=>{const k=$('#gm_k').value.trim(),sc=$('#gm_s').value.trim();if(!k)throw new Error('Isi kelas tujuan.');if(sc.length<3)throw new Error('Isi nama sekolah tujuan.');
+   let n=0,gagal=0;const ids=rs.map(r=>r.uid);for(let i=0;i<ids.length;i+=200){const j=await gCall({action:'siswa_edit',token:gTok,uids:ids.slice(i,i+200),f:{kelas:k,sekolah:sc}});n+=j.n||0;gagal+=j.akunGagal||0}
+   await gFetch();await gTLoad();ids.forEach(u=>gTX.delete(u));gTDraw();gToast(n+' siswa dipindahkan ke '+k+'.'+(gagal?' '+gagal+' akun login tidak ikut pindah karena sudah ada akun dengan nama itu di kelas tujuan.':''),!!gagal)}});
+ const t=$('#gm_t');if(t)t.onchange=()=>{const g=others[+t.value];if(t.value===''||!g)return;$('#gm_k').value=g.kelas;$('#gm_s').value=g.sekolah}}
 function gGoTab(t){gTab=t;const d=$('#gd');d.querySelectorAll('.gtabs button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
  $('#gvs').hidden=t!=='siswa';if($('#gvg'))$('#gvg').hidden=t!=='guru';if($('#gvt'))$('#gvt').hidden=t!=='tes';
  if(t!=='siswa'){gSel='';const e=$('#gdet');if(e)e.hidden=true}
@@ -1735,6 +1744,9 @@ function tesPre(done){if(S.pre)return done();modal('Tes Awal Pedagang',{cls:'nox
 async function tesCek(){if(!SHEETS_URL||!S||!S.sid||!S.sid.u)return;/* tetap periksa walau semua tes selesai: guru bisa mengulang tes siswa (setelah semua selesai, cukup tiap 5 menit) */
  {const tk=window.__tesTk=(window.__tesTk||0)+1;if(S.post&&S.post.a&&S.pre&&S.pre.a&&tk>1&&tk%5!==1)return}
  try{const j=await gCall({action:'statusTes',uid:S.sid.u}),was=!!S.tesBuka,wasPre=!!S.tesBukaPre;S.tesBuka=!!j.buka;S.tesBukaPre=!!j.bukaPre;
+  /* admin memindah kelas/sekolah siswa: ikuti data terbaru dari server (akun login ikut berubah di server, token tetap berlaku) */
+  {const I=j.ident,sd=S.sid;if(I&&sd){const m={n:'nama',k:'kelas',ss:'sekolah',kc:'kecamatan',kb:'kabupaten',pv:'provinsi'};let ch=0;Object.keys(m).forEach(f=>{const v=String(I[m[f]]||'');if(v&&v!==sd[f]){sd[f]=v;ch=1}});if(I.ak&&sd.ak&&I.ak!==sd.ak){sd.ak=I.ak;ch=1}
+   if(ch){lastCs='';lastSig='';log('Gurumu memperbarui data kelasmu: '+sd.k+' · '+(sd.ss||'')+'.','good');persist();queueSend()}}}
   {let ul=0,msg=[];if(+j.ulangPre>(S.ulPre||0)){S.ulPre=+j.ulangPre;if(S.pre){S.preLama=S.pre;S.pre=null}window.__tesRemPre=0;ul=1;msg.push('Tes Awal')}
    if(+j.ulangPost>(S.ulPost||0)){S.ulPost=+j.ulangPost;if(S.post){S.postLama=S.post;S.post=null}try{const a=arS();S.arBase=(a.w|0)+(a.l|0)}catch(e){}window.__tesRem=0;ul=1;msg.push('Tes Akhir')}
    if(ul){log('Gurumu mengulang '+msg.join(' dan ')+'-mu. Kerjakan lagi lewat menu Belajar saat tesnya dibuka.','good');persist()}}
