@@ -1,0 +1,31 @@
+/* Sumber terbaca resep. Ubah di sini, lalu minta dikodekan ulang. JANGAN diunggah ke GitHub Pages. */
+const RSP={
+ wedang:{n:'Wedang Jahe',i:'🍵',b:['jahe','gula'],v:0,L:2,s:'',h:'Lina: "Rimpang pedas yang diseduh dengan pemanis. Resep paling sederhana, tapi cepat basi."'},
+ sereh:{n:'Wedang Sereh',i:'🍋',b:['jahe','sereh'],v:500,L:3,s:'h',h:'Sari: "Batang harum dari kebun dipadu rimpang pedas. Orang mencarinya saat hujan."'},
+ masukangin:{n:'Jamu Masuk Angin',i:'🫖',b:['jahe','kunyit'],v:1000,L:3,s:'h',h:'Lina: "Dua rimpang hangat dalam satu cangkir. Warga mencarinya saat cuaca basah."'},
+ kunyitasam:{n:'Kunyit Asam',i:'🥤',b:['kunyit','asam','gula'],v:1500,L:3,s:'k',h:'Sari: "Kuning, asam, dan manis. Segar diminum saat kemarau."'},
+ beraskencur:{n:'Beras Kencur',i:'🥛',b:['beras','kencur','gula'],v:2000,L:4,s:'',h:'Lina: "Butir putih dihaluskan dengan akar harum dan sedikit manis. Tahan lebih lama."'},
+ stamina:{n:'Jamu Stamina',i:'🧉',b:['temulawak','madu','jahe'],v:6000,L:5,s:'',h:'Sari: "Bahan terbaiknya hanya tumbuh jauh di dalam dungeon. Mahal, tapi pembeli rela membayar."'},
+ pegallinu:{n:'Jamu Pegal Linu',i:'💪',b:['kencur','jahe'],v:1500,L:3,s:'',h:'Joko: "Akar harum dan rimpang pedas diseduh bersama. Pegal habis menarik jaring cepat hilang."'},
+ jamutemulawak:{n:'Jamu Temulawak',i:'🧡',b:['temulawak','gula'],v:2500,L:4,s:'',h:'Lina: "Umbi oranye dari dalam dungeon, cukup diseduh dengan pemanis. Bagus untuk nafsu makan."'},
+ sinom:{n:'Sinom',i:'🍃',b:['kunyit','asam','jahe'],v:1800,L:3,s:'k',h:'Dina: "Kuning, asam, dengan sedikit pedas. Paling segar diminum dingin di musim kemarau."'},
+ serehmadu:{n:'Sereh Madu',i:'🍹',b:['sereh','madu'],v:2500,L:3,s:'k',h:'Sari: "Batang harum dengan madu hutan. Segar kalau diminum dingin saat kemarau."'},
+ jahemadu:{n:'Wedang Jahe Madu',i:'🍯',b:['jahe','madu'],v:3000,L:3,s:'h',h:'Rani: "Rimpang pedas dilembutkan madu hutan. Nelayan pulang kehujanan paling suka."'},
+ kunyitmadu:{n:'Kunyit Madu',i:'🟡',b:['kunyit','madu'],v:3500,L:4,s:'',h:'Bayu: "Rimpang kuning bertemu madu hutan. Pembeli rela bayar lebih untuk yang manis dan menyehatkan."'},
+ kunyittemulawak:{n:'Kunyit Temulawak',i:'🥃',b:['kunyit','temulawak'],v:3000,L:4,s:'',h:'Lina: "Dua umbi berwarna hangat, kuning dan oranye. Resep lama para herbalis."'},
+ cekok:{n:'Jamu Cekok',i:'🥄',b:['temulawak','kencur','madu'],v:5000,L:5,s:'',h:'Tomo: "Jamu penambah nafsu makan anak. Bahan dari dungeon, dipadu akar harum."'}};
+const RCL={
+ wedang:{i:5,s:'',c:0,t:'Mulai dari yang paling sederhana: rimpang pedas yang diseduh dengan pemanis. Cepat basi, jadi seduh secukupnya saja.'},
+ sereh:{i:2,s:'h',c:10,t:'Kalau hujan, orang mencari yang harum dan hangat. Batang harum dari kebun, dipadu rimpang pedas.'},
+ masukangin:{i:3,s:'h',c:15,t:'Nelayan pulang kehujanan pasti masuk angin. Obatnya dua rimpang hangat dalam satu cangkir: yang pedas dan yang kuning.'},
+ kunyitasam:{i:1,s:'k',c:15,t:'Saat kemarau, dagangan paling laku itu yang segar. Kuning, asam, dan manis, tiga bahan murah di pasar.'},
+ beraskencur:{i:0,s:'k',c:20,t:'Menempa seharian butuh bekal yang tahan lama: butir putih, akar harum, dan sedikit manis.'},
+ stamina:{i:6,s:'',c:30,t:'Bahan terbaiknya hanya tumbuh di dalam dungeon, dan aku sering lewat sana. Cari umbi oranye dan madu hutan, campur dengan rimpang pedas.'},
+ pegallinu:{i:4,s:'',c:10,t:'Narik jaring seharian bikin pegal. Akar harum dan rimpang pedas diseduh bersama, pegalnya cepat hilang.'},
+ jamutemulawak:{i:5,s:'',c:20,t:'Umbi oranye dari dalam dungeon itu bagus untuk nafsu makan. Cukup seduh dengan pemanis saja.'},
+ sinom:{i:0,s:'k',c:25,t:'Menempa di bawah terik bikin haus. Yang kuning, asam, dan sedikit pedas paling pas diminum dingin.'},
+ serehmadu:{i:2,s:'k',c:25,t:'Saat kemarau, batang harum dengan madu hutan diminum dingin itu segar sekali.'},
+ jahemadu:{i:3,s:'h',c:25,t:'Pulang melaut kehujanan, rimpang pedas ditambah madu hutan itu obat paling enak.'},
+ kunyitmadu:{i:1,s:'',c:25,t:'Banyak pembeli minta yang manis dan menyehatkan. Rimpang kuning dengan madu hutan, harganya bisa lebih tinggi.'},
+ kunyittemulawak:{i:5,s:'',c:30,t:'Dua umbi hangat, satu kuning dan satu oranye. Resep lama para herbalis, cobalah campur keduanya.'},
+ cekok:{i:6,s:'',c:35,t:'Anak-anak susah makan? Umbi oranye dan madu hutan dari dungeon, tambah akar harum dari kebun.'}};
